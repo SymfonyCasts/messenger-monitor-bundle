@@ -1,0 +1,20 @@
+{
+    "name": "karo/messenger-monitor",
+    "description": "Symfony bundle for information about your Messenger queues and transports",
+    "type": "symfony-bundle",
+    "require": {
+        "symfony/framework-bundle": "^5.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Karo\\MessengerMonitor\\": ""
+        }
+    },
+    "authors": [
+        {
+            "name": "Peter Dietrich",
+            "email": "xosofox@gmail.com"
+        }
+    ]
+}

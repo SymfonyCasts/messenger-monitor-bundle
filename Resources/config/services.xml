@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="karo.messenger_monitor.receiver_locator"
+                 class="Karo\MessengerMonitor\Locator\ReceiverLocator">
+            <argument type="service" id="messenger.receiver_locator"></argument>
+        </service>
+        <service id="karo.messenger_monitor.monitor_command" class="Karo\MessengerMonitor\Command\MonitorCommand">
+            <argument>messenger:monitor</argument>
+            <argument type="service" id="karo.messenger_monitor.receiver_locator"></argument>
+            <tag name="console.command"/>
+        </service>
+    </services>
+</container>
