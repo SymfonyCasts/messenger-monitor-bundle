@@ -4,19 +4,14 @@
 namespace KaroIO\MessengerMonitor;
 
 use KaroIO\MessengerMonitor\DependencyInjection\ReceiverLocatorPass;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class KaroIOMessengerMonitorBundle extends Bundle
 {
-    public function load() {
-        die('GIPS?');
-
-    }
-
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
