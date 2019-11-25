@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Karo\MessengerMonitor\Controller;
+namespace KaroIO\MessengerMonitor\Controller;
 
 
 use Symfony\Component\HttpFoundation\Response;

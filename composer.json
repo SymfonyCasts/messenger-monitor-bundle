@@ -1,5 +1,5 @@
 {
-    "name": "karo/messenger-monitor",
+    "name": "karo-io/messenger-monitor",
     "description": "Symfony bundle for information about your Messenger queues and transports",
     "type": "symfony-bundle",
     "require": {
@@ -8,7 +8,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Karo\\MessengerMonitor\\": ""
+            "KaroIO\\MessengerMonitor\\": ""
         }
     },
     "authors": [

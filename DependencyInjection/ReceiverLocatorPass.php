@@ -1,6 +1,6 @@
 <?php
 
-namespace Karo\MessengerMonitor\DependencyInjection;
+namespace KaroIO\MessengerMonitor\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -17,7 +17,7 @@ class ReceiverLocatorPass implements CompilerPassInterface
 
                 // steal configurations already done by the MessengerPass so we dont have to duplicate the work
                 // as approved by @ryanweaver with the "I've seen Nicolas do worse" certificate
-                $receiverLocatorDefinition = $container->getDefinition('karo.messenger_monitor.receiver_locator');
+                $receiverLocatorDefinition = $container->getDefinition('karo-io.messenger_monitor.receiver_locator');
 
                 $consumeCommandDefinition = $container->getDefinition('console.command.messenger_consume_messages');
                 $names = $consumeCommandDefinition->getArgument(4);

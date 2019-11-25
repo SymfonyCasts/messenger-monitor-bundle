@@ -5,13 +5,13 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="karo.messenger_monitor.receiver_locator"
-                 class="Karo\MessengerMonitor\Locator\ReceiverLocator">
+        <service id="karo-io.messenger_monitor.receiver_locator"
+                 class="KaroIO\MessengerMonitor\Locator\ReceiverLocator">
             <argument type="service" id="messenger.receiver_locator"></argument>
         </service>
-        <service id="karo.messenger_monitor.monitor_command" class="Karo\MessengerMonitor\Command\MonitorCommand">
+        <service id="karo-io.messenger_monitor.monitor_command" class="KaroIO\MessengerMonitor\Command\MonitorCommand">
             <argument>messenger:monitor</argument>
-            <argument type="service" id="karo.messenger_monitor.receiver_locator"></argument>
+            <argument type="service" id="karo-io.messenger_monitor.receiver_locator"></argument>
             <tag name="console.command"/>
         </service>
     </services>
