@@ -3,7 +3,8 @@
     "description": "Symfony bundle for information about your Messenger queues and transports",
     "type": "symfony-bundle",
     "require": {
-        "symfony/framework-bundle": "^5.0"
+        "symfony/framework-bundle": "^5.0",
+        "symfony/messenger": "^5.0"
     },
     "license": "MIT",
     "autoload": {
