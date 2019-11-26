@@ -6,10 +6,10 @@
 
     <services>
         <service id="karo-io.messenger_monitor.receiver_locator"
-                 class="KaroIO\MessengerMonitor\Locator\ReceiverLocator">
+                 class="KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator">
             <argument type="service" id="messenger.receiver_locator"></argument>
         </service>
-        <service id="karo-io.messenger_monitor.monitor_command" class="KaroIO\MessengerMonitor\Command\MonitorCommand">
+        <service id="karo-io.messenger_monitor.monitor_command" class="KaroIO\MessengerMonitorBundle\Command\MonitorCommand">
             <argument>messenger:monitor</argument>
             <argument type="service" id="karo-io.messenger_monitor.receiver_locator"></argument>
             <tag name="console.command"/>

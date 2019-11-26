@@ -1,10 +1,10 @@
 <?php
 
 
-namespace KaroIO\MessengerMonitor\Command;
+namespace KaroIO\MessengerMonitorBundle\Command;
 
 
-use KaroIO\MessengerMonitor\Locator\ReceiverLocator;
+use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

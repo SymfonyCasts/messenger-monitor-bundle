@@ -1,13 +1,13 @@
 <?php
 
 
-namespace KaroIO\MessengerMonitor\Controller;
+namespace KaroIO\MessengerMonitorBundle\Controller;
 
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MessengerMonitorController
+class MessengerMonitorBundleController
 {
     public function __construct()
     {

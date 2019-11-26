@@ -1,7 +1,7 @@
 <?php
 
 
-namespace KaroIO\MessengerMonitor\DependencyInjection;
+namespace KaroIO\MessengerMonitorBundle\DependencyInjection;
 
 
 use Symfony\Component\Config\FileLocator;

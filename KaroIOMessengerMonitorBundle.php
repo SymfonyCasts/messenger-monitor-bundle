@@ -1,16 +1,16 @@
 <?php
 
 
-namespace KaroIO\MessengerMonitor;
+namespace KaroIO\MessengerMonitorBundle;
 
-use KaroIO\MessengerMonitor\DependencyInjection\ReceiverLocatorPass;
+use KaroIO\MessengerMonitorBundle\DependencyInjection\ReceiverLocatorPass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class KaroIOMessengerMonitorBundle extends Bundle
+class KaroIOMessengerMonitorBundleBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {

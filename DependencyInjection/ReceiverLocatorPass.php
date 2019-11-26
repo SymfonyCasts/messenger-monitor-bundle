@@ -1,6 +1,6 @@
 <?php
 
-namespace KaroIO\MessengerMonitor\DependencyInjection;
+namespace KaroIO\MessengerMonitorBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
