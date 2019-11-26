@@ -7,14 +7,17 @@ A Symfony Bundle to show you information about your Messenger queues/transports
 This is in a development phase
 
 Implemented Features
-* Queue length via console
+* Show queue length in console (configure interval) 
 
 Planned Features
-* 
+* Add admin route to see the queues in the browser
+* Auto Refresh
+* Refactor queue information to allow additional data
+* Collect data (how? TBD)
+* Show more queue information (avg time, ago, ...)
 
 Phase 2
-* Realtime updates 
-
+* Realtime updates in browser (use TURTED_reactphp)
 
 Installation
 ============
@@ -29,7 +32,7 @@ Applications that use Symfony Flex
 Open a command console, enter your project directory and execute:
 
 ```console
-$ composer require <package-name>
+$ composer require karo-io/messenger-monitor-bundle
 ```
 
 Applications that don't use Symfony Flex
@@ -41,7 +44,7 @@ Open a command console, enter your project directory and execute the
 following command to download the latest stable version of this bundle:
 
 ```console
-$ composer require <package-name>
+$ composer require karo-io/messenger-monitor-bundle
 ```
 
 ### Step 2: Enable the Bundle
@@ -54,14 +57,19 @@ in the `config/bundles.php` file of your project:
 
 return [
     // ...
-    <vendor>\<bundle-name>\<bundle-long-name>::class => ['all' => true],
+    KaroIO\MessengerMonitorBundle\KaroIOMessengerMonitorBundle::class => ['all' => true],
 ];
 ```
 
 Usage
 =====
 
-```bin/console messenger:show```
+```bin/console messenger:monitor``` to refresh every 3 seconds (default)
+
+```bin/console messenger:monitor -i 0``` to get the information only once
+```bin/console messenger:monitor -i 1``` to refresh every second
+
+Check ```bin/console help messenger:monitor``` for more information
 
 
 
