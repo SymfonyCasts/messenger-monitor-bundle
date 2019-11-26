@@ -10,7 +10,7 @@ class ReceiverLocator
     private $receiverLocator;
     private $receiverNames;
 
-    public function __construct($receiverLocator, $receiverNames)
+    public function __construct($receiverLocator, $receiverNames = [])
     {
         $this->receiverLocator = $receiverLocator;
         $this->receiverNames = $receiverNames;
