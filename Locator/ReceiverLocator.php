@@ -4,6 +4,7 @@
 namespace KaroIO\MessengerMonitorBundle\Locator;
 
 use Symfony\Component\Console\Exception\RuntimeException;
+use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 
 class ReceiverLocator
 {
@@ -19,7 +20,7 @@ class ReceiverLocator
     /**
      * Key-Value array of receiver name to receiver object
      *
-     * @return array
+     * @return ReceiverInterface[]
      */
     public function getReceiverMapping()
     {

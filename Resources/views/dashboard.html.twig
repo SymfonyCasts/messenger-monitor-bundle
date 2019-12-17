@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Messenger monitor dashboard</title>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+</head>
+<body>
+<h1>Messenger monitor dashboard</h1>
+<div class="container">
+    <table class="table">
+        <tr>
+            <th>Transport name</th>
+            <th>Messages count</th>
+        </tr>
+        {% for transportName, messagesCount in transports %}
+            <tr>
+                <td>{{ transportName }}</td>
+                <td>{{ messagesCount != -1 ? messagesCount : 'no value' }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+</body>
+</html>
