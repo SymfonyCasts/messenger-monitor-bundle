@@ -2,7 +2,9 @@
 
 namespace KaroIO\MessengerMonitorBundle\FailedMessage;
 
+use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
 use KaroIO\MessengerMonitorBundle\Exception\FailureTransportNotListable;
+use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
 use KaroIO\MessengerMonitorBundle\Locator\FailureTransportLocator;
 use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
 use Psr\Log\LoggerInterface;
@@ -22,7 +24,7 @@ class FailedMessageRetryer
     private $messageBus;
     private $logger;
 
-    public function __construct(ReceiverLocator $receiverLocator, string $failureReceiverName, MessageBusInterface $messageBus, EventDispatcherInterface $eventDispatcher, LoggerInterface $logger)
+    public function __construct(ReceiverLocator $receiverLocator, ?string $failureReceiverName, MessageBusInterface $messageBus, EventDispatcherInterface $eventDispatcher, LoggerInterface $logger)
     {
         $this->receiverLocator = $receiverLocator;
         $this->failureReceiverName = $failureReceiverName;
@@ -35,9 +37,14 @@ class FailedMessageRetryer
     {
         $this->eventDispatcher->addSubscriber(new StopWorkerOnMessageLimitListener(1));
 
+        if (null === $this->failureReceiverName) {
+            throw new FailureReceiverDoesNotExistException();
+        }
+
         $failureReceiver = $this->receiverLocator->getReceiver($this->failureReceiverName);
+
         if (!$failureReceiver instanceof ListableReceiverInterface) {
-            throw new FailureTransportNotListable();
+            throw new FailureReceiverNotListableException();
         }
 
         $envelope = $failureReceiver->find($id);

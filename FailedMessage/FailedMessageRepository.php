@@ -2,6 +2,8 @@
 
 namespace KaroIO\MessengerMonitorBundle\FailedMessage;
 
+use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
+use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
 use KaroIO\MessengerMonitorBundle\Exception\FailureTransportNotListable;
 use KaroIO\MessengerMonitorBundle\Locator\FailureTransportLocator;
 use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
@@ -17,17 +19,25 @@ class FailedMessageRepository
     private $receiverLocator;
     private $failureReceiverName;
 
-    public function __construct(ReceiverLocator $receiverLocator, string $failureReceiverName)
+    public function __construct(ReceiverLocator $receiverLocator, ?string $failureReceiverName)
     {
         $this->receiverLocator = $receiverLocator;
         $this->failureReceiverName = $failureReceiverName;
     }
 
+    /**
+     * @return FailedMessageDetails[]
+     */
     public function listFailedMessages(): array
     {
+        if (null === $this->failureReceiverName) {
+            throw new FailureReceiverDoesNotExistException();
+        }
+
         $failureReceiver = $this->receiverLocator->getReceiver($this->failureReceiverName);
+
         if (!$failureReceiver instanceof ListableReceiverInterface) {
-            throw new FailureTransportNotListable();
+            throw new FailureReceiverNotListableException();
         }
 
         // todo: this number should be dynamic
@@ -37,12 +47,12 @@ class FailedMessageRepository
         foreach ($envelopes as $envelope) {
             $lastRedeliveryStampWithException = $this->getLastRedeliveryStampWithException($envelope);
 
-            $rows[] = [
-                'id' => $this->getMessageId($envelope),
-                'class' => \get_class($envelope->getMessage()),
-                'failedAt' => null === $lastRedeliveryStampWithException ? '' : $lastRedeliveryStampWithException->getRedeliveredAt()->format('Y-m-d H:i:s'),
-                'error' => null === $lastRedeliveryStampWithException ? '' : $lastRedeliveryStampWithException->getExceptionMessage(),
-            ];
+            $rows[] = new FailedMessageDetails(
+                $this->getMessageId($envelope),
+                \get_class($envelope->getMessage()),
+                null === $lastRedeliveryStampWithException ? '' : $lastRedeliveryStampWithException->getRedeliveredAt()->format('Y-m-d H:i:s'),
+                null === $lastRedeliveryStampWithException ? '' : $lastRedeliveryStampWithException->getExceptionMessage()
+            );
         }
 
         return $rows;

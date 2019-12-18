@@ -15,6 +15,8 @@ class FailureReceiverPass implements CompilerPassInterface
         if ($container->hasDefinition('console.command.messenger_failed_messages_show')) {
             $consumeCommandDefinition = $container->getDefinition('console.command.messenger_failed_messages_show');
             $container->setParameter('karo-io.messenger_monitor.failure_transport', $consumeCommandDefinition->getArgument(0));
+        } else {
+            $container->setParameter('karo-io.messenger_monitor.failure_transport', null);
         }
     }
 

@@ -2,6 +2,7 @@
 
 namespace KaroIO\MessengerMonitorBundle\Locator;
 
+use KaroIO\MessengerMonitorBundle\Exception\ReceiverDoesNotExistException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 use Symfony\Contracts\Service\ServiceProviderInterface;
@@ -35,12 +36,7 @@ class ReceiverLocator
     public function getReceiver(string $receiverName): TransportInterface
     {
         if (!$this->receiverLocator->has($receiverName)) {
-            $message = sprintf('The receiver "%s" does not exist.', $receiverName);
-            if ($this->receiverNames) {
-                $message .= sprintf(' Valid receivers are: %s.', implode(', ', $this->receiverNames));
-            }
-
-            throw new RuntimeException($message);
+            throw new ReceiverDoesNotExistException($receiverName, $this->receiverNames);
         }
 
         return $this->receiverLocator->get($receiverName);

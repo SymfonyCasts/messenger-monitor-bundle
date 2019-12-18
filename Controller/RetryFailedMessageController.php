@@ -2,22 +2,22 @@
 
 namespace KaroIO\MessengerMonitorBundle\Controller;
 
-use KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRejecter;
 use KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRetryer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnMessageLimitListener;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class RejectFailedMessage
+// todo: bulk treatment
+class RetryFailedMessageController
 {
-    private $failedMessageRejecter;
+    private $failedMessageRetryer;
     private $session;
     private $urlGenerator;
 
-    public function __construct(FailedMessageRejecter $failedMessageRejecter, SessionInterface $session, UrlGeneratorInterface $urlGenerator)
+    public function __construct(FailedMessageRetryer $failedMessageRetryer, SessionInterface $session, UrlGeneratorInterface $urlGenerator)
     {
-        $this->failedMessageRejecter = $failedMessageRejecter;
+        $this->failedMessageRetryer = $failedMessageRetryer;
         $this->session = $session;
         $this->urlGenerator = $urlGenerator;
     }
@@ -25,10 +25,10 @@ class RejectFailedMessage
     public function __invoke($id): RedirectResponse
     {
         try {
-            $this->failedMessageRejecter->rejectFailedMessage($id);
-            $this->session->getBag('flashes')->add('success', sprintf('Message with id "%s" correctly rejected.', $id));
+            $this->failedMessageRetryer->retryFailedMessage($id);
+            $this->session->getBag('flashes')->add('messenger_monitor.success', sprintf('Message with id "%s" correctly retried.', $id));
         } catch (\Exception $exception) {
-            $this->session->getBag('flashes')->add('danger', sprintf('Error while rejecting message with id "%s": %s', $id, $exception->getMessage()));
+            $this->session->getBag('flashes')->add('messenger_monitor.error', sprintf('Error while rejecting message with id "%s": %s', $id, $exception->getMessage()));
         }
 
         return new RedirectResponse($this->urlGenerator->generate('karo-io.dashboard'));

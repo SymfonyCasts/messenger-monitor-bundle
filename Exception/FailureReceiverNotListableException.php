@@ -4,7 +4,7 @@ namespace KaroIO\MessengerMonitorBundle\Exception;
 
 use Symfony\Component\Messenger\Exception\RuntimeException;
 
-class FailureTransportNotListable extends RuntimeException
+class FailureReceiverNotListableException extends RuntimeException
 {
     public function __construct()
     {
