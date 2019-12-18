@@ -41,6 +41,7 @@
                 <th>Failed at</th>
                 <th>Error</th>
                 <th></th>
+                <th></th>
             </tr>
             {% for failedMessage in failedMessages %}
                 <tr>
@@ -49,6 +50,7 @@
                     <td>{{ failedMessage.failedAt }}</td>
                     <td>{{ failedMessage.error }}</td>
                     <td><a class="btn btn-primary" href="{{ path('karo-io.retry_failed_message', {id: failedMessage.id}) }}">Retry</a></td>
+                    <td><a class="btn btn-danger" href="{{ path('karo-io.reject_failed_message', {id: failedMessage.id}) }}">Reject</a></td>
                 </tr>
             {% endfor %}
         </table>

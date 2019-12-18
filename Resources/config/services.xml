@@ -6,16 +6,23 @@
 
     <services>
         <!-- Controllers -->
-        <service id="karo-io.controller.dashboard" class="KaroIO\MessengerMonitorBundle\Controller\Dashboard" public="true">
+        <service id="karo-io.controller.dashboard" class="KaroIO\MessengerMonitorBundle\Controller\Dashboard">
             <tag name="controller.service_arguments" />
             <argument type="service" id="twig" />
             <argument type="service" id="karo-io.messenger_monitor.receiver_locator" />
             <argument type="service" id="karo-io.messenger_monitor.failed_message.repository" />
         </service>
 
-        <service id="karo-io.controller.retry_failed_message" class="KaroIO\MessengerMonitorBundle\Controller\RetryFailedMessage" public="true">
+        <service id="karo-io.controller.retry_failed_message" class="KaroIO\MessengerMonitorBundle\Controller\RetryFailedMessage">
             <tag name="controller.service_arguments" />
             <argument type="service" id="karo-io.messenger_monitor.failed_message.retry" />
+            <argument type="service" id="session" />
+            <argument type="service" id="router" />
+        </service>
+
+        <service id="karo-io.controller.reject_failed_message" class="KaroIO\MessengerMonitorBundle\Controller\RejectFailedMessage">
+            <tag name="controller.service_arguments" />
+            <argument type="service" id="karo-io.messenger_monitor.failed_message.reject" />
             <argument type="service" id="session" />
             <argument type="service" id="router" />
         </service>
@@ -48,6 +55,10 @@
             <argument type="service" id="messenger.routable_message_bus" />
             <argument type="service" id="event_dispatcher" />
             <argument type="service" id="logger" />
+        </service>
+
+        <service id="karo-io.messenger_monitor.failed_message.reject" class="KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRejecter">
+            <argument type="service" id="karo-io.messenger_monitor.failure_transport_locator" />
         </service>
     </services>
 </container>

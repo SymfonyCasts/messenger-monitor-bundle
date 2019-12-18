@@ -8,7 +8,11 @@
         <default key="_controller">karo-io.controller.dashboard</default>
     </route>
 
-    <route id="karo-io.retry_failed_message" path="/retry/{id}">
+    <route id="karo-io.retry_failed_message" path="/failed-message/retry/{id}">
         <default key="_controller">karo-io.controller.retry_failed_message</default>
+    </route>
+
+    <route id="karo-io.reject_failed_message" path="/failed-message/reject/{id}">
+        <default key="_controller">karo-io.controller.reject_failed_message</default>
     </route>
 </routes>
