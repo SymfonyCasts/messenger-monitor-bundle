@@ -4,6 +4,7 @@ namespace KaroIO\MessengerMonitorBundle\FailedMessage;
 
 use KaroIO\MessengerMonitorBundle\Exception\FailureTransportNotListable;
 use KaroIO\MessengerMonitorBundle\Locator\FailureTransportLocator;
+use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnMessageLimitListener;
@@ -15,14 +16,16 @@ use Symfony\Component\Messenger\Worker;
 // all this code was stolen from \Symfony\Component\Messenger\Command\FailedMessagesRetryCommand
 class FailedMessageRetryer
 {
-    private $failureTransportLocator;
+    private $receiverLocator;
+    private $failureReceiverName;
     private $eventDispatcher;
     private $messageBus;
     private $logger;
 
-    public function __construct(FailureTransportLocator $failureTransportLocator, MessageBusInterface $messageBus, EventDispatcherInterface $eventDispatcher, LoggerInterface $logger)
+    public function __construct(ReceiverLocator $receiverLocator, string $failureReceiverName, MessageBusInterface $messageBus, EventDispatcherInterface $eventDispatcher, LoggerInterface $logger)
     {
-        $this->failureTransportLocator = $failureTransportLocator;
+        $this->receiverLocator = $receiverLocator;
+        $this->failureReceiverName = $failureReceiverName;
         $this->eventDispatcher = $eventDispatcher;
         $this->messageBus = $messageBus;
         $this->logger = $logger;
@@ -32,19 +35,19 @@ class FailedMessageRetryer
     {
         $this->eventDispatcher->addSubscriber(new StopWorkerOnMessageLimitListener(1));
 
-        $failureTransport = $this->failureTransportLocator->getFailureTransport();
-        if (!$failureTransport instanceof ListableReceiverInterface) {
+        $failureReceiver = $this->receiverLocator->getReceiver($this->failureReceiverName);
+        if (!$failureReceiver instanceof ListableReceiverInterface) {
             throw new FailureTransportNotListable();
         }
 
-        $envelope = $failureTransport->find($id);
+        $envelope = $failureReceiver->find($id);
         if (null === $envelope) {
             throw new \RuntimeException(sprintf('The message "%s" was not found.', $id));
         }
 
-        $singleReceiver = new SingleMessageReceiver($failureTransport, $envelope);
+        $singleReceiver = new SingleMessageReceiver($failureReceiver, $envelope);
         $worker = new Worker(
-            [$this->failureTransportLocator->getFailureTransportName() => $singleReceiver],
+            [$this->failureReceiverName => $singleReceiver],
             $this->messageBus,
             $this->eventDispatcher,
             $this->logger

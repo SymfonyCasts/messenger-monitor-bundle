@@ -26,18 +26,23 @@ class ReceiverLocator
     {
         $receivers = [];
         foreach ($this->receiverNames as $receiverName) {
-            if (!$this->receiverLocator->has($receiverName)) {
-                $message = sprintf('The receiver "%s" does not exist.', $receiverName);
-                if ($this->receiverNames) {
-                    $message .= sprintf(' Valid receivers are: %s.', implode(', ', $this->receiverNames));
-                }
-
-                throw new RuntimeException($message);
-            }
-
-            $receivers[$receiverName] = $this->receiverLocator->get($receiverName);
+            $receivers[$receiverName] = $this->getReceiver($receiverName);
         }
 
         return $receivers;
+    }
+
+    public function getReceiver(string $receiverName): TransportInterface
+    {
+        if (!$this->receiverLocator->has($receiverName)) {
+            $message = sprintf('The receiver "%s" does not exist.', $receiverName);
+            if ($this->receiverNames) {
+                $message .= sprintf(' Valid receivers are: %s.', implode(', ', $this->receiverNames));
+            }
+
+            throw new RuntimeException($message);
+        }
+
+        return $this->receiverLocator->get($receiverName);
     }
 }

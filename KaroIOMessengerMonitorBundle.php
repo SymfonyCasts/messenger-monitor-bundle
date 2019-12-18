@@ -2,7 +2,7 @@
 
 namespace KaroIO\MessengerMonitorBundle;
 
-use KaroIO\MessengerMonitorBundle\DependencyInjection\FailureTransportPass;
+use KaroIO\MessengerMonitorBundle\DependencyInjection\FailureReceiverPass;
 use KaroIO\MessengerMonitorBundle\DependencyInjection\ReceiverLocatorPass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -21,6 +21,6 @@ class KaroIOMessengerMonitorBundle extends Bundle
         $loader->load('services.xml');
 
         $container->addCompilerPass(new ReceiverLocatorPass());
-        $container->addCompilerPass(new FailureTransportPass());
+        $container->addCompilerPass(new FailureReceiverPass());
     }
 }
