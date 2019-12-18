@@ -3,9 +3,8 @@
 namespace KaroIO\MessengerMonitorBundle\FailedMessage;
 
 use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
-use KaroIO\MessengerMonitorBundle\Exception\FailureTransportNotListable;
 use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
-use KaroIO\MessengerMonitorBundle\Locator\FailureTransportLocator;
+use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
 use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -28,7 +27,7 @@ class FailedMessageRetryer
     private $messageBus;
     private $logger;
 
-    public function __construct(ReceiverLocator $receiverLocator, ?string $failureReceiverName, MessageBusInterface $messageBus, EventDispatcherInterface $eventDispatcher, LoggerInterface $logger)
+    public function __construct(ReceiverLocator $receiverLocator, FailureReceiverName $failureReceiverName, MessageBusInterface $messageBus, EventDispatcherInterface $eventDispatcher, LoggerInterface $logger)
     {
         $this->receiverLocator = $receiverLocator;
         $this->failureReceiverName = $failureReceiverName;
@@ -41,11 +40,11 @@ class FailedMessageRetryer
     {
         $this->eventDispatcher->addSubscriber(new StopWorkerOnMessageLimitListener(1));
 
-        if (null === $this->failureReceiverName) {
+        if (null === $this->failureReceiverName->toString()) {
             throw new FailureReceiverDoesNotExistException();
         }
 
-        $failureReceiver = $this->receiverLocator->getReceiver($this->failureReceiverName);
+        $failureReceiver = $this->receiverLocator->getReceiver($this->failureReceiverName->toString());
 
         if (!$failureReceiver instanceof ListableReceiverInterface) {
             throw new FailureReceiverNotListableException();
@@ -58,7 +57,7 @@ class FailedMessageRetryer
 
         $singleReceiver = new SingleMessageReceiver($failureReceiver, $envelope);
         $worker = new Worker(
-            [$this->failureReceiverName => $singleReceiver],
+            [$this->failureReceiverName->toString() => $singleReceiver],
             $this->messageBus,
             $this->eventDispatcher,
             $this->logger

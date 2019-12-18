@@ -5,6 +5,7 @@ namespace KaroIO\MessengerMonitorBundle\FailedMessage;
 use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
 use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
 use KaroIO\MessengerMonitorBundle\Exception\FailureTransportNotListable;
+use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
 use KaroIO\MessengerMonitorBundle\Locator\FailureTransportLocator;
 use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
 use Symfony\Component\Messenger\Envelope;
@@ -22,7 +23,7 @@ class FailedMessageRepository
     private $receiverLocator;
     private $failureReceiverName;
 
-    public function __construct(ReceiverLocator $receiverLocator, ?string $failureReceiverName)
+    public function __construct(ReceiverLocator $receiverLocator, FailureReceiverName $failureReceiverName)
     {
         $this->receiverLocator = $receiverLocator;
         $this->failureReceiverName = $failureReceiverName;
@@ -33,11 +34,11 @@ class FailedMessageRepository
      */
     public function listFailedMessages(): array
     {
-        if (null === $this->failureReceiverName) {
+        if (null === $this->failureReceiverName->toString()) {
             throw new FailureReceiverDoesNotExistException();
         }
 
-        $failureReceiver = $this->receiverLocator->getReceiver($this->failureReceiverName);
+        $failureReceiver = $this->receiverLocator->getReceiver($this->failureReceiverName->toString());
 
         if (!$failureReceiver instanceof ListableReceiverInterface) {
             throw new FailureReceiverNotListableException();

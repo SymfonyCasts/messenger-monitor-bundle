@@ -12,12 +12,20 @@ class FailureReceiverPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if ($container->hasDefinition('console.command.messenger_failed_messages_show')) {
-            $consumeCommandDefinition = $container->getDefinition('console.command.messenger_failed_messages_show');
-            $container->setParameter('karo-io.messenger_monitor.failure_transport', $consumeCommandDefinition->getArgument(0));
-        } else {
-            $container->setParameter('karo-io.messenger_monitor.failure_transport', null);
+        if (!$container->hasDefinition('karo-io.messenger_monitor.failed_receiver.name')) {
+            return;
         }
+
+        $failureReceiverNameDefinition = $container->getDefinition('karo-io.messenger_monitor.failed_receiver.name');
+
+        if (!$container->hasDefinition('console.command.messenger_failed_messages_show')) {
+            $failureReceiverNameDefinition->replaceArgument(0, null);
+
+            return;
+        }
+
+        $consumeCommandDefinition = $container->getDefinition('console.command.messenger_failed_messages_show');
+        $failureReceiverNameDefinition->replaceArgument(0, $consumeCommandDefinition->getArgument(0));
     }
 
 }

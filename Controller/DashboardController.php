@@ -4,11 +4,9 @@ namespace KaroIO\MessengerMonitorBundle\Controller;
 
 use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
 use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
-use KaroIO\MessengerMonitorBundle\Exception\ReceiverDoesNotExistException;
 use KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRepository;
 use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
 use Twig\Environment;
 
@@ -19,7 +17,7 @@ class DashboardController
     private $failedMessageRepository;
 
     public const FAILURE_RECEIVER_NOT_LISTABLE = 'failure-receiver-not-listable';
-    public const NO_FAILURE_RECEIVER = 'no-failure-receiver';
+    public const NO_FAILURE_RECEIVER           = 'no-failure-receiver';
 
     public function __construct(
         Environment $twig,

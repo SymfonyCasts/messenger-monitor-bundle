@@ -43,12 +43,12 @@
         <!-- Failed Message -->
         <service id="karo-io.messenger_monitor.failed_message.repository" class="KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRepository">
             <argument type="service" id="karo-io.messenger_monitor.receiver_locator" />
-            <argument>%karo-io.messenger_monitor.failure_transport%</argument>
+            <argument type="service" id="karo-io.messenger_monitor.failed_receiver.name" />
         </service>
 
         <service id="karo-io.messenger_monitor.failed_message.retry" class="KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRetryer">
             <argument type="service" id="karo-io.messenger_monitor.receiver_locator" />
-            <argument>%karo-io.messenger_monitor.failure_transport%</argument>
+            <argument type="service" id="karo-io.messenger_monitor.failed_receiver.name" />
             <argument type="service" id="messenger.routable_message_bus" />
             <argument type="service" id="event_dispatcher" />
             <argument type="service" id="logger" />
@@ -56,7 +56,12 @@
 
         <service id="karo-io.messenger_monitor.failed_message.reject" class="KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRejecter">
             <argument type="service" id="karo-io.messenger_monitor.receiver_locator" />
-            <argument>%karo-io.messenger_monitor.failure_transport%</argument>
+            <argument type="service" id="karo-io.messenger_monitor.failed_receiver.name" />
+        </service>
+
+        <!-- FailureReceiver -->
+        <service id="karo-io.messenger_monitor.failed_receiver.name" class="KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverName">
+            <argument /> <!-- Failure receiver's name -->
         </service>
     </services>
 </container>
