@@ -2,6 +2,7 @@
 
 namespace KaroIO\MessengerMonitorBundle\FailedMessage;
 
+use KaroIO\MessengerMonitorBundle\Exception\FailureTransportNotListable;
 use KaroIO\MessengerMonitorBundle\Locator\FailureTransportLocator;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
@@ -9,6 +10,7 @@ use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
 use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
 
 // all this code was stolen from \Symfony\Component\Messenger\Command\FailedMessagesShowCommand
+// todo: find a better name?
 class FailedMessageRepository
 {
     private $failureTransportLocator;
@@ -22,9 +24,10 @@ class FailedMessageRepository
     {
         $failureTransport = $this->failureTransportLocator->getFailureTransport();
         if (!$failureTransport instanceof ListableReceiverInterface) {
-            throw new \RuntimeException('The failure receiver does not support listing or showing specific messages.');
+            throw new FailureTransportNotListable();
         }
 
+        // todo: this number should be dynamic
         $envelopes = $failureTransport->all(10);
 
         $rows = [];

@@ -25,4 +25,8 @@ class FailureTransportLocator
         return $this->receiverLocator->get($this->failureReceiverName);
     }
 
+    public function getFailureTransportName(): string
+    {
+        return $this->failureReceiverName;
+    }
 }

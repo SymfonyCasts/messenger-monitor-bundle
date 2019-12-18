@@ -8,20 +8,23 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
 use Twig\Environment;
 
-class MessengerMonitorController
+class Dashboard
 {
     private $twig;
     private $receiverLocator;
     private $failedMessageRepository;
 
-    public function __construct(Environment $twig, ReceiverLocator $receiverLocator, FailedMessageRepository $failedMessageRepository)
-    {
+    public function __construct(
+        Environment $twig,
+        ReceiverLocator $receiverLocator,
+        FailedMessageRepository $failedMessageRepository
+    ) {
         $this->twig = $twig;
         $this->receiverLocator = $receiverLocator;
         $this->failedMessageRepository = $failedMessageRepository;
     }
 
-    public function showDashboard(): Response
+    public function __invoke(): Response
     {
         $transports = [];
         foreach ($this->receiverLocator->getReceiversMapping() as $name => $receiver) {
@@ -45,5 +48,4 @@ class MessengerMonitorController
             )
         );
     }
-
 }

@@ -7,6 +7,15 @@
 <body>
 <h1>Messenger monitor dashboard</h1>
 <div class="container">
+
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
     <h2>Transports list</h2>
     <table class="table">
         <tr>
@@ -39,7 +48,7 @@
                     <td>{{ failedMessage.class }}</td>
                     <td>{{ failedMessage.failedAt }}</td>
                     <td>{{ failedMessage.error }}</td>
-                    <td><a class="btn btn-primary" href="">Retry</a></td>
+                    <td><a class="btn btn-primary" href="{{ path('karo-io.retry_failed_message', {id: failedMessage.id}) }}">Retry</a></td>
                 </tr>
             {% endfor %}
         </table>

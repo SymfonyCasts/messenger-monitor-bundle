@@ -5,6 +5,10 @@
         xsi:schemaLocation="http://symfony.com/schema/routing https://symfony.com/schema/routing/routing-1.0.xsd">
 
     <route id="karo-io.dashboard" path="/">
-        <default key="_controller">karo-io.controller.main::showDashboard</default>
+        <default key="_controller">karo-io.controller.dashboard</default>
+    </route>
+
+    <route id="karo-io.retry_failed_message" path="/retry/{id}">
+        <default key="_controller">karo-io.controller.retry_failed_message</default>
     </route>
 </routes>
