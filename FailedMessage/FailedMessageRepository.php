@@ -12,8 +12,11 @@ use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
 use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
 
-// all this code was stolen from \Symfony\Component\Messenger\Command\FailedMessagesShowCommand
-// todo: find a better name?
+/**
+ * all this code was stolen from \Symfony\Component\Messenger\Command\FailedMessagesShowCommand
+ *
+ * @internal
+ */
 class FailedMessageRepository
 {
     private $receiverLocator;

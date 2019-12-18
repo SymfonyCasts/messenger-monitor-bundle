@@ -25,7 +25,7 @@
         {% for transportName, messagesCount in transports %}
             <tr>
                 <td>{{ transportName }}</td>
-                <td>{{ messagesCount is not null ? messagesCount : 'no value' }}</td>
+                <td>{{ messagesCount is not null ? messagesCount : 'no value available' }}</td>
             </tr>
         {% else %}
             <tr>

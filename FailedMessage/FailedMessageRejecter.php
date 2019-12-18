@@ -3,11 +3,13 @@
 namespace KaroIO\MessengerMonitorBundle\FailedMessage;
 
 use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
-use KaroIO\MessengerMonitorBundle\Exception\FailureTransportNotListable;
 use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
 use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
 use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
 
+/**
+ * @internal
+ */
 class FailedMessageRejecter
 {
     private $receiverLocator;

@@ -15,7 +15,11 @@ use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
 use Symfony\Component\Messenger\Transport\Receiver\SingleMessageReceiver;
 use Symfony\Component\Messenger\Worker;
 
-// all this code was stolen from \Symfony\Component\Messenger\Command\FailedMessagesRetryCommand
+/**
+ * all this code was stolen from \Symfony\Component\Messenger\Command\FailedMessagesRetryCommand
+ *
+ * @internal
+ */
 class FailedMessageRetryer
 {
     private $receiverLocator;

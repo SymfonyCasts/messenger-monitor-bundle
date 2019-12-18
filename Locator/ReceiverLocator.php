@@ -3,10 +3,12 @@
 namespace KaroIO\MessengerMonitorBundle\Locator;
 
 use KaroIO\MessengerMonitorBundle\Exception\ReceiverDoesNotExistException;
-use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 
+/**
+ * @internal
+ */
 class ReceiverLocator
 {
     private $receiverLocator;

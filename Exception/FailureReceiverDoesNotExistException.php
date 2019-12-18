@@ -4,6 +4,9 @@ namespace KaroIO\MessengerMonitorBundle\Exception;
 
 use Symfony\Component\Messenger\Exception\RuntimeException;
 
+/**
+ * @internal
+ */
 class FailureReceiverDoesNotExistException extends RuntimeException
 {
     public function __construct()
