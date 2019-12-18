@@ -1,8 +1,6 @@
-<?php
-
+<?php declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\Command;
-
 
 use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
 use Symfony\Component\Console\Command\Command;
@@ -52,7 +50,7 @@ class MonitorCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->receivers = $this->locator->getReceiverMapping();
+        $this->receivers = $this->locator->getReceiversMapping();
         $interval = (int) $input->getOption('interval');
         $looping = ($interval > 0);
 
@@ -62,7 +60,7 @@ class MonitorCommand extends Command
             $io->title('Transport Queue Length');
             $io->text((new \DateTime('now'))->format('Y-m-d H:i:s'));
 
-            $receivers = $this->locator->getReceiverMapping();
+            $receivers = $this->locator->getReceiversMapping();
             $rows = [];
             foreach ($receivers as $name => $receiver) {
                 /** @var ReceiverInterface $receiver */

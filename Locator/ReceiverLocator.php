@@ -1,17 +1,17 @@
-<?php
-
+<?php declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\Locator;
 
 use Symfony\Component\Console\Exception\RuntimeException;
-use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
+use Symfony\Component\Messenger\Transport\TransportInterface;
+use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class ReceiverLocator
 {
     private $receiverLocator;
     private $receiverNames;
 
-    public function __construct($receiverLocator, $receiverNames = [])
+    public function __construct(ServiceProviderInterface $receiverLocator, $receiverNames = [])
     {
         $this->receiverLocator = $receiverLocator;
         $this->receiverNames = $receiverNames;
@@ -20,9 +20,9 @@ class ReceiverLocator
     /**
      * Key-Value array of receiver name to receiver object
      *
-     * @return ReceiverInterface[]
+     * @return TransportInterface[]
      */
-    public function getReceiverMapping()
+    public function getReceiversMapping(): array
     {
         $receivers = [];
         foreach ($this->receiverNames as $receiverName) {

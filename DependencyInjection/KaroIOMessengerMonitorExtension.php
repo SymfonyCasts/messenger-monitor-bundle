@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace KaroIO\MessengerMonitorBundle\DependencyInjection;
@@ -11,7 +11,6 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 class KaroIOMessengerMonitorExtension extends Extension
 {
-
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new XmlFileLoader(

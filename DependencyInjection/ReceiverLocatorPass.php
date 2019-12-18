@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\DependencyInjection;
 
@@ -20,7 +20,7 @@ class ReceiverLocatorPass implements CompilerPassInterface
 
                 $consumeCommandDefinition = $container->getDefinition('console.command.messenger_consume_messages');
                 $names = $consumeCommandDefinition->getArgument(4);
-                $receiverLocatorDefinition->addArgument($names);
+                $receiverLocatorDefinition->replaceArgument(1, $names);
             }
         }
     }
