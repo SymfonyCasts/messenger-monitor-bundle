@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\FailedMessage;
 
@@ -12,7 +14,7 @@ use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
 use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
 
 /**
- * all this code was stolen from \Symfony\Component\Messenger\Command\FailedMessagesShowCommand
+ * all this code was stolen from \Symfony\Component\Messenger\Command\FailedMessagesShowCommand.
  *
  * @internal
  */

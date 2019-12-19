@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\Locator;
 
@@ -21,7 +23,7 @@ class ReceiverLocator
     }
 
     /**
-     * Key-Value array of receiver name to receiver object
+     * Key-Value array of receiver name to receiver object.
      *
      * @return ReceiverInterface[]
      */

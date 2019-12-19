@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\FailedMessage;
 
@@ -15,7 +17,7 @@ use Symfony\Component\Messenger\Transport\Receiver\SingleMessageReceiver;
 use Symfony\Component\Messenger\Worker;
 
 /**
- * all this code was stolen from \Symfony\Component\Messenger\Command\FailedMessagesRetryCommand
+ * all this code was stolen from \Symfony\Component\Messenger\Command\FailedMessagesRetryCommand.
  *
  * @internal
  */

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\Command;
 
@@ -35,7 +37,6 @@ class MonitorCommand extends Command
     {
         parent::__construct($name);
         $this->locator = $locator;
-
     }
 
     protected function configure()
@@ -75,7 +76,7 @@ class MonitorCommand extends Command
             $io->table(['Transport', 'Queue Length'], $rows);
 
             if ($looping) {
-                if ($interval === 1) {
+                if (1 === $interval) {
                     $io->writeln('(Refreshing every second)');
                 } else {
                     $io->writeln('(Refreshing every '.$interval.' seconds)');

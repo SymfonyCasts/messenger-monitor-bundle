@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\DependencyInjection;
 
@@ -27,5 +29,4 @@ class FailureReceiverPass implements CompilerPassInterface
         $consumeCommandDefinition = $container->getDefinition('console.command.messenger_failed_messages_show');
         $failureReceiverNameDefinition->replaceArgument(0, $consumeCommandDefinition->getArgument(0));
     }
-
 }

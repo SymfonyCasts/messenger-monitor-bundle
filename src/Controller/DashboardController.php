@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\Controller;
 
@@ -17,7 +19,7 @@ class DashboardController
     private $failedMessageRepository;
 
     public const FAILURE_RECEIVER_NOT_LISTABLE = 'failure-receiver-not-listable';
-    public const NO_FAILURE_RECEIVER           = 'no-failure-receiver';
+    public const NO_FAILURE_RECEIVER = 'no-failure-receiver';
 
     public function __construct(
         Environment $twig,
@@ -52,7 +54,7 @@ class DashboardController
                 [
                     'receivers' => $receivers,
                     'cannotListFailedMessages' => $cannotListFailedMessages,
-                    'failedMessages' => $failedMessages
+                    'failedMessages' => $failedMessages,
                 ]
             )
         );
