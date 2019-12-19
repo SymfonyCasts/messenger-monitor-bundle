@@ -31,9 +31,9 @@ class DashboardController
 
     public function __invoke(): Response
     {
-        $transports = [];
+        $receivers = [];
         foreach ($this->receiverLocator->getReceiversMapping() as $name => $receiver) {
-            $transports[$name] = $receiver instanceof MessageCountAwareInterface ? $receiver->getMessageCount() : null;
+            $receivers[$name] = $receiver instanceof MessageCountAwareInterface ? $receiver->getMessageCount() : null;
         }
 
         $failedMessages = null;
@@ -50,7 +50,7 @@ class DashboardController
             $this->twig->render(
                 '@KaroIOMessengerMonitor/dashboard.html.twig',
                 [
-                    'transports' => $transports,
+                    'receivers' => $receivers,
                     'cannotListFailedMessages' => $cannotListFailedMessages,
                     'failedMessages' => $failedMessages
                 ]

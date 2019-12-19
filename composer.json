@@ -6,12 +6,18 @@
         "php": "^7.1.3",
         "symfony/framework-bundle": "^4.4|^5.0",
         "symfony/messenger": "^4.4|^5.0",
-        "symfony/twig-bundle": "^4.4|^5.0"
+        "symfony/twig-bundle": "^4.4|^5.0",
+        "symfony/phpunit-bridge": "^5.0"
     },
     "license": "MIT",
     "autoload": {
+        "psr-4": {"KaroIO\\MessengerMonitorBundle\\": "src/"},
+        "exclude-from-classmap": ["src/Test/"]
+    },
+    "autoload-dev": {
         "psr-4": {
-            "KaroIO\\MessengerMonitorBundle\\": ""
+            "KaroIO\\MessengerMonitorBundle\\": "tests/",
+            "KaroIO\\MessengerMonitorBundle\\Test\\": "src/Test"
         }
     },
     "authors": [

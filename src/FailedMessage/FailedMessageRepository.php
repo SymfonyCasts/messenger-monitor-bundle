@@ -4,9 +4,7 @@ namespace KaroIO\MessengerMonitorBundle\FailedMessage;
 
 use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
 use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
-use KaroIO\MessengerMonitorBundle\Exception\FailureTransportNotListable;
 use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
-use KaroIO\MessengerMonitorBundle\Locator\FailureTransportLocator;
 use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\RedeliveryStamp;

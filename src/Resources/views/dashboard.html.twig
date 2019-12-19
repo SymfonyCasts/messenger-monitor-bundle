@@ -22,9 +22,9 @@
             <th>Transport name</th>
             <th>Messages count</th>
         </tr>
-        {% for transportName, messagesCount in transports %}
+        {% for receiverName, messagesCount in receivers %}
             <tr>
-                <td>{{ transportName }}</td>
+                <td>{{ receiverName }}</td>
                 <td>{{ messagesCount is not null ? messagesCount : 'no value available' }}</td>
             </tr>
         {% else %}

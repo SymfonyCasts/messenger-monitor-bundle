@@ -3,7 +3,7 @@
 namespace KaroIO\MessengerMonitorBundle\Locator;
 
 use KaroIO\MessengerMonitorBundle\Exception\ReceiverDoesNotExistException;
-use Symfony\Component\Messenger\Transport\TransportInterface;
+use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 
 /**
@@ -23,7 +23,7 @@ class ReceiverLocator
     /**
      * Key-Value array of receiver name to receiver object
      *
-     * @return TransportInterface[]
+     * @return ReceiverInterface[]
      */
     public function getReceiversMapping(): array
     {
@@ -35,9 +35,9 @@ class ReceiverLocator
         return $receivers;
     }
 
-    public function getReceiver(string $receiverName): TransportInterface
+    public function getReceiver(string $receiverName): ReceiverInterface
     {
-        if (!$this->receiverLocator->has($receiverName)) {
+        if (!\in_array($receiverName, $this->receiverNames, true) || !$this->receiverLocator->has($receiverName)) {
             throw new ReceiverDoesNotExistException($receiverName, $this->receiverNames);
         }
 
