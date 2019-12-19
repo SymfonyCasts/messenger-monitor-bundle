@@ -6,14 +6,8 @@ if (!file_exists(__DIR__.'/src')) {
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__.'/src')
-    // the PHP template files are a bit special
-    ->notName('*.tpl.php')
+    ->in(__DIR__.'/tests')
 ;
-
-if (\PHP_VERSION_ID < 70100) {
-    // EntityRegenerator works only with PHP 7.1+
-    $finder->notName('EntityRegenerator.php');
-}
 
 return PhpCsFixer\Config::create()
     ->setRules(array(

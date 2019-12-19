@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\FailedMessage;
 
-use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
-use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
 use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
-use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
+use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnMessageLimitListener;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
 use Symfony\Component\Messenger\Transport\Receiver\SingleMessageReceiver;
 use Symfony\Component\Messenger\Worker;
 
@@ -23,15 +20,15 @@ use Symfony\Component\Messenger\Worker;
  */
 class FailedMessageRetryer
 {
-    private $receiverLocator;
+    private $failureReceiverProvider;
     private $failureReceiverName;
     private $eventDispatcher;
     private $messageBus;
     private $logger;
 
-    public function __construct(ReceiverLocator $receiverLocator, FailureReceiverName $failureReceiverName, MessageBusInterface $messageBus, EventDispatcherInterface $eventDispatcher, LoggerInterface $logger)
+    public function __construct(FailureReceiverProvider $failureReceiverProvider, FailureReceiverName $failureReceiverName, MessageBusInterface $messageBus, EventDispatcherInterface $eventDispatcher, LoggerInterface $logger)
     {
-        $this->receiverLocator = $receiverLocator;
+        $this->failureReceiverProvider = $failureReceiverProvider;
         $this->failureReceiverName = $failureReceiverName;
         $this->eventDispatcher = $eventDispatcher;
         $this->messageBus = $messageBus;
@@ -42,15 +39,7 @@ class FailedMessageRetryer
     {
         $this->eventDispatcher->addSubscriber(new StopWorkerOnMessageLimitListener(1));
 
-        if (null === $this->failureReceiverName->toString()) {
-            throw new FailureReceiverDoesNotExistException();
-        }
-
-        $failureReceiver = $this->receiverLocator->getReceiver($this->failureReceiverName->toString());
-
-        if (!$failureReceiver instanceof ListableReceiverInterface) {
-            throw new FailureReceiverNotListableException();
-        }
+        $failureReceiver = $this->failureReceiverProvider->getFailureReceiver();
 
         $envelope = $failureReceiver->find($id);
         if (null === $envelope) {

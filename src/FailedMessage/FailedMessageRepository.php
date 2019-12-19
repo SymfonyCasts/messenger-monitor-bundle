@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\FailedMessage;
 
-use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
-use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
-use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
-use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
+use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
-use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
 
 /**
  * all this code was stolen from \Symfony\Component\Messenger\Command\FailedMessagesShowCommand.
@@ -20,13 +16,11 @@ use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
  */
 class FailedMessageRepository
 {
-    private $receiverLocator;
-    private $failureReceiverName;
+    private $failureReceiverProvider;
 
-    public function __construct(ReceiverLocator $receiverLocator, FailureReceiverName $failureReceiverName)
+    public function __construct(FailureReceiverProvider $failureReceiverProvider)
     {
-        $this->receiverLocator = $receiverLocator;
-        $this->failureReceiverName = $failureReceiverName;
+        $this->failureReceiverProvider = $failureReceiverProvider;
     }
 
     /**
@@ -34,18 +28,8 @@ class FailedMessageRepository
      */
     public function listFailedMessages(): array
     {
-        if (null === $this->failureReceiverName->toString()) {
-            throw new FailureReceiverDoesNotExistException();
-        }
-
-        $failureReceiver = $this->receiverLocator->getReceiver($this->failureReceiverName->toString());
-
-        if (!$failureReceiver instanceof ListableReceiverInterface) {
-            throw new FailureReceiverNotListableException();
-        }
-
         // todo: this number should be dynamic
-        $envelopes = $failureReceiver->all(10);
+        $envelopes = $this->failureReceiverProvider->getFailureReceiver()->all(10);
 
         $rows = [];
         foreach ($envelopes as $envelope) {

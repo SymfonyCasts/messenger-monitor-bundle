@@ -1,9 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\FailedMessage;
 
-use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
-use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
+use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
 use KaroIO\MessengerMonitorBundle\Test\Message;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
@@ -15,12 +16,11 @@ class FailedMessageRepositoryTest extends TestCase
 {
     public function testListFailedMessages(): void
     {
-        $receiverLocator = $this->createMock(ReceiverLocator::class);
-        $failedMessageRepository = new FailedMessageRepository($receiverLocator, new FailureReceiverName('failed'));
+        $failureReceiverProvider = $this->createMock(FailureReceiverProvider::class);
+        $failedMessageRepository = new FailedMessageRepository($failureReceiverProvider);
 
-        $receiverLocator->expects($this->once())
-            ->method('getReceiver')
-            ->with('failed')
+        $failureReceiverProvider->expects($this->once())
+            ->method('getFailureReceiver')
             ->willReturn($failureReceiver = $this->createMock(ListableReceiverInterface::class));
 
         $failureReceiver->expects($this->once())
@@ -55,20 +55,18 @@ class FailedMessageRepositoryTest extends TestCase
             new Message(),
             [
                 new TransportMessageIdStamp($id),
-                new RedeliveryStamp(0, 'exceptionMessage')
+                new RedeliveryStamp(0, 'exceptionMessage'),
             ]
         );
     }
 
     public function testListFailedMessagesWithNoStamps()
     {
+        $failureReceiverProvider = $this->createMock(FailureReceiverProvider::class);
+        $failedMessageRepository = new FailedMessageRepository($failureReceiverProvider);
 
-        $receiverLocator = $this->createMock(ReceiverLocator::class);
-        $failedMessageRepository = new FailedMessageRepository($receiverLocator, new FailureReceiverName('failed'));
-
-        $receiverLocator->expects($this->once())
-            ->method('getReceiver')
-            ->with('failed')
+        $failureReceiverProvider->expects($this->once())
+            ->method('getFailureReceiver')
             ->willReturn($failureReceiver = $this->createMock(ListableReceiverInterface::class));
 
         $failureReceiver->expects($this->once())

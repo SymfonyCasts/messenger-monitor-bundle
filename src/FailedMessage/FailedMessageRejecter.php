@@ -4,37 +4,23 @@ declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\FailedMessage;
 
-use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
-use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
-use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
-use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
-use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
+use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
 
 /**
  * @internal
  */
 class FailedMessageRejecter
 {
-    private $receiverLocator;
-    private $failureReceiverName;
+    private $failureReceiverProvider;
 
-    public function __construct(ReceiverLocator $receiverLocator, FailureReceiverName $failureReceiverName)
+    public function __construct(FailureReceiverProvider $failureReceiverProvider)
     {
-        $this->receiverLocator = $receiverLocator;
-        $this->failureReceiverName = $failureReceiverName;
+        $this->failureReceiverProvider = $failureReceiverProvider;
     }
 
     public function rejectFailedMessage($id): void
     {
-        if (null === $this->failureReceiverName->toString()) {
-            throw new FailureReceiverDoesNotExistException();
-        }
-
-        $failureReceiver = $this->receiverLocator->getReceiver($this->failureReceiverName->toString());
-
-        if (!$failureReceiver instanceof ListableReceiverInterface) {
-            throw new FailureReceiverNotListableException();
-        }
+        $failureReceiver = $this->failureReceiverProvider->getFailureReceiver();
 
         $envelope = $failureReceiver->find($id);
 

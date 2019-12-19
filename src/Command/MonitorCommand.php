@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 
@@ -18,24 +17,11 @@ class MonitorCommand extends Command
 {
     protected static $defaultName = 'messenger:monitor';
 
-    /**
-     * @var MessageBusInterface
-     */
-    private $bus;
-
-    /**
-     * @var ReceiverLocator
-     */
     private $locator;
 
-    /**
-     * @var array
-     */
-    private $receivers;
-
-    public function __construct(string $name = null, ReceiverLocator $locator)
+    public function __construct(ReceiverLocator $locator)
     {
-        parent::__construct($name);
+        parent::__construct(self::$defaultName);
         $this->locator = $locator;
     }
 
@@ -51,7 +37,6 @@ class MonitorCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->receivers = $this->locator->getReceiversMapping();
         $interval = (int) $input->getOption('interval');
         $looping = ($interval > 0);
 
@@ -66,7 +51,7 @@ class MonitorCommand extends Command
             foreach ($receivers as $name => $receiver) {
                 /** @var ReceiverInterface $receiver */
                 $receiver = $receivers[$name];
-                $queueLength = -1;
+                $queueLength = null;
                 if ($receiver instanceof MessageCountAwareInterface) {
                     /** @var MessageCountAwareInterface $receiver */
                     $queueLength = $receiver->getMessageCount();
