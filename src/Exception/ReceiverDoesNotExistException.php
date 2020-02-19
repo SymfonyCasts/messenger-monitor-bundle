@@ -9,7 +9,7 @@ use Symfony\Component\Messenger\Exception\RuntimeException;
 /**
  * @internal
  */
-class ReceiverDoesNotExistException extends RuntimeException
+final class ReceiverDoesNotExistException extends RuntimeException
 {
     public function __construct(string $receiverName, array $availableReceivers = [])
     {

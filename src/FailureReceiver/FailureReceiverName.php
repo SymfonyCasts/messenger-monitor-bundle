@@ -7,11 +7,11 @@ namespace KaroIO\MessengerMonitorBundle\FailureReceiver;
 /**
  * @internal
  */
-class FailureReceiverName
+final class FailureReceiverName
 {
     private $failureReceiverName;
 
-    public function __construct(?string $failureReceiverName = null)
+    public function __construct(?string $failureReceiverName)
     {
         $this->failureReceiverName = $failureReceiverName;
     }

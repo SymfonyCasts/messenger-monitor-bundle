@@ -18,7 +18,7 @@ use Symfony\Component\Messenger\Worker;
  *
  * @internal
  */
-class FailedMessageRetryer
+final class FailedMessageRetryer
 {
     private $failureReceiverProvider;
     private $failureReceiverName;

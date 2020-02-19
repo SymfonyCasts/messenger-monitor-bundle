@@ -13,7 +13,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 
-class MonitorCommand extends Command
+/**
+ * @internal
+ */
+final class MonitorCommand extends Command
 {
     protected static $defaultName = 'messenger:monitor';
 

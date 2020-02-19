@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\FailedMessage;
+namespace KaroIO\MessengerMonitorBundle\Tests\FailedMessage;
 
+use KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageDetails;
+use KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRepository;
 use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
-use KaroIO\MessengerMonitorBundle\Test\Message;
+use KaroIO\MessengerMonitorBundle\Tests\TestableMessage;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
@@ -34,13 +36,13 @@ class FailedMessageRepositoryTest extends TestCase
             [
                 new FailedMessageDetails(
                     1,
-                    Message::class,
+                    TestableMessage::class,
                     $envelope1->last(RedeliveryStamp::class)->getRedeliveredAt()->format('Y-m-d H:i:s'),
                     'exceptionMessage'
                 ),
                 new FailedMessageDetails(
                     2,
-                    Message::class,
+                    TestableMessage::class,
                     $envelope2->last(RedeliveryStamp::class)->getRedeliveredAt()->format('Y-m-d H:i:s'),
                     'exceptionMessage'
                 ),
@@ -52,7 +54,7 @@ class FailedMessageRepositoryTest extends TestCase
     private function createEnvelope(int $id): Envelope
     {
         return new Envelope(
-            new Message(),
+            new TestableMessage(),
             [
                 new TransportMessageIdStamp($id),
                 new RedeliveryStamp(0, 'exceptionMessage'),
@@ -60,7 +62,7 @@ class FailedMessageRepositoryTest extends TestCase
         );
     }
 
-    public function testListFailedMessagesWithNoStamps()
+    public function testListFailedMessagesWithNoStamps(): void
     {
         $failureReceiverProvider = $this->createMock(FailureReceiverProvider::class);
         $failedMessageRepository = new FailedMessageRepository($failureReceiverProvider);
@@ -72,12 +74,12 @@ class FailedMessageRepositoryTest extends TestCase
         $failureReceiver->expects($this->once())
             ->method('all')
             ->with(10)
-            ->willReturn([new Envelope(new Message()), new Envelope(new Message())]);
+            ->willReturn([new Envelope(new TestableMessage()), new Envelope(new TestableMessage())]);
 
         $this->assertEquals(
             [
-                new FailedMessageDetails(null, Message::class, '', ''),
-                new FailedMessageDetails(null, Message::class, '', ''),
+                new FailedMessageDetails(null, TestableMessage::class, '', ''),
+                new FailedMessageDetails(null, TestableMessage::class, '', ''),
             ],
             $failedMessageRepository->listFailedMessages()
         );

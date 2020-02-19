@@ -9,7 +9,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class RejectFailedMessageController
+/**
+ * @internal
+ */
+final class RejectFailedMessageController
 {
     private $failedMessageRejecter;
     private $session;

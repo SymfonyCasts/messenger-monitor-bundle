@@ -12,7 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
 use Twig\Environment;
 
-class DashboardController
+/**
+ * @internal
+ */
+final class DashboardController
 {
     private $twig;
     private $receiverLocator;

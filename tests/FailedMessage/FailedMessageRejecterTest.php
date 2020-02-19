@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\FailedMessage;
+namespace KaroIO\MessengerMonitorBundle\Tests\FailedMessage;
 
+use KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRejecter;
 use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
-use KaroIO\MessengerMonitorBundle\Test\Message;
+use KaroIO\MessengerMonitorBundle\Tests\TestableMessage;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
@@ -24,7 +25,7 @@ class FailedMessageRejecterTest extends TestCase
         $failureReceiver->expects($this->once())
             ->method('find')
             ->with('id')
-            ->willReturn($envelope = new Envelope(new Message()));
+            ->willReturn($envelope = new Envelope(new TestableMessage()));
 
         $failureReceiver->expects($this->once())->method('reject')->with($envelope);
 

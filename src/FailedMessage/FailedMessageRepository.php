@@ -14,7 +14,7 @@ use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
  *
  * @internal
  */
-class FailedMessageRepository
+final class FailedMessageRepository
 {
     private $failureReceiverProvider;
 

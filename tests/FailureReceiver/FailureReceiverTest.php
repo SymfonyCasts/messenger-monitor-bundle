@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\FailureReceiver;
+namespace KaroIO\MessengerMonitorBundle\Tests\FailureReceiver;
 
+use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
 use PHPUnit\Framework\TestCase;
 
 final class FailureReceiverTest extends TestCase
@@ -16,7 +17,7 @@ final class FailureReceiverTest extends TestCase
 
     public function testFailureReceiverNameWithEmptyName(): void
     {
-        $failureReceiverName = new FailureReceiverName();
+        $failureReceiverName = new FailureReceiverName(null);
         $this->assertNull($failureReceiverName->toString());
     }
 }

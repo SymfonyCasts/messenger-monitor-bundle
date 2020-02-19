@@ -7,12 +7,15 @@ namespace KaroIO\MessengerMonitorBundle\DependencyInjection;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class ReceiverLocatorPass implements CompilerPassInterface
+/**
+ * @internal
+ */
+final class ReceiverLocatorPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if ($container->hasDefinition('karo-io.messenger_monitor.receiver_locator')
             && $container->hasDefinition('console.command.messenger_consume_messages')) {

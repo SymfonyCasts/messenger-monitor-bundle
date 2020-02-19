@@ -10,13 +10,15 @@ use Symfony\Contracts\Service\ServiceProviderInterface;
 
 /**
  * @internal
+ *
+ * @final
  */
 class ReceiverLocator
 {
     private $receiverLocator;
     private $receiverNames;
 
-    public function __construct(ServiceProviderInterface $receiverLocator, $receiverNames = [])
+    public function __construct(ServiceProviderInterface $receiverLocator, array $receiverNames)
     {
         $this->receiverLocator = $receiverLocator;
         $this->receiverNames = $receiverNames;

@@ -9,7 +9,7 @@ use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
 /**
  * @internal
  */
-class FailedMessageRejecter
+final class FailedMessageRejecter
 {
     private $failureReceiverProvider;
 

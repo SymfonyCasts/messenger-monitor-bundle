@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\FailedMessage;
+namespace KaroIO\MessengerMonitorBundle\Tests\FailedMessage;
 
+use KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageDetails;
 use PHPUnit\Framework\TestCase;
 
 final class FailedMessageDetailsTest extends TestCase

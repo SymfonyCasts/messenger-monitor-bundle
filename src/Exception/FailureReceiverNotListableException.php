@@ -9,7 +9,7 @@ use Symfony\Component\Messenger\Exception\RuntimeException;
 /**
  * @internal
  */
-class FailureReceiverNotListableException extends RuntimeException
+final class FailureReceiverNotListableException extends RuntimeException
 {
     public function __construct()
     {

@@ -9,6 +9,11 @@ use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
 use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
 use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
 
+/**
+ * @final
+ *
+ * @internal
+ */
 class FailureReceiverProvider
 {
     private $receiverLocator;

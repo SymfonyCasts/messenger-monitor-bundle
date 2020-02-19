@@ -7,7 +7,7 @@ namespace KaroIO\MessengerMonitorBundle\FailedMessage;
 /**
  * @internal
  */
-class FailedMessageDetails
+final class FailedMessageDetails
 {
     private $id;
     private $class;

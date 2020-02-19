@@ -11,7 +11,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class KaroIOMessengerMonitorBundle extends Bundle
+/**
+ * @internal
+ */
+final class KaroIOMessengerMonitorBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {
