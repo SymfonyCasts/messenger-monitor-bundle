@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/routing https://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="karo-io.dashboard" path="/">
+        <default key="_controller">karo-io.controller.dashboard</default>
+    </route>
+
+    <route id="karo-io.retry_failed_message" path="/failed-message/retry/{id}">
+        <default key="_controller">karo-io.controller.retry_failed_message</default>
+    </route>
+
+    <route id="karo-io.reject_failed_message" path="/failed-message/reject/{id}">
+        <default key="_controller">karo-io.controller.reject_failed_message</default>
+    </route>
+</routes>

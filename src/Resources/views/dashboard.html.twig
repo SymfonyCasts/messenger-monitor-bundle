@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Messenger monitor dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+<h1>Messenger monitor dashboard</h1>
+<div class="container">
+
+    {% for label, messages in app.flashes(['messenger_monitor.success', 'messenger_monitor.error']) %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label == 'messenger_monitor.success' ? 'success' : 'danger' }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <h2>Transports list</h2>
+    <table class="table">
+        <tr>
+            <th>Transport name</th>
+            <th>Messages count</th>
+        </tr>
+        {% for receiverName, messagesCount in receivers %}
+            <tr>
+                <td>{{ receiverName }}</td>
+                <td>{{ messagesCount is not null ? messagesCount : 'no value available' }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">No transport available</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    {% if cannotListFailedMessages != constant('KaroIO\\MessengerMonitorBundle\\Controller\\DashboardController::NO_FAILURE_RECEIVER') %}
+        <h2>Failure transport</h2>
+        {% if cannotListFailedMessages == constant('KaroIO\\MessengerMonitorBundle\\Controller\\DashboardController::FAILURE_RECEIVER_NOT_LISTABLE') %}
+            The failure transport does not support listing or showing specific messages
+        {% else %}
+            <table class="table">
+                <tr>
+                    <th>Id</th>
+                    <th>Class</th>
+                    <th>Failed at</th>
+                    <th>Error</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                {% for failedMessage in failedMessages %}
+                    <tr>
+                        <td>{{ failedMessage.id }}</td>
+                        <td>{{ failedMessage.class }}</td>
+                        <td>{{ failedMessage.failedAt }}</td>
+                        <td>{{ failedMessage.error }}</td>
+                        <td><a class="btn btn-primary" href="{{ path('karo-io.retry_failed_message', {id: failedMessage.id}) }}">Retry</a></td>
+                        <td><a class="btn btn-danger" href="{{ path('karo-io.reject_failed_message', {id: failedMessage.id}) }}">Reject</a></td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="6">Your failure transport is empty. You're killing it!</td></tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    {% endif %}
+</div>
+</body>
+</html>

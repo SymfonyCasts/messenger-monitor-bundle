@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\Command;
-
 
 use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
 use Symfony\Component\Console\Command\Command;
@@ -10,34 +10,22 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 
-class MonitorCommand extends Command
+/**
+ * @internal
+ */
+final class MonitorCommand extends Command
 {
     protected static $defaultName = 'messenger:monitor';
 
-    /**
-     * @var MessageBusInterface
-     */
-    private $bus;
-
-    /**
-     * @var ReceiverLocator
-     */
     private $locator;
 
-    /**
-     * @var array
-     */
-    private $receivers;
-
-    public function __construct(string $name = null, ReceiverLocator $locator)
+    public function __construct(ReceiverLocator $locator)
     {
-        parent::__construct($name);
+        parent::__construct(self::$defaultName);
         $this->locator = $locator;
-
     }
 
     protected function configure()
@@ -52,7 +40,6 @@ class MonitorCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->receivers = $this->locator->getReceiverMapping();
         $interval = (int) $input->getOption('interval');
         $looping = ($interval > 0);
 
@@ -62,12 +49,12 @@ class MonitorCommand extends Command
             $io->title('Transport Queue Length');
             $io->text((new \DateTime('now'))->format('Y-m-d H:i:s'));
 
-            $receivers = $this->locator->getReceiverMapping();
+            $receivers = $this->locator->getReceiversMapping();
             $rows = [];
             foreach ($receivers as $name => $receiver) {
                 /** @var ReceiverInterface $receiver */
                 $receiver = $receivers[$name];
-                $queueLength = -1;
+                $queueLength = null;
                 if ($receiver instanceof MessageCountAwareInterface) {
                     /** @var MessageCountAwareInterface $receiver */
                     $queueLength = $receiver->getMessageCount();
@@ -77,7 +64,7 @@ class MonitorCommand extends Command
             $io->table(['Transport', 'Queue Length'], $rows);
 
             if ($looping) {
-                if ($interval === 1) {
+                if (1 === $interval) {
                     $io->writeln('(Refreshing every second)');
                 } else {
                     $io->writeln('(Refreshing every '.$interval.' seconds)');
