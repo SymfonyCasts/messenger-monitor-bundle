@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\Tests\IntegrationTests\Configuration;
 
@@ -11,12 +13,14 @@ final class ConfigurationTest extends TestCase
     public function testUseTableNameWithRedisDriverThrowsException(): void
     {
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('"table_name" and "doctrine_connection" can only be used with doctrine driver.');
+        $this->expectExceptionMessage('"doctrine.table_name" and "doctrine.connection" can only be used with doctrine driver.');
 
         $kernel = new TestKernel(
             [
                 'driver' => 'redis',
-                'table_name' => 'foo'
+                'doctrine' => [
+                    'table_name' => 'foo',
+                ]
             ]
         );
         $kernel->boot();
@@ -30,10 +34,12 @@ final class ConfigurationTest extends TestCase
         $kernel = new TestKernel(
             [
                 'driver' => 'doctrine',
-                'doctrine_connection' => 'foo'
+                'doctrine' => [
+                    'connection' => 'foo',
+                ]
             ]
         );
         $kernel->boot();
-        $kernel->getContainer()->get('karo-io.messenger_monitor.storage.doctrine_connection');
+        $kernel->getContainer()->get('test.karo-io.messenger_monitor.storage.doctrine_connection');
     }
 }

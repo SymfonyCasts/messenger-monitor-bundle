@@ -12,7 +12,7 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
     public function testExecuteQueryUpdatesSchema(): void
     {
         /** @var DoctrineConnection $doctrineConnection */
-        $doctrineConnection = self::$container->get('karo-io.messenger_monitor.storage.doctrine_connection');
+        $doctrineConnection = self::$container->get('test.karo-io.messenger_monitor.storage.doctrine_connection');
 
         $statement = $doctrineConnection->executeQuery(
             <<<SQL

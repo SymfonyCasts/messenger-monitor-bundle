@@ -22,16 +22,15 @@ final class KaroIOMessengerMonitorExtension extends Extension
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
-        if ('doctrine' !== $config['driver']) {
-            // todo: remove definition from all services tagged with "messenger_monitor.doctrine_driver"?
-            $container->removeDefinition('karo-io.messenger_monitor.storage.doctrine_connection');
-        } else {
+        if ('doctrine' === $config['driver']) {
+            $loader->load('doctrine.xml');
+
             $doctrineConnectionFactoryDefinition = $container->getDefinition('karo-io.messenger_monitor.storage.doctrine_connection_factory');
 
-            $doctrineConnection = $config['doctrine_connection'] ?? 'default';
+            $doctrineConnection = $config['doctrine']['connection'] ?? 'default';
             $doctrineConnectionFactoryDefinition->replaceArgument(1, $doctrineConnection);
 
-            $tableName = $config['table_name'] ?? 'karo_io_messenger_monitor';
+            $tableName = $config['doctrine']['table_name'] ?? 'karo_io_messenger_monitor';
             $doctrineConnectionFactoryDefinition->replaceArgument(2, $tableName);
         }
     }

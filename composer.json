@@ -19,9 +19,10 @@
         "ext-json": "*",
         "doctrine/dbal": "^2.10",
         "doctrine/doctrine-bundle": "^2.0",
-        "friendsofphp/php-cs-fixer": "^2.16",
-        "roave/security-advisories": "dev-master",
         "symfony/phpunit-bridge": "^5.0"
+    },
+    "conflict": {
+        "doctrine/doctrine-bundle": "<2.0"
     },
     "license": "MIT",
     "autoload": {

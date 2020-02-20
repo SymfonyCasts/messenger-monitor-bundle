@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * todo: bulk treatment
+ * todo: bulk treatment.
  *
  * @internal
  */

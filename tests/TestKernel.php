@@ -6,6 +6,7 @@ namespace KaroIO\MessengerMonitorBundle\Tests;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use KaroIO\MessengerMonitorBundle\KaroIOMessengerMonitorBundle;
+use KaroIO\MessengerMonitorBundle\Storage\DoctrineConnection;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -44,19 +45,15 @@ final class TestKernel extends Kernel
         return $this->getProjectDir().'/cache/'.md5(json_encode($this->bundleOptions));
     }
 
-    protected function build(ContainerBuilder $container)
-    {
-        // set all services public in order to access them
-        // with static::$container->get('service') in tests
-        foreach ($container->getDefinitions() as $definition) {
-            $definition->setPublic(true);
-        }
-    }
-
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(
             function (ContainerBuilder $container) {
+                $container->setAlias(
+                    'test.karo-io.messenger_monitor.storage.doctrine_connection',
+                    'karo-io.messenger_monitor.storage.doctrine_connection'
+                )->setPublic(true);
+
                 $container->setParameter('kernel.secret', 123);
                 $container->prependExtensionConfig(
                     'framework',
@@ -65,7 +62,7 @@ final class TestKernel extends Kernel
                         'router' => [
                             'resource' => 'kernel::loadRoutes',
                             'enabled' => true,
-                        ]
+                        ],
                     ]
                 );
                 $container->prependExtensionConfig(

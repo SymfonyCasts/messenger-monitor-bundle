@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\Storage;
 
-use Doctrine\DBAL\Connection as DBALConnection;
+use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Schema\Schema;
@@ -20,10 +20,9 @@ class DoctrineConnection
     private $schemaSynchronizer;
     private $tableName;
 
-    public function __construct(DBALConnection $driverConnection, string $tableName)
+    public function __construct(Connection $driverConnection, string $tableName)
     {
         $this->driverConnection = $driverConnection;
-        $this->schemaSynchronizer = new SingleDatabaseSynchronizer($this->driverConnection);
         $this->tableName = $tableName;
     }
 
@@ -46,7 +45,7 @@ class DoctrineConnection
 
     private function setup(): void
     {
-        $this->schemaSynchronizer->updateSchema($this->getSchema(), true);
+        $this->getSchemaSynchronizer()->updateSchema($this->getSchema(), true);
     }
 
     private function getSchema(): Schema
@@ -64,5 +63,14 @@ class DoctrineConnection
         $table->addIndex(['class']);
 
         return $schema;
+    }
+
+    private function getSchemaSynchronizer(): SingleDatabaseSynchronizer
+    {
+        if (null === $this->schemaSynchronizer) {
+            $this->schemaSynchronizer = new SingleDatabaseSynchronizer($this->driverConnection);
+        }
+
+        return $this->schemaSynchronizer;
     }
 }

@@ -24,30 +24,30 @@ final class Configuration implements ConfigurationInterface
                     ->defaultValue('doctrine')
                     ->values(['doctrine', 'redis'])
                     ->validate()
-                        ->ifTrue(function($value) {
+                        ->ifTrue(function ($value) {
                             return 'doctrine' === $value && !class_exists(DBALConnection::class);
                         })
-                        ->thenInvalid('Package doctrine/dbal is required to use doctrine driver.')
+                        ->thenInvalid('Package doctrine/dbal and doctrine/doctrine-bundle are required to use doctrine driver.')
                     ->end()
                     ->validate()
-                        ->ifTrue(function($value) {
+                        ->ifTrue(function ($value) {
                             return 'redis' === $value && !class_exists(\Redis::class);
                         })
                         ->thenInvalid('Extension php-redis is required to use redis driver.')
                     ->end()
                 ->end()
-                ->scalarNode('table_name')
-                    ->defaultNull()
-                ->end()
-                ->scalarNode('doctrine_connection')
-                    ->defaultNull()
+                ->arrayNode('doctrine')
+                    ->children()
+                        ->scalarNode('table_name')->defaultNull()->end()
+                        ->scalarNode('connection')->defaultNull()->end()
+                    ->end()
                 ->end()
             ->end()
             ->validate()
-                ->ifTrue(function($value) {
-                    return (null !== $value['table_name'] || null !== $value['doctrine_connection']) && 'redis' === $value['driver'];
+                ->ifTrue(function ($value) {
+                    return (isset($value['doctrine']['table_name']) || isset($value['doctrine']['connection'])) && 'redis' === $value['driver'];
                 })
-                ->thenInvalid('"table_name" and "doctrine_connection" can only be used with doctrine driver.')
+                ->thenInvalid('"doctrine.table_name" and "doctrine.connection" can only be used with doctrine driver.')
             ->end();
 
         return $treeBuilder;

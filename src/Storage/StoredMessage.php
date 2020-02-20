@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\Storage;
 
-use Symfony\Component\Messenger\Envelope;
-
 /**
  * todo handle retries.
  *

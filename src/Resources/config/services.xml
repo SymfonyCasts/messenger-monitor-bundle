@@ -62,17 +62,5 @@
             <argument type="service" id="karo-io.messenger_monitor.receiver_locator" />
             <argument type="service" id="karo-io.messenger_monitor.failed_receiver.name" />
         </service>
-
-        <!-- Storage -->
-        <!-- todo: remove public -->
-        <service id="karo-io.messenger_monitor.storage.doctrine_connection" class="KaroIO\MessengerMonitorBundle\Storage\DoctrineConnection" public="true">
-            <factory service="karo-io.messenger_monitor.storage.doctrine_connection_factory"/>
-        </service>
-
-        <service id="karo-io.messenger_monitor.storage.doctrine_connection_factory" class="KaroIO\MessengerMonitorBundle\Storage\DoctrineConnectionFactory">
-            <argument type="service" id="doctrine" />
-            <argument /> <!-- Doctrine's connection name -->
-            <argument /> <!-- Doctrine's table name -->
-        </service>
     </services>
 </container>
