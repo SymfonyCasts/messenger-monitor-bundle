@@ -62,5 +62,10 @@
             <argument type="service" id="karo-io.messenger_monitor.receiver_locator" />
             <argument type="service" id="karo-io.messenger_monitor.failed_receiver.name" />
         </service>
+
+        <!-- EventListener -->
+        <service id="karo-io.messenger_monitor.listener.add_monitor_id_stamp" class="KaroIO\MessengerMonitorBundle\EventListener\AddStampOnMessageSentListener">
+            <tag name="kernel.event_subscriber" />
+        </service>
     </services>
 </container>
