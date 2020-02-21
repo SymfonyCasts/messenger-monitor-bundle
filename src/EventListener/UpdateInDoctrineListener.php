@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace KaroIO\MessengerMonitorBundle\EventListener;
 
 use KaroIO\MessengerMonitorBundle\Stamp\MonitorIdStamp;
+use KaroIO\MessengerMonitorBundle\Storage\DoctrineConnection;
 use KaroIO\MessengerMonitorBundle\Storage\StoredMessage;
-use KaroIO\MessengerMonitorBundle\Storage\StoredMessageRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
@@ -19,11 +19,11 @@ use Symfony\Component\Messenger\Event\WorkerMessageReceivedEvent;
  */
 final class UpdateInDoctrineListener implements EventSubscriberInterface
 {
-    private $storedMessageRepository;
+    private $doctrineConnection;
 
-    public function __construct(StoredMessageRepository $storedMessageRepository)
+    public function __construct(DoctrineConnection $doctrineConnection)
     {
-        $this->storedMessageRepository = $storedMessageRepository;
+        $this->doctrineConnection = $doctrineConnection;
     }
 
     public function onMessageReceived(WorkerMessageReceivedEvent $event): void
@@ -31,7 +31,7 @@ final class UpdateInDoctrineListener implements EventSubscriberInterface
         $storedMessage = $this->getStoredMessage($event->getEnvelope());
 
         $storedMessage->setReceivedAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
-        $this->storedMessageRepository->updateMessage($storedMessage);
+        $this->doctrineConnection->updateMessage($storedMessage);
     }
 
     public function onMessageHandled(WorkerMessageHandledEvent $event): void
@@ -39,7 +39,7 @@ final class UpdateInDoctrineListener implements EventSubscriberInterface
         $storedMessage = $this->getStoredMessage($event->getEnvelope());
 
         $storedMessage->setHandledAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
-        $this->storedMessageRepository->updateMessage($storedMessage);
+        $this->doctrineConnection->updateMessage($storedMessage);
     }
 
     private function getStoredMessage(Envelope $envelope): StoredMessage
@@ -51,7 +51,7 @@ final class UpdateInDoctrineListener implements EventSubscriberInterface
             throw new \RuntimeException('Envelope should have a MonitorIdStamp!');
         }
 
-        $storedMessage = $this->storedMessageRepository->findMessage($monitorIdStamp->getId());
+        $storedMessage = $this->doctrineConnection->findMessage($monitorIdStamp->getId());
 
         if (null === $storedMessage) {
             throw new \RuntimeException(sprintf('Message with id "%s" not found', $monitorIdStamp->getId()));

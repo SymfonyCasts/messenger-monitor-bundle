@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\EventListener;
 
+use KaroIO\MessengerMonitorBundle\Storage\DoctrineConnection;
 use KaroIO\MessengerMonitorBundle\Storage\StoredMessage;
-use KaroIO\MessengerMonitorBundle\Storage\StoredMessageRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
 
@@ -14,16 +14,16 @@ use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
  */
 final class StoreInDoctrineOnMessageSentListener implements EventSubscriberInterface
 {
-    private $storedMessageRepository;
+    private $doctrineConnection;
 
-    public function __construct(StoredMessageRepository $storedMessageRepository)
+    public function __construct(DoctrineConnection $doctrineConnection)
     {
-        $this->storedMessageRepository = $storedMessageRepository;
+        $this->doctrineConnection = $doctrineConnection;
     }
 
     public function onMessageSent(SendMessageToTransportsEvent $event): void
     {
-        $this->storedMessageRepository->saveMessage(StoredMessage::fromEnvelope($event->getEnvelope()));
+        $this->doctrineConnection->saveMessage(StoredMessage::fromEnvelope($event->getEnvelope()));
     }
 
     public static function getSubscribedEvents(): array

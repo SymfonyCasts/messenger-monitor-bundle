@@ -16,19 +16,14 @@
             <argument /> <!-- Doctrine's table name -->
         </service>
 
-        <service id="karo-io.messenger_monitor.storage.stored_message_repository" class="KaroIO\MessengerMonitorBundle\Storage\StoredMessageRepository">
-            <argument type="service" id="karo-io.messenger_monitor.storage.doctrine_connection" />
-            <argument /> <!-- Doctrine's table name -->
-        </service>
-
         <!-- EventListeners -->
         <service id="karo-io.messenger_monitor.listener.store_in_doctrine" class="KaroIO\MessengerMonitorBundle\EventListener\StoreInDoctrineOnMessageSentListener">
-            <argument type="service" id="karo-io.messenger_monitor.storage.stored_message_repository" />
+            <argument type="service" id="karo-io.messenger_monitor.storage.doctrine_connection" />
             <tag name="kernel.event_subscriber" />
         </service>
 
         <service id="karo-io.messenger_monitor.listener.update_doctrine" class="KaroIO\MessengerMonitorBundle\EventListener\UpdateInDoctrineListener">
-            <argument type="service" id="karo-io.messenger_monitor.storage.stored_message_repository" />
+            <argument type="service" id="karo-io.messenger_monitor.storage.doctrine_connection" />
             <tag name="kernel.event_subscriber" />
         </service>
     </services>

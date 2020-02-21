@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\Storage;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Schema\Schema;
@@ -13,6 +13,7 @@ use Doctrine\DBAL\Types\Types;
 
 /**
  * @internal
+ * @final
  */
 class DoctrineConnection
 {
@@ -26,7 +27,72 @@ class DoctrineConnection
         $this->tableName = $tableName;
     }
 
-    public function executeQuery(string $sql, array $parameters = [], array $types = []): ResultStatement
+    public function saveMessage(StoredMessage $storedMessage): void
+    {
+        $this->executeQuery(
+            $this->driverConnection->createQueryBuilder()
+                ->insert($this->tableName)
+                ->values(
+                    [
+                        'id' => ':id',
+                        'class' => ':class',
+                        'dispatched_at' => ':dispatched_at',
+                    ]
+                )
+                ->getSQL(),
+            [
+                'id' => $storedMessage->getId(),
+                'class' => $storedMessage->getMessageClass(),
+                'dispatched_at' => $storedMessage->getDispatchedAt(),
+            ],
+            [
+                'dispatched_at' => Types::DATETIME_IMMUTABLE,
+            ]
+        );
+    }
+
+    public function updateMessage(StoredMessage $storedMessage): void
+    {
+        $this->executeQuery(
+            $this->driverConnection->createQueryBuilder()
+                ->update($this->tableName)
+                ->set('received_at', ':received_at')
+                ->set('handled_at', ':handled_at')
+                ->where('id = :id')
+                ->getSQL(),
+            [
+                'received_at' => $storedMessage->getReceivedAt(),
+                'handled_at' => $storedMessage->getHandledAt(),
+                'id' => $storedMessage->getId()
+            ],
+            [
+                'received_at' => Types::DATETIME_IMMUTABLE,
+                'handled_at' => Types::DATETIME_IMMUTABLE,
+            ]
+        );
+    }
+
+    public function findMessage(string $id): ?StoredMessage
+    {
+        $statement = $this->executeQuery(
+            $this->driverConnection->createQueryBuilder()
+                ->select('*')
+                ->from($this->tableName)
+                ->where('id = :id')
+                ->getSQL(),
+            [
+                'id' => $id
+            ]
+        );
+
+        if (false === $row = $statement->fetch()) {
+            return null;
+        }
+
+        return StoredMessage::fromDatabaseRow($row);
+    }
+
+    private function executeQuery(string $sql, array $parameters = [], array $types = []): ResultStatement
     {
         try {
             $stmt = $this->driverConnection->executeQuery($sql, $parameters, $types);
