@@ -24,7 +24,7 @@ final class AddStampOnMessageSentListener implements EventSubscriberInterface
     {
         return [
             // should happen prior to StoreInDoctrineOnMessageSentListener
-            SendMessageToTransportsEvent::class => ['onMessageSent', 2],
+            SendMessageToTransportsEvent::class => ['onMessageSent', 20],
         ];
     }
 }

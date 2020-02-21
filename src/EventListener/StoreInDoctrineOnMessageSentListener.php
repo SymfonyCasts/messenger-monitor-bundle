@@ -30,7 +30,7 @@ final class StoreInDoctrineOnMessageSentListener implements EventSubscriberInter
     {
         return [
             // should happen after AddStampOnMessageSentListener
-            SendMessageToTransportsEvent::class => ['onMessageSent', 1],
+            SendMessageToTransportsEvent::class => ['onMessageSent', 10],
         ];
     }
 }
