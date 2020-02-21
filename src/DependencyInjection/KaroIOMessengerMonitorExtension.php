@@ -32,6 +32,9 @@ final class KaroIOMessengerMonitorExtension extends Extension
 
             $tableName = $config['doctrine']['table_name'] ?? 'karo_io_messenger_monitor';
             $doctrineConnectionFactoryDefinition->replaceArgument(2, $tableName);
+
+            $storedMessageRepositoryDefinition = $container->getDefinition('karo-io.messenger_monitor.storage.stored_message_repository');
+            $storedMessageRepositoryDefinition->replaceArgument(1, $tableName);
         }
     }
 }

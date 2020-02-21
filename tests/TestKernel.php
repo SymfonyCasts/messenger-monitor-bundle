@@ -53,6 +53,10 @@ final class TestKernel extends Kernel
                     'test.karo-io.messenger_monitor.storage.doctrine_connection',
                     'karo-io.messenger_monitor.storage.doctrine_connection'
                 )->setPublic(true);
+                $container->setAlias(
+                    'test.karo-io.messenger_monitor.storage.stored_message_repository',
+                    'karo-io.messenger_monitor.storage.stored_message_repository'
+                )->setPublic(true);
 
                 $container->setParameter('kernel.secret', 123);
                 $container->prependExtensionConfig(

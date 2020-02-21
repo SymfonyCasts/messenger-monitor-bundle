@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\Storage;
 
+use KaroIO\MessengerMonitorBundle\Stamp\MonitorIdStamp;
+use Symfony\Component\Messenger\Envelope;
+
 /**
  * todo handle retries.
  *
@@ -32,6 +35,33 @@ final class StoredMessage
         } elseif (null !== $handledAt) {
             throw new \RuntimeException('"receivedAt" could not be null if "handledAt" is not null');
         }
+    }
+
+    public static function fromEnvelope(Envelope $envelope): self
+    {
+        /** @var MonitorIdStamp $monitorIdStamp */
+        $monitorIdStamp = $envelope->last(MonitorIdStamp::class);
+
+        if (null === $monitorIdStamp) {
+            throw new \RuntimeException('Envelope should have a MonitorIdStamp!');
+        }
+
+        return new self(
+            $monitorIdStamp->getId(),
+            \get_class($envelope->getMessage()),
+            \DateTimeImmutable::createFromFormat('U', (string) time())
+        );
+    }
+
+    public static function fromDatabaseRow(array $row): self
+    {
+        return new self(
+            $row['id'],
+            $row['class'],
+            new \DateTimeImmutable($row['dispatched_at']),
+            null !== $row['received_at'] ? new \DateTimeImmutable($row['received_at']) : null,
+            null !== $row['handled_at'] ? new \DateTimeImmutable($row['handled_at']) : null
+        );
     }
 
     public function getId(): string
