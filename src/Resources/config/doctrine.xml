@@ -17,14 +17,16 @@
         </service>
 
         <!-- EventListeners -->
-        <service id="karo-io.messenger_monitor.listener.store_in_doctrine" class="KaroIO\MessengerMonitorBundle\Storage\Doctrine\EventListener\StoreOnMessageSentListener">
+        <service id="karo-io.messenger_monitor.listener.store_in_doctrine" class="KaroIO\MessengerMonitorBundle\Storage\Doctrine\EventListener\SaveStoredMessageOnMessageSentListener">
             <argument type="service" id="karo-io.messenger_monitor.storage.doctrine_connection" />
             <tag name="kernel.event_subscriber" />
         </service>
 
         <service id="karo-io.messenger_monitor.listener.update_doctrine" class="KaroIO\MessengerMonitorBundle\Storage\Doctrine\EventListener\UpdateStoredMessageListener">
             <argument type="service" id="karo-io.messenger_monitor.storage.doctrine_connection" />
+            <argument type="service" id="logger" on-invalid="null" />
             <tag name="kernel.event_subscriber" />
+            <tag name="monolog.logger" channel="messenger-monitor-bundle" />
         </service>
     </services>
 </container>

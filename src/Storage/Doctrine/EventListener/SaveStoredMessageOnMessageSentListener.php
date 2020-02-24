@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
 /**
  * @internal
  */
-final class StoreOnMessageSentListener implements EventSubscriberInterface
+final class SaveStoredMessageOnMessageSentListener implements EventSubscriberInterface
 {
     private $doctrineConnection;
 

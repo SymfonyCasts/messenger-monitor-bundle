@@ -10,13 +10,14 @@ use KaroIO\MessengerMonitorBundle\Storage\Doctrine\EventListener\UpdateStoredMes
 use KaroIO\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
 use KaroIO\MessengerMonitorBundle\Tests\TestableMessage;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
 use Symfony\Component\Messenger\Event\WorkerMessageReceivedEvent;
 
-final class UpdateInDoctrineListenerTest extends TestCase
+final class UpdateStoredMessageListenerTest extends TestCase
 {
-    public function testUpdateInDoctrineOnMessageReceived(): void
+    public function testUpdateOnMessageReceived(): void
     {
         $listener = new UpdateStoredMessageListener(
             $doctrineConnection = $this->createMock(Connection::class)
@@ -37,7 +38,39 @@ final class UpdateInDoctrineListenerTest extends TestCase
         $this->assertNotNull($storedMessage->getReceivedAt());
     }
 
-    public function testUpdateInDoctrineOnMessageHandled(): void
+    public function testUpdateOnMessageReceivedLogsAnErrorWhenMessageDoesNotHaveMonitorIdStamp(): void
+    {
+        $listener = new UpdateStoredMessageListener(
+            $doctrineConnection = $this->createMock(Connection::class),
+            $logger = $this->createMock(LoggerInterface::class)
+        );
+
+        $envelope = new Envelope(new TestableMessage());
+
+        $doctrineConnection->expects($this->never())->method('findMessage');
+        $logger->expects($this->once())->method('error')->with('Envelope should have a MonitorIdStamp!');
+
+        $listener->onMessageReceived(new WorkerMessageReceivedEvent($envelope, 'receiver-name'));
+    }
+
+    public function testUpdateOnMessageReceivedLogsAnErrorWhenStoredMessageNotFound(): void
+    {
+        $listener = new UpdateStoredMessageListener(
+            $doctrineConnection = $this->createMock(Connection::class),
+            $logger = $this->createMock(LoggerInterface::class)
+        );
+
+        $envelope = new Envelope(new TestableMessage(), [$stamp = new MonitorIdStamp()]);
+
+        $doctrineConnection->expects($this->once())->method('findMessage')->with($stamp->getId())->willReturn(null);
+        $doctrineConnection->expects($this->never())->method('updateMessage');
+
+        $logger->expects($this->once())->method('error')->with(sprintf('Message with id "%s" not found', $stamp->getId()));
+
+        $listener->onMessageReceived(new WorkerMessageReceivedEvent($envelope, 'receiver-name'));
+    }
+
+    public function testUpdateOnMessageHandled(): void
     {
         $listener = new UpdateStoredMessageListener(
             $doctrineConnection = $this->createMock(Connection::class)
