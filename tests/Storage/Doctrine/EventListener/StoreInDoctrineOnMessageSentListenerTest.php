@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\EventListener;
+namespace KaroIO\MessengerMonitorBundle\Tests\Storage\Doctrine\EventListener;
 
-use KaroIO\MessengerMonitorBundle\EventListener\StoreInDoctrineOnMessageSentListener;
 use KaroIO\MessengerMonitorBundle\Stamp\MonitorIdStamp;
-use KaroIO\MessengerMonitorBundle\Storage\DoctrineConnection;
-use KaroIO\MessengerMonitorBundle\Storage\StoredMessage;
+use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Connection;
+use KaroIO\MessengerMonitorBundle\Storage\Doctrine\EventListener\StoreOnMessageSentListener;
+use KaroIO\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
 use KaroIO\MessengerMonitorBundle\Tests\TestableMessage;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
@@ -17,8 +17,8 @@ final class StoreInDoctrineOnMessageSentListenerTest extends TestCase
 {
     public function testStoreInDoctrineOnMessageSent(): void
     {
-        $listener = new StoreInDoctrineOnMessageSentListener(
-            $doctrineConnection = $this->createMock(DoctrineConnection::class)
+        $listener = new StoreOnMessageSentListener(
+            $doctrineConnection = $this->createMock(Connection::class)
         );
 
         $envelope = new Envelope(new TestableMessage(), [new MonitorIdStamp()]);

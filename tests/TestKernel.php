@@ -6,7 +6,6 @@ namespace KaroIO\MessengerMonitorBundle\Tests;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use KaroIO\MessengerMonitorBundle\KaroIOMessengerMonitorBundle;
-use KaroIO\MessengerMonitorBundle\Storage\DoctrineConnection;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;

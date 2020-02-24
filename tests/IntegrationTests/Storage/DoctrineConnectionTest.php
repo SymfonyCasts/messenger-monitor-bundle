@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace KaroIO\MessengerMonitorBundle\Tests\IntegrationTests\Storage;
 
-use KaroIO\MessengerMonitorBundle\Storage\DoctrineConnection;
-use KaroIO\MessengerMonitorBundle\Storage\StoredMessage;
+use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Connection;
+use KaroIO\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
 use KaroIO\MessengerMonitorBundle\Tests\IntegrationTests\AbstractDoctrineIntegrationTests;
 use KaroIO\MessengerMonitorBundle\Tests\TestableMessage;
 
@@ -13,7 +13,7 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
 {
     public function testSaveAndLoadMessage(): void
     {
-        /** @var DoctrineConnection $doctrineConnection */
+        /** @var Connection $doctrineConnection */
         $doctrineConnection = self::$container->get('test.karo-io.messenger_monitor.storage.doctrine_connection');
 
         $doctrineConnection->saveMessage(
@@ -27,7 +27,7 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
 
     public function testSeveralMessages(): void
     {
-        /** @var DoctrineConnection $doctrineConnection */
+        /** @var Connection $doctrineConnection */
         $doctrineConnection = self::$container->get('test.karo-io.messenger_monitor.storage.doctrine_connection');
 
         $doctrineConnection->saveMessage(new StoredMessage('id1', TestableMessage::class, new \DateTimeImmutable()));
@@ -39,7 +39,7 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
 
     public function testUpdateMessage(): void
     {
-        /** @var DoctrineConnection $doctrineConnection */
+        /** @var Connection $doctrineConnection */
         $doctrineConnection = self::$container->get('test.karo-io.messenger_monitor.storage.doctrine_connection');
 
         $doctrineConnection->saveMessage($storedMessage = new StoredMessage('id', TestableMessage::class, new \DateTimeImmutable()));

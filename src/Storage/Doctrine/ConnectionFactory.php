@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Storage;
+namespace KaroIO\MessengerMonitorBundle\Storage\Doctrine;
 
 use Doctrine\Persistence\ConnectionRegistry;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
-final class DoctrineConnectionFactory
+final class ConnectionFactory
 {
     private $registry;
     private $connectionName;
@@ -20,10 +20,10 @@ final class DoctrineConnectionFactory
         $this->tableName = $tableName;
     }
 
-    public function __invoke(): DoctrineConnection
+    public function __invoke(): Connection
     {
         try {
-            return new DoctrineConnection(
+            return new Connection(
                 $this->registry->getConnection($this->connectionName),
                 $this->tableName
             );

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Storage;
+namespace KaroIO\MessengerMonitorBundle\Storage\Doctrine;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Connection as DBALConnection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Schema\Schema;
@@ -15,13 +15,13 @@ use Doctrine\DBAL\Types\Types;
  * @internal
  * @final
  */
-class DoctrineConnection
+class Connection
 {
     private $driverConnection;
     private $schemaSynchronizer;
     private $tableName;
 
-    public function __construct(Connection $driverConnection, string $tableName)
+    public function __construct(DBALConnection $driverConnection, string $tableName)
     {
         $this->driverConnection = $driverConnection;
         $this->tableName = $tableName;
@@ -89,7 +89,13 @@ class DoctrineConnection
             return null;
         }
 
-        return StoredMessage::fromDatabaseRow($row);
+        return new StoredMessage(
+            $row['id'],
+            $row['class'],
+            new \DateTimeImmutable($row['dispatched_at']),
+            null !== $row['received_at'] ? new \DateTimeImmutable($row['received_at']) : null,
+            null !== $row['handled_at'] ? new \DateTimeImmutable($row['handled_at']) : null
+        );
     }
 
     private function executeQuery(string $sql, array $parameters = [], array $types = []): ResultStatement

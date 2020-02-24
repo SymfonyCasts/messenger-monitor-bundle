@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\EventListener;
+namespace KaroIO\MessengerMonitorBundle\Storage\Doctrine\EventListener;
 
-use KaroIO\MessengerMonitorBundle\Storage\DoctrineConnection;
-use KaroIO\MessengerMonitorBundle\Storage\StoredMessage;
+use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Connection;
+use KaroIO\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
 
 /**
  * @internal
  */
-final class StoreInDoctrineOnMessageSentListener implements EventSubscriberInterface
+final class StoreOnMessageSentListener implements EventSubscriberInterface
 {
     private $doctrineConnection;
 
-    public function __construct(DoctrineConnection $doctrineConnection)
+    public function __construct(Connection $doctrineConnection)
     {
         $this->doctrineConnection = $doctrineConnection;
     }

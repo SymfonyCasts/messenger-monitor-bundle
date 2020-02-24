@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\EventListener;
+namespace KaroIO\MessengerMonitorBundle\Storage\Doctrine\EventListener;
 
 use KaroIO\MessengerMonitorBundle\Stamp\MonitorIdStamp;
-use KaroIO\MessengerMonitorBundle\Storage\DoctrineConnection;
-use KaroIO\MessengerMonitorBundle\Storage\StoredMessage;
+use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Connection;
+use KaroIO\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
@@ -17,11 +17,11 @@ use Symfony\Component\Messenger\Event\WorkerMessageReceivedEvent;
  *
  * @internal
  */
-final class UpdateInDoctrineListener implements EventSubscriberInterface
+final class UpdateStoredMessageListener implements EventSubscriberInterface
 {
     private $doctrineConnection;
 
-    public function __construct(DoctrineConnection $doctrineConnection)
+    public function __construct(Connection $doctrineConnection)
     {
         $this->doctrineConnection = $doctrineConnection;
     }

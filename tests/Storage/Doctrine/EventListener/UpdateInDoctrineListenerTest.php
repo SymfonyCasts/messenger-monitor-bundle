@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\EventListener;
+namespace KaroIO\MessengerMonitorBundle\Tests\Storage\Doctrine\EventListener;
 
-use KaroIO\MessengerMonitorBundle\EventListener\UpdateInDoctrineListener;
 use KaroIO\MessengerMonitorBundle\Stamp\MonitorIdStamp;
-use KaroIO\MessengerMonitorBundle\Storage\DoctrineConnection;
-use KaroIO\MessengerMonitorBundle\Storage\StoredMessage;
+use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Connection;
+use KaroIO\MessengerMonitorBundle\Storage\Doctrine\EventListener\UpdateStoredMessageListener;
+use KaroIO\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
 use KaroIO\MessengerMonitorBundle\Tests\TestableMessage;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
@@ -18,8 +18,8 @@ final class UpdateInDoctrineListenerTest extends TestCase
 {
     public function testUpdateInDoctrineOnMessageReceived(): void
     {
-        $listener = new UpdateInDoctrineListener(
-            $doctrineConnection = $this->createMock(DoctrineConnection::class)
+        $listener = new UpdateStoredMessageListener(
+            $doctrineConnection = $this->createMock(Connection::class)
         );
 
         $envelope = new Envelope(new TestableMessage(), [$stamp = new MonitorIdStamp()]);
@@ -39,8 +39,8 @@ final class UpdateInDoctrineListenerTest extends TestCase
 
     public function testUpdateInDoctrineOnMessageHandled(): void
     {
-        $listener = new UpdateInDoctrineListener(
-            $doctrineConnection = $this->createMock(DoctrineConnection::class)
+        $listener = new UpdateStoredMessageListener(
+            $doctrineConnection = $this->createMock(Connection::class)
         );
 
         $envelope = new Envelope(new TestableMessage(), [$stamp = new MonitorIdStamp()]);
