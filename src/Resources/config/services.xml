@@ -10,6 +10,7 @@
             <argument type="service" id="twig" />
             <argument type="service" id="karo-io.messenger_monitor.receiver_locator" />
             <argument type="service" id="karo-io.messenger_monitor.failed_message.repository" />
+            <argument type="service" id="karo-io.messenger_monitor.statistics.processor"/>
         </service>
 
         <service id="karo-io.controller.retry_failed_message" class="KaroIO\MessengerMonitorBundle\Controller\RetryFailedMessageController">

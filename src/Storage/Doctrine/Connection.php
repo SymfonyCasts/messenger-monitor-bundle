@@ -7,9 +7,13 @@ namespace KaroIO\MessengerMonitorBundle\Storage\Doctrine;
 use Doctrine\DBAL\Connection as DBALConnection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Synchronizer\SingleDatabaseSynchronizer;
 use Doctrine\DBAL\Types\Types;
+use KaroIO\MessengerMonitorBundle\Statistics\MetricsPerMessageType;
+use KaroIO\MessengerMonitorBundle\Statistics\Statistics;
+use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Driver\SQLDriver;
 
 /**
  * @internal
@@ -18,12 +22,14 @@ use Doctrine\DBAL\Types\Types;
 class Connection
 {
     private $driverConnection;
-    private $schemaSynchronizer;
+    private $SQLDriver;
     private $tableName;
+    private $schemaSynchronizer;
 
-    public function __construct(DBALConnection $driverConnection, string $tableName)
+    public function __construct(DBALConnection $driverConnection, SQLDriver $SQLDriver, string $tableName)
     {
         $this->driverConnection = $driverConnection;
+        $this->SQLDriver = $SQLDriver;
         $this->tableName = $tableName;
     }
 
@@ -80,9 +86,7 @@ class Connection
                 ->from($this->tableName)
                 ->where('id = :id')
                 ->getSQL(),
-            [
-                'id' => $id
-            ]
+            ['id' => $id]
         );
 
         if (false === $row = $statement->fetch()) {
@@ -96,6 +100,37 @@ class Connection
             null !== $row['received_at'] ? new \DateTimeImmutable($row['received_at']) : null,
             null !== $row['handled_at'] ? new \DateTimeImmutable($row['handled_at']) : null
         );
+    }
+
+    public function getStatistics(\DateTimeImmutable $from, \DateTimeImmutable $to): Statistics
+    {
+        $statement = $this->executeQuery(
+            $this->driverConnection->createQueryBuilder()
+                ->select('count(id) as countMessagesOnPeriod, class')
+                ->addSelect(sprintf('AVG(%s) AS averageWaitingTime', $this->SQLDriver->getDateDiffInSecondsExpression('received_at', 'dispatched_at')))
+                ->addSelect(sprintf('AVG(%s) AS averageHandlingTime', $this->SQLDriver->getDateDiffInSecondsExpression('handled_at', 'received_at')))
+                ->from($this->tableName)
+                ->where('handled_at >= :from')
+                ->andWhere('handled_at <= :to')
+                ->groupBy('class')
+                ->getSQL(),
+            ['from' => $from, 'to' => $to],
+            ['from' => Types::DATETIME_IMMUTABLE, 'to' => Types::DATETIME_IMMUTABLE,]
+        );
+
+        $statistics = new Statistics($from, $to);
+        while (false !== ($row = $statement->fetch(FetchMode::ASSOCIATIVE))) {
+            $statistics->add(
+                new MetricsPerMessageType(
+                    $row['class'],
+                    (int) $row['countMessagesOnPeriod'],
+                    (float) $row['averageWaitingTime'],
+                    (float) $row['averageHandlingTime']
+                )
+            );
+        }
+
+        return $statistics;
     }
 
     private function executeQuery(string $sql, array $parameters = [], array $types = []): ResultStatement

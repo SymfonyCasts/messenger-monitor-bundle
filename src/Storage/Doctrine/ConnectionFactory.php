@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace KaroIO\MessengerMonitorBundle\Storage\Doctrine;
 
 use Doctrine\Persistence\ConnectionRegistry;
+use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Driver\MySQLDriver;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
+/**
+ * @internal
+ */
 final class ConnectionFactory
 {
     private $registry;
@@ -25,6 +29,7 @@ final class ConnectionFactory
         try {
             return new Connection(
                 $this->registry->getConnection($this->connectionName),
+                new MySQLDriver(),
                 $this->tableName
             );
         } catch (\InvalidArgumentException $exception) {
