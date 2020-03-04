@@ -27,7 +27,7 @@ final class MetricsPerMessageType
         return $this->class;
     }
 
-    public function getMessagesCountOnPeriod(): int
+    public function getMessagesCount(): int
     {
         return $this->messagesCountOnPeriod;
     }

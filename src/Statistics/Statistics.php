@@ -18,23 +18,120 @@ final class Statistics
     public function __construct(\DateTimeImmutable $from, \DateTimeImmutable $to)
     {
         $this->from = $from;
-        $this->to = $to;
+        $this->to   = $to;
     }
 
     public function add(MetricsPerMessageType $metrics): void
     {
+        $messageClasses = array_map(
+            static function (MetricsPerMessageType $metric): string {
+                return $metric->getClass();
+            },
+            $this->metrics
+        );
+
+        if (in_array($metrics->getClass(), $messageClasses, true)) {
+            throw new MetricsAlreadyAddedForMessageClassException($metrics->getClass());
+        }
+
         $this->metrics[] = $metrics;
     }
 
-    // statistics overall messages types
-    // public function getMessagesCountOnPeriod(): int
-    // public function getMessagesHandledPerHourOnPeriod(): float
-    // public function getAverageWaitingTime(): float
-    // public function getAverageHandlingTime(): float
+    public function getMessagesCount(): int
+    {
+        return array_sum($this->getMessagesCountPerMessageType());
+    }
 
-    // statistics per messages type
-    // public function getMessagesCountOnPeriodPerMessageType(): int[]
-    // public function getMessagesHandledPerHourOnPeriodPerMessageType(): float[]
-    // public function getAverageWaitingTimePerMessageType(): float[]
-    // public function getAverageHandlingTimePerMessageType(): float[]
+    public function getMessagesHandledPerHour(): float
+    {
+        return round($this->getMessagesCount() / $this->getNbHoursInPeriod(), 2);
+    }
+
+    public function getAverageWaitingTime(): float
+    {
+        return $this->computeOverallAverageFor('AverageWaitingTime');
+    }
+
+    public function getAverageHandlingTime(): float
+    {
+        return $this->computeOverallAverageFor('AverageHandlingTime');
+    }
+
+    private function computeOverallAverageFor(string $metricName): float
+    {
+        if ($this->getMessagesCount() === 0) {
+            return 0;
+        }
+
+        return round(
+            array_sum(
+                array_map(
+                    static function (MetricsPerMessageType $metric) use ($metricName) {
+                        $method = 'get'.$metricName;
+
+                        return $metric->getMessagesCount() * $metric->$method();
+                    },
+                    $this->metrics
+                )
+            ) / $this->getMessagesCount(),
+            2
+        );
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getMessagesCountPerMessageType(): array
+    {
+        $countMessages = [];
+        foreach ($this->metrics as $metric) {
+            $countMessages[$metric->getClass()] = $metric->getMessagesCount();
+        }
+
+        return $countMessages;
+    }
+
+    /**
+     * @return float[]
+     */
+    public function getMessagesHandledPerHourPerMessageType(): array
+    {
+        $countMessages = [];
+        foreach ($this->metrics as $metric) {
+            $countMessages[$metric->getClass()] = round($metric->getMessagesCount() / $this->getNbHoursInPeriod(), 2);
+        }
+
+        return $countMessages;
+    }
+
+    /**
+     * @return float[]
+     */
+    public function getAverageWaitingTimePerMessageType(): array
+    {
+        $averageWaitingTimePerMessages = [];
+        foreach ($this->metrics as $metric) {
+            $averageWaitingTimePerMessages[$metric->getClass()] = $metric->getAverageWaitingTime();
+        }
+
+        return $averageWaitingTimePerMessages;
+    }
+
+    /**
+     * @return float[]
+     */
+    public function getAverageHandlingTimePerMessageType(): array
+    {
+        $averageHandlingTimePerMessages = [];
+        foreach ($this->metrics as $metric) {
+            $averageHandlingTimePerMessages[$metric->getClass()] = $metric->getAverageHandlingTime();
+        }
+
+        return $averageHandlingTimePerMessages;
+    }
+
+    private function getNbHoursInPeriod(): float
+    {
+        return abs($this->from->getTimestamp() - $this->to->getTimestamp()) / (60 * 60);
+    }
 }
