@@ -37,9 +37,24 @@ final class Statistics
         $this->metrics[] = $metrics;
     }
 
+    /**
+     * @return MetricsPerMessageType[]
+     */
+    public function getMetrics(): array
+    {
+        return $this->metrics;
+    }
+
     public function getMessagesCount(): int
     {
-        return array_sum($this->getMessagesCountPerMessageType());
+        return array_sum(
+            array_map(
+                static function (MetricsPerMessageType $metrics) {
+                    return $metrics->getMessagesCount();
+                },
+                $this->metrics
+            )
+        );
     }
 
     public function getMessagesHandledPerHour(): float
@@ -76,58 +91,6 @@ final class Statistics
             ) / $this->getMessagesCount(),
             2
         );
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getMessagesCountPerMessageType(): array
-    {
-        $countMessages = [];
-        foreach ($this->metrics as $metric) {
-            $countMessages[$metric->getClass()] = $metric->getMessagesCount();
-        }
-
-        return $countMessages;
-    }
-
-    /**
-     * @return float[]
-     */
-    public function getMessagesHandledPerHourPerMessageType(): array
-    {
-        $countMessages = [];
-        foreach ($this->metrics as $metric) {
-            $countMessages[$metric->getClass()] = round($metric->getMessagesCount() / $this->getNbHoursInPeriod(), 2);
-        }
-
-        return $countMessages;
-    }
-
-    /**
-     * @return float[]
-     */
-    public function getAverageWaitingTimePerMessageType(): array
-    {
-        $averageWaitingTimePerMessages = [];
-        foreach ($this->metrics as $metric) {
-            $averageWaitingTimePerMessages[$metric->getClass()] = $metric->getAverageWaitingTime();
-        }
-
-        return $averageWaitingTimePerMessages;
-    }
-
-    /**
-     * @return float[]
-     */
-    public function getAverageHandlingTimePerMessageType(): array
-    {
-        $averageHandlingTimePerMessages = [];
-        foreach ($this->metrics as $metric) {
-            $averageHandlingTimePerMessages[$metric->getClass()] = $metric->getAverageHandlingTime();
-        }
-
-        return $averageHandlingTimePerMessages;
     }
 
     private function getNbHoursInPeriod(): float

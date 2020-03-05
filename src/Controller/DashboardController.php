@@ -59,10 +59,10 @@ final class DashboardController
             $this->twig->render(
                 '@KaroIOMessengerMonitor/dashboard.html.twig',
                 [
-                    'receivers' => $receivers,
+                    'receivers'                => $receivers,
                     'cannotListFailedMessages' => $cannotListFailedMessages,
-                    'failedMessages' => $failedMessages,
-                    'metrics' => $this->statisticsProcessor->processStatistics(),
+                    'failedMessages'           => $failedMessages,
+                    'statistics'               => $this->statisticsProcessor->processStatistics(),
                 ]
             )
         );

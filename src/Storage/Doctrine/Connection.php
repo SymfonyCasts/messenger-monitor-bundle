@@ -122,6 +122,8 @@ class Connection
         while (false !== ($row = $statement->fetch(FetchMode::ASSOCIATIVE))) {
             $statistics->add(
                 new MetricsPerMessageType(
+                    $from,
+                    $to,
                     $row['class'],
                     (int) $row['countMessagesOnPeriod'],
                     (float) $row['averageWaitingTime'],
