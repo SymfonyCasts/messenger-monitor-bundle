@@ -31,12 +31,6 @@
             <argument/> <!-- Receiver names -->
         </service>
 
-        <!-- Commands -->
-        <service id="symfonycasts.messenger_monitor.monitor_command" class="SymfonyCasts\MessengerMonitorBundle\Command\MonitorCommand">
-            <argument type="service" id="symfonycasts.messenger_monitor.receiver_locator"/>
-            <tag name="console.command"/>
-        </service>
-
         <!-- Failed Message -->
         <service id="symfonycasts.messenger_monitor.failed_message.repository" class="SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRepository">
             <argument type="service" id="symfonycasts.messenger_monitor.failed_receiver.provider"/>

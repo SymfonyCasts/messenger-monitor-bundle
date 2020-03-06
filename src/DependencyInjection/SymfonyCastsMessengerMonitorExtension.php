@@ -20,7 +20,7 @@ final class SymfonyCastsMessengerMonitorExtension extends Extension
         $loader->load('services.xml');
 
         $configuration = $this->getConfiguration($configs, $container);
-        $config        = $this->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration($configuration, $configs);
 
         if ('doctrine' === $config['driver']) {
             // todo: throw an error if doctrine platform is not mysql nor postgresql

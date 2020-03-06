@@ -20,7 +20,8 @@
         "ext-json": "*",
         "doctrine/dbal": "^2.10",
         "doctrine/doctrine-bundle": "^2.0",
-        "symfony/phpunit-bridge": "^5.0"
+        "symfony/phpunit-bridge": "^5.0",
+        "vimeo/psalm": "^3.9"
     },
     "conflict": {
         "doctrine/doctrine-bundle": "<2.0"

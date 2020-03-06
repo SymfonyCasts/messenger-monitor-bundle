@@ -36,6 +36,6 @@ final class RetryFailedMessageController
             $this->session->getBag('flashes')->add('messenger_monitor.error', sprintf('Error while rejecting message with id "%s": %s', $id, $exception->getMessage()));
         }
 
-        return new RedirectResponse($this->urlGenerator->generate('.dashboard'));
+        return new RedirectResponse($this->urlGenerator->generate('symfonycasts.messenger_monitor.dashboard'));
     }
 }

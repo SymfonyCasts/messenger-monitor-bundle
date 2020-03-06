@@ -17,7 +17,7 @@ final class FailureReceiverProviderTest extends TestCase
 {
     public function testGetFailureProvider(): void
     {
-        $receiverLocator         = $this->createMock(ReceiverLocator::class);
+        $receiverLocator = $this->createMock(ReceiverLocator::class);
         $failureReceiverProvider = new FailureReceiverProvider($receiverLocator, new FailureReceiverName('failed'));
 
         $receiverLocator->expects($this->once())

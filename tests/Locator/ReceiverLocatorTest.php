@@ -15,7 +15,7 @@ final class ReceiverLocatorTest extends TestCase
     public function testGetReceiver(): void
     {
         $messengerReceiverLocator = $this->createMock(ServiceProviderInterface::class);
-        $receiverLocator          = new ReceiverLocator($messengerReceiverLocator, ['foo', 'bar']);
+        $receiverLocator = new ReceiverLocator($messengerReceiverLocator, ['foo', 'bar']);
 
         $messengerReceiverLocator->expects($this->once())
             ->method('has')

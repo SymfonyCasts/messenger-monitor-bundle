@@ -16,7 +16,7 @@ class FailedMessageRejecterTest extends TestCase
     public function testRejectFailedMessage(): void
     {
         $failureReceiverProvider = $this->createMock(FailureReceiverProvider::class);
-        $failedMessageRejecter   = new FailedMessageRejecter($failureReceiverProvider);
+        $failedMessageRejecter = new FailedMessageRejecter($failureReceiverProvider);
 
         $failureReceiverProvider->expects($this->once())
             ->method('getFailureReceiver')
