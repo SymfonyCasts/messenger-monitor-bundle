@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Statistics;
+namespace SymfonyCasts\MessengerMonitorBundle\Statistics;
 
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Connection;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection;
 
 /**
  * @internal

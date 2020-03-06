@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\IntegrationTests\Storage;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests\IntegrationTests\Storage;
 
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Connection;
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
-use KaroIO\MessengerMonitorBundle\Tests\IntegrationTests\AbstractDoctrineIntegrationTests;
-use KaroIO\MessengerMonitorBundle\Tests\TestableMessage;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\IntegrationTests\AbstractDoctrineIntegrationTests;
+use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
 
 final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
 {
     public function testSaveAndLoadMessage(): void
     {
         /** @var Connection $doctrineConnection */
-        $doctrineConnection = self::$container->get('test.karo-io.messenger_monitor.storage.doctrine_connection');
+        $doctrineConnection = self::$container->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection');
 
         $doctrineConnection->saveMessage(
             new StoredMessage('id', TestableMessage::class, $dispatchedAt = (new \DateTimeImmutable())->setTime(0, 0, 0))
@@ -28,7 +28,7 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
     public function testSeveralMessages(): void
     {
         /** @var Connection $doctrineConnection */
-        $doctrineConnection = self::$container->get('test.karo-io.messenger_monitor.storage.doctrine_connection');
+        $doctrineConnection = self::$container->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection');
 
         $doctrineConnection->saveMessage(new StoredMessage('id1', TestableMessage::class, new \DateTimeImmutable()));
         $doctrineConnection->saveMessage(new StoredMessage('id2', TestableMessage::class, new \DateTimeImmutable()));
@@ -40,7 +40,7 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
     public function testUpdateMessage(): void
     {
         /** @var Connection $doctrineConnection */
-        $doctrineConnection = self::$container->get('test.karo-io.messenger_monitor.storage.doctrine_connection');
+        $doctrineConnection = self::$container->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection');
 
         $doctrineConnection->saveMessage($storedMessage = new StoredMessage('id', TestableMessage::class, new \DateTimeImmutable()));
         $storedMessage->setReceivedAt(\DateTimeImmutable::createFromFormat('U', (string) time()));

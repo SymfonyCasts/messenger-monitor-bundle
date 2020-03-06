@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\FailureReceiver;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests\FailureReceiver;
 
-use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
 use PHPUnit\Framework\TestCase;
+use SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
 
 final class FailureReceiverTest extends TestCase
 {

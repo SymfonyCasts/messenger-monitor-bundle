@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\Storage\Doctrine\EventListener;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests\Storage\Doctrine\EventListener;
 
-use KaroIO\MessengerMonitorBundle\Stamp\MonitorIdStamp;
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Connection;
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\EventListener\SaveStoredMessageOnMessageSentListener;
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
-use KaroIO\MessengerMonitorBundle\Tests\TestableMessage;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
+use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener\SaveStoredMessageOnMessageSentListener;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
 
 final class SaveStoredMessageOnMessageSentListenerTest extends TestCase
 {

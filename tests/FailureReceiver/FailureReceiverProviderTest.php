@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\FailureReceiver;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests\FailureReceiver;
 
-use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
-use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
-use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
-use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
-use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
+use SymfonyCasts\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
+use SymfonyCasts\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
+use SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
+use SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
+use SymfonyCasts\MessengerMonitorBundle\Locator\ReceiverLocator;
 
 final class FailureReceiverProviderTest extends TestCase
 {
     public function testGetFailureProvider(): void
     {
-        $receiverLocator = $this->createMock(ReceiverLocator::class);
+        $receiverLocator         = $this->createMock(ReceiverLocator::class);
         $failureReceiverProvider = new FailureReceiverProvider($receiverLocator, new FailureReceiverName('failed'));
 
         $receiverLocator->expects($this->once())

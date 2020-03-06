@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Storage\Doctrine\EventListener;
+namespace SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener;
 
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Connection;
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
 
 /**
  * TODO: catch error + log

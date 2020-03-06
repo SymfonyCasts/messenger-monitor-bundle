@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\Statistics;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests\Statistics;
 
-use KaroIO\MessengerMonitorBundle\Statistics\MetricsPerMessageType;
 use PHPUnit\Framework\TestCase;
+use SymfonyCasts\MessengerMonitorBundle\Statistics\MetricsPerMessageType;
 
 final class MetricsPerMessageTypeTest extends TestCase
 {

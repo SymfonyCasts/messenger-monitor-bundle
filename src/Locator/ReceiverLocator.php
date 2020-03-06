@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Locator;
+namespace SymfonyCasts\MessengerMonitorBundle\Locator;
 
-use KaroIO\MessengerMonitorBundle\Exception\ReceiverDoesNotExistException;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Contracts\Service\ServiceProviderInterface;
+use SymfonyCasts\MessengerMonitorBundle\Exception\ReceiverDoesNotExistException;
 
 /**
  * @internal

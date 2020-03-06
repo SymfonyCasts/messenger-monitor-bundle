@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\IntegrationTests;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests\IntegrationTests;
 
 use Doctrine\DBAL\Connection;
-use KaroIO\MessengerMonitorBundle\Tests\TestKernel;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use SymfonyCasts\MessengerMonitorBundle\Tests\TestKernel;
 
 abstract class AbstractDoctrineIntegrationTests extends KernelTestCase
 {
@@ -30,6 +30,6 @@ abstract class AbstractDoctrineIntegrationTests extends KernelTestCase
             $this->markTestSkipped(sprintf('Can\'t connect to connection: %s', $exception->getMessage()));
         }
 
-        $connection->executeQuery('DROP TABLE IF EXISTS karo_io_messenger_monitor');
+        $connection->executeQuery('DROP TABLE IF EXISTS messenger_monitor');
     }
 }

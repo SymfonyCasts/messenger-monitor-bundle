@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Exception;
+namespace SymfonyCasts\MessengerMonitorBundle\Exception;
 
 use Symfony\Component\Messenger\Exception\RuntimeException;
 

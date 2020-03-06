@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Controller;
+namespace SymfonyCasts\MessengerMonitorBundle\Controller;
 
-use KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRetryer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRetryer;
 
 /**
  * todo: bulk treatment.
@@ -36,6 +36,6 @@ final class RetryFailedMessageController
             $this->session->getBag('flashes')->add('messenger_monitor.error', sprintf('Error while rejecting message with id "%s": %s', $id, $exception->getMessage()));
         }
 
-        return new RedirectResponse($this->urlGenerator->generate('karo-io.dashboard'));
+        return new RedirectResponse($this->urlGenerator->generate('.dashboard'));
     }
 }

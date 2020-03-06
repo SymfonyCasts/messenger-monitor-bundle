@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Controller;
+namespace SymfonyCasts\MessengerMonitorBundle\Controller;
 
-use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
-use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
-use KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRepository;
-use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
-use KaroIO\MessengerMonitorBundle\Statistics\StatisticsProcessorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
+use SymfonyCasts\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
+use SymfonyCasts\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
+use SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRepository;
+use SymfonyCasts\MessengerMonitorBundle\Locator\ReceiverLocator;
+use SymfonyCasts\MessengerMonitorBundle\Statistics\StatisticsProcessorInterface;
 use Twig\Environment;
 
 /**
@@ -24,7 +24,7 @@ final class DashboardController
     private $statisticsProcessor;
 
     public const FAILURE_RECEIVER_NOT_LISTABLE = 'failure-receiver-not-listable';
-    public const NO_FAILURE_RECEIVER = 'no-failure-receiver';
+    public const NO_FAILURE_RECEIVER           = 'no-failure-receiver';
 
     public function __construct(
         Environment $twig,
@@ -57,7 +57,7 @@ final class DashboardController
 
         return new Response(
             $this->twig->render(
-                '@KaroIOMessengerMonitor/dashboard.html.twig',
+                '@SymfonyCastsMessengerMonitor/dashboard.html.twig',
                 [
                     'receivers' => $receivers,
                     'cannotListFailedMessages' => $cannotListFailedMessages,

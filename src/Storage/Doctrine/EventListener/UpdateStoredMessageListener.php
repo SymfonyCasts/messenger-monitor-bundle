@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Storage\Doctrine\EventListener;
+namespace SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener;
 
-use KaroIO\MessengerMonitorBundle\Stamp\MonitorIdStamp;
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Connection;
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
 use Symfony\Component\Messenger\Event\WorkerMessageReceivedEvent;
+use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
 
 /**
  * todo: see how retries fit into this.

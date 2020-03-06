@@ -34,9 +34,9 @@
         {% endfor %}
     </table>
 
-    {% if cannotListFailedMessages != constant('KaroIO\\MessengerMonitorBundle\\Controller\\DashboardController::NO_FAILURE_RECEIVER') %}
+    {% if cannotListFailedMessages != constant('SymfonyCasts\\MessengerMonitorBundle\\Controller\\DashboardController::NO_FAILURE_RECEIVER') %}
         <h2>Failure transport</h2>
-        {% if cannotListFailedMessages == constant('KaroIO\\MessengerMonitorBundle\\Controller\\DashboardController::FAILURE_RECEIVER_NOT_LISTABLE') %}
+        {% if cannotListFailedMessages == constant('SymfonyCasts\\MessengerMonitorBundle\\Controller\\DashboardController::FAILURE_RECEIVER_NOT_LISTABLE') %}
             The failure transport does not support listing or showing specific messages
         {% else %}
             <table class="table">
@@ -54,8 +54,8 @@
                         <td>{{ failedMessage.class }}</td>
                         <td>{{ failedMessage.failedAt }}</td>
                         <td>{{ failedMessage.error }}</td>
-                        <td><a class="btn btn-primary" href="{{ path('karo-io.retry_failed_message', {id: failedMessage.id}) }}">Retry</a></td>
-                        <td><a class="btn btn-danger" href="{{ path('karo-io.reject_failed_message', {id: failedMessage.id}) }}">Reject</a></td>
+                        <td><a class="btn btn-primary" href="{{ path('symfonycasts.messenger_monitor.retry_failed_message', {id: failedMessage.id}) }}">Retry</a></td>
+                        <td><a class="btn btn-danger" href="{{ path('symfonycasts.messenger_monitor.reject_failed_message', {id: failedMessage.id}) }}">Reject</a></td>
                     </tr>
                 {% else %}
                     <tr>

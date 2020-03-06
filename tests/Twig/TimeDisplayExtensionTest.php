@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\Twig;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests\Twig;
 
-use KaroIO\MessengerMonitorBundle\Twig\TimeDisplayExtension;
+use SymfonyCasts\MessengerMonitorBundle\Twig\TimeDisplayExtension;
 use PHPUnit\Framework\TestCase;
 
 final class TimeDisplayExtensionTest extends TestCase

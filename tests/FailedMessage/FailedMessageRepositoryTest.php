@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\FailedMessage;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests\FailedMessage;
 
-use KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageDetails;
-use KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRepository;
-use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
-use KaroIO\MessengerMonitorBundle\Tests\TestableMessage;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
 use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
+use SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageDetails;
+use SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRepository;
+use SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
+use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
 
 class FailedMessageRepositoryTest extends TestCase
 {

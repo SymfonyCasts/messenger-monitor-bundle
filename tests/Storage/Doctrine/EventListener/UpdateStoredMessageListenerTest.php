@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\Storage\Doctrine\EventListener;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests\Storage\Doctrine\EventListener;
 
-use KaroIO\MessengerMonitorBundle\Stamp\MonitorIdStamp;
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Connection;
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\EventListener\UpdateStoredMessageListener;
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
-use KaroIO\MessengerMonitorBundle\Tests\TestableMessage;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
 use Symfony\Component\Messenger\Event\WorkerMessageReceivedEvent;
+use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener\UpdateStoredMessageListener;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
 
 final class UpdateStoredMessageListenerTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Storage\Doctrine;
+namespace SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine;
 
 use Doctrine\DBAL\Connection as DBALConnection;
 use Doctrine\DBAL\Driver\ResultStatement;
@@ -11,9 +11,9 @@ use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Synchronizer\SingleDatabaseSynchronizer;
 use Doctrine\DBAL\Types\Types;
-use KaroIO\MessengerMonitorBundle\Statistics\MetricsPerMessageType;
-use KaroIO\MessengerMonitorBundle\Statistics\Statistics;
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Driver\SQLDriverInterface;
+use SymfonyCasts\MessengerMonitorBundle\Statistics\MetricsPerMessageType;
+use SymfonyCasts\MessengerMonitorBundle\Statistics\Statistics;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Driver\SQLDriverInterface;
 
 /**
  * @internal

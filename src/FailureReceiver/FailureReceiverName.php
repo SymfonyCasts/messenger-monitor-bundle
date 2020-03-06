@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\FailureReceiver;
+namespace SymfonyCasts\MessengerMonitorBundle\FailureReceiver;
 
 /**
  * @internal

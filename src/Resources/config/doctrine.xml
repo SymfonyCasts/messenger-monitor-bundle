@@ -6,32 +6,32 @@
 
     <services>
         <!-- Storage -->
-        <service id="karo-io.messenger_monitor.storage.doctrine_connection" class="KaroIO\MessengerMonitorBundle\Storage\Doctrine\Connection">
-            <factory service="karo-io.messenger_monitor.storage.doctrine_connection_factory"/>
+        <service id="symfonycasts.messenger_monitor.storage.doctrine_connection" class="SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection">
+            <factory service="symfonycasts.messenger_monitor.storage.doctrine_connection_factory"/>
         </service>
 
-        <service id="karo-io.messenger_monitor.storage.doctrine_connection_factory" class="KaroIO\MessengerMonitorBundle\Storage\Doctrine\ConnectionFactory">
-            <argument type="service" id="doctrine" />
-            <argument /> <!-- Doctrine's connection name -->
-            <argument /> <!-- Doctrine's table name -->
+        <service id="symfonycasts.messenger_monitor.storage.doctrine_connection_factory" class="SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\ConnectionFactory">
+            <argument type="service" id="doctrine"/>
+            <argument/> <!-- Doctrine's connection name -->
+            <argument/> <!-- Doctrine's table name -->
         </service>
 
         <!-- EventListeners -->
-        <service id="karo-io.messenger_monitor.listener.store_in_doctrine" class="KaroIO\MessengerMonitorBundle\Storage\Doctrine\EventListener\SaveStoredMessageOnMessageSentListener">
-            <argument type="service" id="karo-io.messenger_monitor.storage.doctrine_connection" />
-            <tag name="kernel.event_subscriber" />
+        <service id="symfonycasts.messenger_monitor.listener.store_in_doctrine" class="SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener\SaveStoredMessageOnMessageSentListener">
+            <argument type="service" id="symfonycasts.messenger_monitor.storage.doctrine_connection"/>
+            <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="karo-io.messenger_monitor.listener.update_doctrine" class="KaroIO\MessengerMonitorBundle\Storage\Doctrine\EventListener\UpdateStoredMessageListener">
-            <argument type="service" id="karo-io.messenger_monitor.storage.doctrine_connection" />
-            <argument type="service" id="logger" on-invalid="null" />
-            <tag name="kernel.event_subscriber" />
-            <tag name="monolog.logger" channel="messenger-monitor-bundle" />
+        <service id="symfonycasts.messenger_monitor.listener.update_doctrine" class="SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener\UpdateStoredMessageListener">
+            <argument type="service" id="symfonycasts.messenger_monitor.storage.doctrine_connection"/>
+            <argument type="service" id="logger" on-invalid="null"/>
+            <tag name="kernel.event_subscriber"/>
+            <tag name="monolog.logger" channel="messenger-monitor-bundle"/>
         </service>
 
         <!-- Statistics -->
-        <service id="karo-io.messenger_monitor.statistics.doctrine_processor" class="KaroIO\MessengerMonitorBundle\Statistics\DoctrineProcessor">
-            <argument type="service" id="karo-io.messenger_monitor.storage.doctrine_connection" />
+        <service id="symfonycasts.messenger_monitor.statistics.doctrine_processor" class="SymfonyCasts\MessengerMonitorBundle\Statistics\DoctrineProcessor">
+            <argument type="service" id="symfonycasts.messenger_monitor.storage.doctrine_connection"/>
         </service>
     </services>
 </container>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\DependencyInjection;
+namespace SymfonyCasts\MessengerMonitorBundle\DependencyInjection;
 
 use Doctrine\DBAL\Connection as DBALConnection;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -15,7 +15,7 @@ final class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('karo_io_messenger_monitor');
+        $treeBuilder = new TreeBuilder('symfonycasts_messenger_monitor');
         $rootNode = $treeBuilder->getRootNode();
 
         $rootNode

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\FailureReceiver;
+namespace SymfonyCasts\MessengerMonitorBundle\FailureReceiver;
 
-use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
-use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
-use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
 use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
+use SymfonyCasts\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
+use SymfonyCasts\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
+use SymfonyCasts\MessengerMonitorBundle\Locator\ReceiverLocator;
 
 /**
  * @final

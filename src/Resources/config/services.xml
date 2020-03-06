@@ -6,71 +6,71 @@
 
     <services>
         <!-- Controllers -->
-        <service id="karo-io.controller.dashboard" class="KaroIO\MessengerMonitorBundle\Controller\DashboardController">
-            <argument type="service" id="twig" />
-            <argument type="service" id="karo-io.messenger_monitor.receiver_locator" />
-            <argument type="service" id="karo-io.messenger_monitor.failed_message.repository" />
-            <argument type="service" id="karo-io.messenger_monitor.statistics.processor"/>
+        <service id="symfonycasts.messenger_monitor.controller.dashboard" class="SymfonyCasts\MessengerMonitorBundle\Controller\DashboardController">
+            <argument type="service" id="twig"/>
+            <argument type="service" id="symfonycasts.messenger_monitor.receiver_locator"/>
+            <argument type="service" id="symfonycasts.messenger_monitor.failed_message.repository"/>
+            <argument type="service" id="symfonycasts.messenger_monitor.statistics.processor"/>
         </service>
 
-        <service id="karo-io.controller.retry_failed_message" class="KaroIO\MessengerMonitorBundle\Controller\RetryFailedMessageController">
-            <argument type="service" id="karo-io.messenger_monitor.failed_message.retry" />
-            <argument type="service" id="session" />
-            <argument type="service" id="router" />
+        <service id="symfonycasts.messenger_monitor.controller.retry_failed_message" class="SymfonyCasts\MessengerMonitorBundle\Controller\RetryFailedMessageController">
+            <argument type="service" id="symfonycasts.messenger_monitor.failed_message.retry"/>
+            <argument type="service" id="session"/>
+            <argument type="service" id="router"/>
         </service>
 
-        <service id="karo-io.controller.reject_failed_message" class="KaroIO\MessengerMonitorBundle\Controller\RejectFailedMessageController">
-            <argument type="service" id="karo-io.messenger_monitor.failed_message.reject" />
-            <argument type="service" id="session" />
-            <argument type="service" id="router" />
+        <service id="symfonycasts.messenger_monitor.controller.reject_failed_message" class="SymfonyCasts\MessengerMonitorBundle\Controller\RejectFailedMessageController">
+            <argument type="service" id="symfonycasts.messenger_monitor.failed_message.reject"/>
+            <argument type="service" id="session"/>
+            <argument type="service" id="router"/>
         </service>
 
         <!-- Locators -->
-        <service id="karo-io.messenger_monitor.receiver_locator" class="KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator">
-            <argument type="service" id="messenger.receiver_locator" />
-            <argument /> <!-- Receiver names -->
+        <service id="symfonycasts.messenger_monitor.receiver_locator" class="SymfonyCasts\MessengerMonitorBundle\Locator\ReceiverLocator">
+            <argument type="service" id="messenger.receiver_locator"/>
+            <argument/> <!-- Receiver names -->
         </service>
 
         <!-- Commands -->
-        <service id="karo-io.messenger_monitor.monitor_command" class="KaroIO\MessengerMonitorBundle\Command\MonitorCommand">
-            <argument type="service" id="karo-io.messenger_monitor.receiver_locator" />
+        <service id="symfonycasts.messenger_monitor.monitor_command" class="SymfonyCasts\MessengerMonitorBundle\Command\MonitorCommand">
+            <argument type="service" id="symfonycasts.messenger_monitor.receiver_locator"/>
             <tag name="console.command"/>
         </service>
 
         <!-- Failed Message -->
-        <service id="karo-io.messenger_monitor.failed_message.repository" class="KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRepository">
-            <argument type="service" id="karo-io.messenger_monitor.failed_receiver.provider" />
+        <service id="symfonycasts.messenger_monitor.failed_message.repository" class="SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRepository">
+            <argument type="service" id="symfonycasts.messenger_monitor.failed_receiver.provider"/>
         </service>
 
-        <service id="karo-io.messenger_monitor.failed_message.retry" class="KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRetryer">
-            <argument type="service" id="karo-io.messenger_monitor.failed_receiver.provider" />
-            <argument type="service" id="karo-io.messenger_monitor.failed_receiver.name" />
-            <argument type="service" id="messenger.routable_message_bus" />
-            <argument type="service" id="event_dispatcher" />
-            <argument type="service" id="logger" />
+        <service id="symfonycasts.messenger_monitor.failed_message.retry" class="SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRetryer">
+            <argument type="service" id="symfonycasts.messenger_monitor.failed_receiver.provider"/>
+            <argument type="service" id="symfonycasts.messenger_monitor.failed_receiver.name"/>
+            <argument type="service" id="messenger.routable_message_bus"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="logger"/>
         </service>
 
-        <service id="karo-io.messenger_monitor.failed_message.reject" class="KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRejecter">
-            <argument type="service" id="karo-io.messenger_monitor.failed_receiver.provider" />
+        <service id="symfonycasts.messenger_monitor.failed_message.reject" class="SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRejecter">
+            <argument type="service" id="symfonycasts.messenger_monitor.failed_receiver.provider"/>
         </service>
 
         <!-- FailureReceiver -->
-        <service id="karo-io.messenger_monitor.failed_receiver.name" class="KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverName">
-            <argument /> <!-- Failure receiver's name -->
+        <service id="symfonycasts.messenger_monitor.failed_receiver.name" class="SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverName">
+            <argument/> <!-- Failure receiver's name -->
         </service>
 
-        <service id="karo-io.messenger_monitor.failed_receiver.provider" class="KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider">
-            <argument type="service" id="karo-io.messenger_monitor.receiver_locator"/>
-            <argument type="service" id="karo-io.messenger_monitor.failed_receiver.name"/>
+        <service id="symfonycasts.messenger_monitor.failed_receiver.provider" class="SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider">
+            <argument type="service" id="symfonycasts.messenger_monitor.receiver_locator"/>
+            <argument type="service" id="symfonycasts.messenger_monitor.failed_receiver.name"/>
         </service>
 
         <!-- EventListener -->
-        <service id="karo-io.messenger_monitor.listener.add_monitor_id_stamp" class="KaroIO\MessengerMonitorBundle\EventListener\AddStampOnMessageSentListener">
+        <service id="symfonycasts.messenger_monitor.listener.add_monitor_id_stamp" class="SymfonyCasts\MessengerMonitorBundle\EventListener\AddStampOnMessageSentListener">
             <tag name="kernel.event_subscriber"/>
         </service>
 
         <!-- TwigExtensions -->
-        <service id="karo-io.messenger_monitor.twig.time_display" class="KaroIO\MessengerMonitorBundle\Tests\Twig\TimeDisplayExtensionTest">
+        <service id="symfonycasts.messenger_monitor.twig.time_display" class="SymfonyCasts\MessengerMonitorBundle\Tests\Twig\TimeDisplayExtensionTest">
             <tag name="twig.extension"/>
         </service>
     </services>

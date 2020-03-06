@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Command;
+namespace SymfonyCasts\MessengerMonitorBundle\Command;
 
-use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -12,6 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
+use SymfonyCasts\MessengerMonitorBundle\Locator\ReceiverLocator;
 
 /**
  * @internal
