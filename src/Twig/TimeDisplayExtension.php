@@ -16,7 +16,7 @@ final class TimeDisplayExtension extends AbstractExtension
         ];
     }
 
-    public function formatPrice(float $seconds): string
+    public function formatTime(float $seconds): string
     {
         if ($seconds < 10) {
             $seconds = round($seconds, 2);

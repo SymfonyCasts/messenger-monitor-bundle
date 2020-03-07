@@ -6,20 +6,20 @@
 
     <services>
         <!-- Controllers -->
-        <service id="symfonycasts.messenger_monitor.controller.dashboard" class="SymfonyCasts\MessengerMonitorBundle\Controller\DashboardController">
+        <service id="symfonycasts.messenger_monitor.controller.dashboard" class="SymfonyCasts\MessengerMonitorBundle\Controller\DashboardController" public="true">
             <argument type="service" id="twig"/>
             <argument type="service" id="symfonycasts.messenger_monitor.receiver_locator"/>
             <argument type="service" id="symfonycasts.messenger_monitor.failed_message.repository"/>
             <argument type="service" id="symfonycasts.messenger_monitor.statistics.processor"/>
         </service>
 
-        <service id="symfonycasts.messenger_monitor.controller.retry_failed_message" class="SymfonyCasts\MessengerMonitorBundle\Controller\RetryFailedMessageController">
+        <service id="symfonycasts.messenger_monitor.controller.retry_failed_message" class="SymfonyCasts\MessengerMonitorBundle\Controller\RetryFailedMessageController" public="true">
             <argument type="service" id="symfonycasts.messenger_monitor.failed_message.retry"/>
             <argument type="service" id="session"/>
             <argument type="service" id="router"/>
         </service>
 
-        <service id="symfonycasts.messenger_monitor.controller.reject_failed_message" class="SymfonyCasts\MessengerMonitorBundle\Controller\RejectFailedMessageController">
+        <service id="symfonycasts.messenger_monitor.controller.reject_failed_message" class="SymfonyCasts\MessengerMonitorBundle\Controller\RejectFailedMessageController" public="true">
             <argument type="service" id="symfonycasts.messenger_monitor.failed_message.reject"/>
             <argument type="service" id="session"/>
             <argument type="service" id="router"/>
@@ -64,7 +64,7 @@
         </service>
 
         <!-- TwigExtensions -->
-        <service id="symfonycasts.messenger_monitor.twig.time_display" class="SymfonyCasts\MessengerMonitorBundle\Tests\Twig\TimeDisplayExtensionTest">
+        <service id="symfonycasts.messenger_monitor.twig.time_display" class="SymfonyCasts\MessengerMonitorBundle\Twig\TimeDisplayExtension">
             <tag name="twig.extension"/>
         </service>
     </services>

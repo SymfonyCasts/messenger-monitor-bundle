@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace SymfonyCasts\MessengerMonitorBundle\Tests\Twig;
 
-use SymfonyCasts\MessengerMonitorBundle\Twig\TimeDisplayExtension;
 use PHPUnit\Framework\TestCase;
+use SymfonyCasts\MessengerMonitorBundle\Twig\TimeDisplayExtension;
 
 final class TimeDisplayExtensionTest extends TestCase
 {
@@ -13,18 +13,18 @@ final class TimeDisplayExtensionTest extends TestCase
     {
         $timeDisplayExtension = new TimeDisplayExtension();
 
-        $this->assertSame('10 seconds', $timeDisplayExtension->formatPrice(10));
+        $this->assertSame('10 seconds', $timeDisplayExtension->formatTime(10));
 
-        $this->assertSame('1 second', $timeDisplayExtension->formatPrice(1));
-        $this->assertSame('1 second', $timeDisplayExtension->formatPrice(1.004));
+        $this->assertSame('1 second', $timeDisplayExtension->formatTime(1));
+        $this->assertSame('1 second', $timeDisplayExtension->formatTime(1.004));
 
-        $this->assertSame('0.12 seconds', $timeDisplayExtension->formatPrice(0.123));
-        $this->assertSame('11 seconds', $timeDisplayExtension->formatPrice(11.123));
+        $this->assertSame('0.12 seconds', $timeDisplayExtension->formatTime(0.123));
+        $this->assertSame('11 seconds', $timeDisplayExtension->formatTime(11.123));
 
-        $this->assertSame('1 minute', $timeDisplayExtension->formatPrice(60.123));
-        $this->assertSame('5 minutes', $timeDisplayExtension->formatPrice(300.123));
+        $this->assertSame('1 minute', $timeDisplayExtension->formatTime(60.123));
+        $this->assertSame('5 minutes', $timeDisplayExtension->formatTime(300.123));
 
-        $this->assertSame('1 minute 5 seconds', $timeDisplayExtension->formatPrice(65.123));
-        $this->assertSame('5 minutes 1 second', $timeDisplayExtension->formatPrice(301.123));
+        $this->assertSame('1 minute 5 seconds', $timeDisplayExtension->formatTime(65.123));
+        $this->assertSame('5 minutes 1 second', $timeDisplayExtension->formatTime(301.123));
     }
 }
