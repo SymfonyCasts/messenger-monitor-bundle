@@ -13,7 +13,7 @@ use SymfonyCasts\MessengerMonitorBundle\DependencyInjection\SymfonyCastsMessenge
 
 final class SymfonyCastsMessengerMonitorBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new ReceiverLocatorPass());
         $container->addCompilerPass(new FailureReceiverPass());

@@ -8,8 +8,6 @@ use Symfony\Component\Messenger\Envelope;
 use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
 
 /**
- * todo handle retries.
- *
  * @internal
  */
 final class StoredMessage
@@ -42,7 +40,7 @@ final class StoredMessage
 
     public static function fromEnvelope(Envelope $envelope): self
     {
-        /** @var MonitorIdStamp $monitorIdStamp */
+        /** @var MonitorIdStamp|null $monitorIdStamp */
         $monitorIdStamp = $envelope->last(MonitorIdStamp::class);
 
         if (null === $monitorIdStamp) {

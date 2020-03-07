@@ -23,7 +23,6 @@ final class SymfonyCastsMessengerMonitorExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         if ('doctrine' === $config['driver']) {
-            // todo: throw an error if doctrine platform is not mysql nor postgresql
             $loader->load('doctrine.xml');
 
             $doctrineConnectionFactoryDefinition = $container->getDefinition('symfonycasts.messenger_monitor.storage.doctrine_connection_factory');

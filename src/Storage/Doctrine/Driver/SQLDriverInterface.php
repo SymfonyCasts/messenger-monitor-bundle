@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Driver;
 
 /**
- * todo: implement for PostgreSQL
  * @internal
  */
 interface SQLDriverInterface

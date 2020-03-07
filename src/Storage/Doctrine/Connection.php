@@ -24,6 +24,7 @@ class Connection
     private $driverConnection;
     private $SQLDriver;
     private $tableName;
+    /** @var SingleDatabaseSynchronizer|null */
     private $schemaSynchronizer;
 
     public function __construct(DBALConnection $driverConnection, SQLDriverInterface $SQLDriver, string $tableName)
@@ -71,7 +72,7 @@ class Connection
                 'received_at' => $storedMessage->getReceivedAt(),
                 'handled_at' => $storedMessage->getHandledAt(),
                 'receiver_name' => $storedMessage->getReceiverName(),
-                'id' => $storedMessage->getId()
+                'id' => $storedMessage->getId(),
             ],
             [
                 'received_at' => Types::DATETIME_IMMUTABLE,
@@ -118,7 +119,7 @@ class Connection
                 ->groupBy('class')
                 ->getSQL(),
             ['from_date' => $fromDate, 'to_date' => $toDate],
-            ['from_date' => Types::DATETIME_IMMUTABLE, 'to_date' => Types::DATETIME_IMMUTABLE,]
+            ['from_date' => Types::DATETIME_IMMUTABLE, 'to_date' => Types::DATETIME_IMMUTABLE]
         );
 
         $statistics = new Statistics($fromDate, $toDate);

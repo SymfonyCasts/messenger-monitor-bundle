@@ -14,7 +14,7 @@ final class FailedMessageDetails
     private $failedAt;
     private $error;
 
-    public function __construct($id, string $class, string $failedAt, string $error)
+    public function __construct($id, string $class, string $failedAt, ?string $error)
     {
         $this->id = $id;
         $this->class = $class;
@@ -37,7 +37,7 @@ final class FailedMessageDetails
         return $this->failedAt;
     }
 
-    public function getError(): string
+    public function getError(): ?string
     {
         return $this->error;
     }

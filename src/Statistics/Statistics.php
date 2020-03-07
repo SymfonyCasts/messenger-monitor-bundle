@@ -23,7 +23,7 @@ final class Statistics
 
     public function add(MetricsPerMessageType $metrics): void
     {
-        if (array_key_exists($metrics->getClass(), $this->metrics)) {
+        if (\array_key_exists($metrics->getClass(), $this->metrics)) {
             throw new MetricsAlreadyAddedForMessageClassException($metrics->getClass());
         }
 
@@ -40,7 +40,7 @@ final class Statistics
 
     public function getMessagesCount(): int
     {
-        return array_sum(
+        return (int) array_sum(
             array_map(
                 static function (MetricsPerMessageType $metrics) {
                     return $metrics->getMessagesCount();
@@ -67,14 +67,14 @@ final class Statistics
 
     private function computeOverallAverageFor(string $metricName): float
     {
-        if ($this->getMessagesCount() === 0) {
+        if (0 === $this->getMessagesCount()) {
             return 0;
         }
 
         return round(
             array_sum(
                 array_map(
-                    static function (MetricsPerMessageType $metric) use ($metricName) {
+                    static function (MetricsPerMessageType $metric) use ($metricName): float {
                         $method = 'get'.$metricName;
 
                         return $metric->getMessagesCount() * $metric->$method();

@@ -10,7 +10,6 @@ use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection;
 use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
 
 /**
- * TODO: catch error + log
  * @internal
  */
 final class SaveStoredMessageOnMessageSentListener implements EventSubscriberInterface

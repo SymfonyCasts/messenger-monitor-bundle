@@ -24,12 +24,12 @@ class FailedMessageRejecterTest extends TestCase
 
         $failureReceiver->expects($this->once())
             ->method('find')
-            ->with('id')
+            ->with(1)
             ->willReturn($envelope = new Envelope(new TestableMessage()));
 
         $failureReceiver->expects($this->once())->method('reject')->with($envelope);
 
-        $failedMessageRejecter->rejectFailedMessage('id');
+        $failedMessageRejecter->rejectFailedMessage(1);
     }
 
     public function testExceptionIfNoMessageForId(): void
@@ -43,8 +43,8 @@ class FailedMessageRejecterTest extends TestCase
             ->method('getFailureReceiver')
             ->willReturn($failureReceiver = $this->createMock(ListableReceiverInterface::class));
 
-        $failureReceiver->expects($this->once())->method('find')->with('id')->willReturn(null);
+        $failureReceiver->expects($this->once())->method('find')->with(1)->willReturn(null);
 
-        $failedMessageRejecter->rejectFailedMessage('id');
+        $failedMessageRejecter->rejectFailedMessage(1);
     }
 }

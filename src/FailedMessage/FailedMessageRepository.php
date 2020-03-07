@@ -28,7 +28,6 @@ final class FailedMessageRepository
      */
     public function listFailedMessages(): array
     {
-        // todo: this number should be dynamic
         $envelopes = $this->failureReceiverProvider->getFailureReceiver()->all(10);
 
         $rows = [];
@@ -63,7 +62,7 @@ final class FailedMessageRepository
      */
     private function getMessageId(Envelope $envelope)
     {
-        /** @var TransportMessageIdStamp $stamp */
+        /** @var TransportMessageIdStamp|null $stamp */
         $stamp = $envelope->last(TransportMessageIdStamp::class);
 
         return null !== $stamp ? $stamp->getId() : null;

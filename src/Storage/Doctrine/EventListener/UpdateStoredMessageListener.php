@@ -14,8 +14,6 @@ use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection;
 use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
 
 /**
- * todo: see how retries fit into this.
- *
  * @internal
  */
 final class UpdateStoredMessageListener implements EventSubscriberInterface
@@ -57,7 +55,7 @@ final class UpdateStoredMessageListener implements EventSubscriberInterface
 
     private function getStoredMessage(Envelope $envelope): ?StoredMessage
     {
-        /** @var MonitorIdStamp $monitorIdStamp */
+        /** @var MonitorIdStamp|null $monitorIdStamp */
         $monitorIdStamp = $envelope->last(MonitorIdStamp::class);
 
         if (null === $monitorIdStamp) {

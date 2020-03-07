@@ -25,7 +25,7 @@ final class RejectFailedMessageController
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function __invoke($id): RedirectResponse
+    public function __invoke(int $id): RedirectResponse
     {
         try {
             $this->failedMessageRejecter->rejectFailedMessage($id);
@@ -34,6 +34,6 @@ final class RejectFailedMessageController
             $this->session->getBag('flashes')->add('messenger_monitor.error', sprintf('Error while rejecting message with id "%s": %s', $id, $exception->getMessage()));
         }
 
-        return new RedirectResponse($this->urlGenerator->generate('symfonycasts.messenger_monitor.controller.dashboard'));
+        return new RedirectResponse($this->urlGenerator->generate('symfonycasts.messenger_monitor.dashboard'));
     }
 }

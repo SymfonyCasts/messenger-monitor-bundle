@@ -29,7 +29,7 @@ final class TimeDisplayExtension extends AbstractExtension
         }
 
         $minutes = (int) floor($seconds / 60);
-        $seconds %= 60;
+        $seconds = (int) ($seconds % 60);
 
         if (0 === $seconds) {
             return sprintf('%d %s', $minutes, $this->pluralize('minute', $minutes));
@@ -40,6 +40,6 @@ final class TimeDisplayExtension extends AbstractExtension
 
     private function pluralize(string $word, float $number): string
     {
-        return $word.($number === 1.0 ? '' : 's');
+        return $word.(1.0 === $number ? '' : 's');
     }
 }

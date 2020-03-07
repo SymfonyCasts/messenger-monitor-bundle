@@ -21,7 +21,6 @@ final class DoctrineProcessor implements StatisticsProcessorInterface
     /** {@inheritdoc} */
     public function createStatistics(): Statistics
     {
-        // todo: this period should be chosen by user
         return $this->connection->getStatistics(
             new \DateTimeImmutable('24 hours ago'),
             new \DateTimeImmutable()

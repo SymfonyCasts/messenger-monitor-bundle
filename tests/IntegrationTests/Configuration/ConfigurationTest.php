@@ -20,7 +20,7 @@ final class ConfigurationTest extends TestCase
                 'driver' => 'redis',
                 'doctrine' => [
                     'table_name' => 'foo',
-                ]
+                ],
             ]
         );
         $kernel->boot();
@@ -36,7 +36,7 @@ final class ConfigurationTest extends TestCase
                 'driver' => 'doctrine',
                 'doctrine' => [
                     'connection' => 'foo',
-                ]
+                ],
             ]
         );
         $kernel->boot();

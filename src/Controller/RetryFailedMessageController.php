@@ -10,8 +10,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRetryer;
 
 /**
- * todo: bulk treatment.
- *
  * @internal
  */
 final class RetryFailedMessageController
@@ -27,7 +25,7 @@ final class RetryFailedMessageController
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function __invoke($id): RedirectResponse
+    public function __invoke(int $id): RedirectResponse
     {
         try {
             $this->failedMessageRetryer->retryFailedMessage($id);

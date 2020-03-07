@@ -18,7 +18,7 @@ final class FailedMessageRejecter
         $this->failureReceiverProvider = $failureReceiverProvider;
     }
 
-    public function rejectFailedMessage($id): void
+    public function rejectFailedMessage(int $id): void
     {
         $failureReceiver = $this->failureReceiverProvider->getFailureReceiver();
 

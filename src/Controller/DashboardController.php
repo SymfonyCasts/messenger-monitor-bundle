@@ -24,7 +24,7 @@ final class DashboardController
     private $statisticsProcessor;
 
     public const FAILURE_RECEIVER_NOT_LISTABLE = 'failure-receiver-not-listable';
-    public const NO_FAILURE_RECEIVER           = 'no-failure-receiver';
+    public const NO_FAILURE_RECEIVER = 'no-failure-receiver';
 
     public function __construct(
         Environment $twig,

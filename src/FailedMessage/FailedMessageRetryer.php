@@ -35,7 +35,7 @@ final class FailedMessageRetryer
         $this->logger = $logger;
     }
 
-    public function retryFailedMessage($id): void
+    public function retryFailedMessage(int $id): void
     {
         $this->eventDispatcher->addSubscriber(new StopWorkerOnMessageLimitListener(1));
 
