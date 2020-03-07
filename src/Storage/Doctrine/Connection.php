@@ -13,7 +13,7 @@ use Doctrine\DBAL\Schema\Synchronizer\SingleDatabaseSynchronizer;
 use Doctrine\DBAL\Types\Types;
 use KaroIO\MessengerMonitorBundle\Statistics\MetricsPerMessageType;
 use KaroIO\MessengerMonitorBundle\Statistics\Statistics;
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Driver\SQLDriver;
+use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Driver\SQLDriverInterface;
 
 /**
  * @internal
@@ -26,7 +26,7 @@ class Connection
     private $tableName;
     private $schemaSynchronizer;
 
-    public function __construct(DBALConnection $driverConnection, SQLDriver $SQLDriver, string $tableName)
+    public function __construct(DBALConnection $driverConnection, SQLDriverInterface $SQLDriver, string $tableName)
     {
         $this->driverConnection = $driverConnection;
         $this->SQLDriver = $SQLDriver;
@@ -105,7 +105,7 @@ class Connection
         );
     }
 
-    public function getStatistics(\DateTimeImmutable $from, \DateTimeImmutable $to): Statistics
+    public function getStatistics(\DateTimeImmutable $fromDate, \DateTimeImmutable $toDate): Statistics
     {
         $statement = $this->executeQuery(
             $this->driverConnection->createQueryBuilder()
@@ -113,20 +113,20 @@ class Connection
                 ->addSelect(sprintf('AVG(%s) AS averageWaitingTime', $this->SQLDriver->getDateDiffInSecondsExpression('received_at', 'dispatched_at')))
                 ->addSelect(sprintf('AVG(%s) AS averageHandlingTime', $this->SQLDriver->getDateDiffInSecondsExpression('handled_at', 'received_at')))
                 ->from($this->tableName)
-                ->where('handled_at >= :from')
-                ->andWhere('handled_at <= :to')
+                ->where('handled_at >= :from_date')
+                ->andWhere('handled_at <= :to_date')
                 ->groupBy('class')
                 ->getSQL(),
-            ['from' => $from, 'to' => $to],
-            ['from' => Types::DATETIME_IMMUTABLE, 'to' => Types::DATETIME_IMMUTABLE,]
+            ['from_date' => $fromDate, 'to_date' => $toDate],
+            ['from_date' => Types::DATETIME_IMMUTABLE, 'to_date' => Types::DATETIME_IMMUTABLE,]
         );
 
-        $statistics = new Statistics($from, $to);
+        $statistics = new Statistics($fromDate, $toDate);
         while (false !== ($row = $statement->fetch(FetchMode::ASSOCIATIVE))) {
             $statistics->add(
                 new MetricsPerMessageType(
-                    $from,
-                    $to,
+                    $fromDate,
+                    $toDate,
                     $row['class'],
                     (int) $row['countMessagesOnPeriod'],
                     (float) $row['averageWaitingTime'],

@@ -9,21 +9,21 @@ namespace KaroIO\MessengerMonitorBundle\Statistics;
  */
 final class MetricsPerMessageType
 {
-    private $from;
-    private $to;
+    private $fromDate;
+    private $toDate;
     private $class;
     private $messagesCountOnPeriod;
     private $averageWaitingTime;
     private $averageHandlingTime;
 
-    public function __construct(\DateTimeImmutable $from, \DateTimeImmutable $to, string $class, int $messagesCountOnPeriod, float $averageWaitingTime, float $averageHandlingTime)
+    public function __construct(\DateTimeImmutable $fromDate, \DateTimeImmutable $toDate, string $class, int $messagesCountOnPeriod, float $averageWaitingTime, float $averageHandlingTime)
     {
-        $this->from                  = $from;
-        $this->to                    = $to;
-        $this->class                 = $class;
+        $this->fromDate = $fromDate;
+        $this->toDate = $toDate;
+        $this->class = $class;
         $this->messagesCountOnPeriod = $messagesCountOnPeriod;
-        $this->averageWaitingTime    = $averageWaitingTime;
-        $this->averageHandlingTime   = $averageHandlingTime;
+        $this->averageWaitingTime = $averageWaitingTime;
+        $this->averageHandlingTime = $averageHandlingTime;
     }
 
     public function getClass(): string
@@ -53,6 +53,6 @@ final class MetricsPerMessageType
 
     private function getNbHoursInPeriod(): float
     {
-        return abs($this->from->getTimestamp() - $this->to->getTimestamp()) / (60 * 60);
+        return abs($this->fromDate->getTimestamp() - $this->toDate->getTimestamp()) / (60 * 60);
     }
 }

@@ -9,16 +9,16 @@ namespace KaroIO\MessengerMonitorBundle\Statistics;
  */
 final class Statistics
 {
-    private $from;
-    private $to;
+    private $fromDate;
+    private $toDate;
 
     /** @var MetricsPerMessageType[] */
     private $metrics = [];
 
-    public function __construct(\DateTimeImmutable $from, \DateTimeImmutable $to)
+    public function __construct(\DateTimeImmutable $fromDate, \DateTimeImmutable $toDate)
     {
-        $this->from = $from;
-        $this->to   = $to;
+        $this->fromDate = $fromDate;
+        $this->toDate = $toDate;
     }
 
     public function add(MetricsPerMessageType $metrics): void
@@ -34,7 +34,7 @@ final class Statistics
             throw new MetricsAlreadyAddedForMessageClassException($metrics->getClass());
         }
 
-        $this->metrics[] = $metrics;
+        $this->metrics[$metrics->getClass()] = $metrics;
     }
 
     /**
@@ -95,6 +95,6 @@ final class Statistics
 
     private function getNbHoursInPeriod(): float
     {
-        return abs($this->from->getTimestamp() - $this->to->getTimestamp()) / (60 * 60);
+        return abs($this->fromDate->getTimestamp() - $this->toDate->getTimestamp()) / (60 * 60);
     }
 }

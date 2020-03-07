@@ -8,7 +8,7 @@ use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException
 use KaroIO\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
 use KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRepository;
 use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
-use KaroIO\MessengerMonitorBundle\Statistics\StatisticsProcessor;
+use KaroIO\MessengerMonitorBundle\Statistics\StatisticsProcessorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
 use Twig\Environment;
@@ -30,7 +30,7 @@ final class DashboardController
         Environment $twig,
         ReceiverLocator $receiverLocator,
         FailedMessageRepository $failedMessageRepository,
-        StatisticsProcessor $statisticsProcessor
+        StatisticsProcessorInterface $statisticsProcessor
     ) {
         $this->twig = $twig;
         $this->receiverLocator = $receiverLocator;
@@ -59,10 +59,10 @@ final class DashboardController
             $this->twig->render(
                 '@KaroIOMessengerMonitor/dashboard.html.twig',
                 [
-                    'receivers'                => $receivers,
+                    'receivers' => $receivers,
                     'cannotListFailedMessages' => $cannotListFailedMessages,
-                    'failedMessages'           => $failedMessages,
-                    'statistics'               => $this->statisticsProcessor->processStatistics(),
+                    'failedMessages' => $failedMessages,
+                    'statistics' => $this->statisticsProcessor->createStatistics(),
                 ]
             )
         );
