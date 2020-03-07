@@ -66,7 +66,7 @@
         {% endif %}
     {% endif %}
 
-    {% if statistics.metrics|length %}
+    {% if statistics.metrics is not empty %}
         <h2>Statistics for last 24 hours</h2>
 
         <h3 class="mt-3">Overall statistics</h3>
@@ -98,6 +98,9 @@
                 </tr>
             {% endfor %}
         </table>
+    {% else %}
+        <h2>Statistics</h2>
+        <p>Still no messages handled</p>
     {% endif %}
 </div>
 </body>
