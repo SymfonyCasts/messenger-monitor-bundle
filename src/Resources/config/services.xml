@@ -11,21 +11,18 @@
             <argument type="service" id="karo-io.messenger_monitor.receiver_locator" />
             <argument type="service" id="karo-io.messenger_monitor.failed_message.repository" />
             <argument type="service" id="karo-io.messenger_monitor.statistics.processor"/>
-            <tag name="controller.service_arguments"/>
         </service>
 
         <service id="karo-io.controller.retry_failed_message" class="KaroIO\MessengerMonitorBundle\Controller\RetryFailedMessageController">
             <argument type="service" id="karo-io.messenger_monitor.failed_message.retry" />
             <argument type="service" id="session" />
             <argument type="service" id="router" />
-            <tag name="controller.service_arguments"/>
         </service>
 
         <service id="karo-io.controller.reject_failed_message" class="KaroIO\MessengerMonitorBundle\Controller\RejectFailedMessageController">
             <argument type="service" id="karo-io.messenger_monitor.failed_message.reject" />
             <argument type="service" id="session" />
             <argument type="service" id="router" />
-            <tag name="controller.service_arguments"/>
         </service>
 
         <!-- Locators -->

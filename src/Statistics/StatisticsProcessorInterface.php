@@ -7,7 +7,7 @@ namespace KaroIO\MessengerMonitorBundle\Statistics;
 /**
  * @internal
  */
-interface StatisticsProcessor
+interface StatisticsProcessorInterface
 {
-    public function processStatistics(): Statistics;
+    public function createStatistics(): Statistics;
 }

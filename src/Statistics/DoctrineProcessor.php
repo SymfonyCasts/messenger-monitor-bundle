@@ -9,7 +9,7 @@ use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Connection;
 /**
  * @internal
  */
-final class DoctrineProcessor implements StatisticsProcessor
+final class DoctrineProcessor implements StatisticsProcessorInterface
 {
     private $connection;
 
@@ -19,7 +19,7 @@ final class DoctrineProcessor implements StatisticsProcessor
     }
 
     /** {@inheritdoc} */
-    public function processStatistics(): Statistics
+    public function createStatistics(): Statistics
     {
         // todo: this period should be chosen by user
         return $this->connection->getStatistics(
