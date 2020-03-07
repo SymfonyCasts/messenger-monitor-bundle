@@ -28,5 +28,10 @@
             <tag name="kernel.event_subscriber" />
             <tag name="monolog.logger" channel="messenger-monitor-bundle" />
         </service>
+
+        <!-- Statistics -->
+        <service id="karo-io.messenger_monitor.statistics.doctrine_processor" class="KaroIO\MessengerMonitorBundle\Statistics\DoctrineProcessor">
+            <argument type="service" id="karo-io.messenger_monitor.storage.doctrine_connection" />
+        </service>
     </services>
 </container>

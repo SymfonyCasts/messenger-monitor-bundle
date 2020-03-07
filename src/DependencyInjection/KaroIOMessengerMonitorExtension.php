@@ -23,6 +23,7 @@ final class KaroIOMessengerMonitorExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         if ('doctrine' === $config['driver']) {
+            // todo: throw an error if doctrine platform is not mysql nor postgresql
             $loader->load('doctrine.xml');
 
             $doctrineConnectionFactoryDefinition = $container->getDefinition('karo-io.messenger_monitor.storage.doctrine_connection_factory');
@@ -32,6 +33,8 @@ final class KaroIOMessengerMonitorExtension extends Extension
 
             $tableName = $config['doctrine']['table_name'] ?? 'karo_io_messenger_monitor';
             $doctrineConnectionFactoryDefinition->replaceArgument(2, $tableName);
+
+            $container->setAlias('karo-io.messenger_monitor.statistics.processor', 'karo-io.messenger_monitor.statistics.doctrine_processor');
         }
     }
 }

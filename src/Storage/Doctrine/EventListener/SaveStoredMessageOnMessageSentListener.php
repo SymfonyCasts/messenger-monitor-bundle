@@ -10,6 +10,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
 
 /**
+ * TODO: catch error + log
  * @internal
  */
 final class SaveStoredMessageOnMessageSentListener implements EventSubscriberInterface

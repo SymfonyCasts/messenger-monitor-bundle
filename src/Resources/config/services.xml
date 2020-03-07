@@ -10,6 +10,7 @@
             <argument type="service" id="twig" />
             <argument type="service" id="karo-io.messenger_monitor.receiver_locator" />
             <argument type="service" id="karo-io.messenger_monitor.failed_message.repository" />
+            <argument type="service" id="karo-io.messenger_monitor.statistics.processor"/>
         </service>
 
         <service id="karo-io.controller.retry_failed_message" class="KaroIO\MessengerMonitorBundle\Controller\RetryFailedMessageController">
@@ -59,13 +60,18 @@
         </service>
 
         <service id="karo-io.messenger_monitor.failed_receiver.provider" class="KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider">
-            <argument type="service" id="karo-io.messenger_monitor.receiver_locator" />
-            <argument type="service" id="karo-io.messenger_monitor.failed_receiver.name" />
+            <argument type="service" id="karo-io.messenger_monitor.receiver_locator"/>
+            <argument type="service" id="karo-io.messenger_monitor.failed_receiver.name"/>
         </service>
 
         <!-- EventListener -->
         <service id="karo-io.messenger_monitor.listener.add_monitor_id_stamp" class="KaroIO\MessengerMonitorBundle\EventListener\AddStampOnMessageSentListener">
-            <tag name="kernel.event_subscriber" />
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- TwigExtensions -->
+        <service id="karo-io.messenger_monitor.twig.time_display" class="KaroIO\MessengerMonitorBundle\Tests\Twig\TimeDisplayExtensionTest">
+            <tag name="twig.extension"/>
         </service>
     </services>
 </container>

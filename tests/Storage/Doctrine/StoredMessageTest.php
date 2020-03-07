@@ -14,11 +14,21 @@ final class StoredMessageTest extends TestCase
 {
     public function testStoredMessage(): void
     {
-        $storedMessage = new StoredMessage('id', TestableMessage::class, $dispatchedAt = new \DateTimeImmutable());
+        $storedMessage = new StoredMessage(
+            'id',
+            TestableMessage::class,
+            $dispatchedAt = new \DateTimeImmutable(),
+            $receivedAt = new \DateTimeImmutable(),
+            $handledAt = new \DateTimeImmutable(),
+            $receiverName = 'receiver_name'
+        );
 
         $this->assertSame('id', $storedMessage->getId());
         $this->assertSame(TestableMessage::class, $storedMessage->getMessageClass());
-        $this->assertSame($dispatchedAt->format('Y-m-d'), $storedMessage->getDispatchedAt()->format('Y-m-d'));
+        $this->assertSame($dispatchedAt, $storedMessage->getDispatchedAt());
+        $this->assertSame($receivedAt, $storedMessage->getReceivedAt());
+        $this->assertSame($handledAt, $storedMessage->getHandledAt());
+        $this->assertSame($receiverName, $storedMessage->getReceiverName());
     }
 
     public function testCreateFromEnvelope(): void
