@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Storage\Doctrine\Driver;
+namespace SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Driver;
 
 /**
  * todo: implement for PostgreSQL

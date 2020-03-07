@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\FailedMessage;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests\FailedMessage;
 
-use KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRejecter;
-use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
-use KaroIO\MessengerMonitorBundle\Tests\TestableMessage;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
+use SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRejecter;
+use SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
+use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
 
 class FailedMessageRejecterTest extends TestCase
 {

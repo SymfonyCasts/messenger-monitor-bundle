@@ -1,5 +1,5 @@
 {
-    "name": "karo-io/messenger-monitor-bundle",
+    "name": "symfonycasts/messenger-monitor-bundle",
     "description": "Symfony bundle for information about your Messenger queues and transports",
     "type": "symfony-bundle",
     "require": {
@@ -20,7 +20,8 @@
         "ext-json": "*",
         "doctrine/dbal": "^2.10",
         "doctrine/doctrine-bundle": "^2.0",
-        "symfony/phpunit-bridge": "^5.0"
+        "symfony/phpunit-bridge": "^5.0",
+        "vimeo/psalm": "^3.9"
     },
     "conflict": {
         "doctrine/doctrine-bundle": "<2.0"
@@ -28,12 +29,12 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "KaroIO\\MessengerMonitorBundle\\": "src/"
+            "SymfonyCasts\\MessengerMonitorBundle\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "KaroIO\\MessengerMonitorBundle\\Tests\\": "tests/"
+            "SymfonyCasts\\MessengerMonitorBundle\\Tests\\": "tests/"
         }
     },
     "config": {
@@ -44,6 +45,10 @@
         {
             "name": "Peter Dietrich",
             "email": "xosofox@gmail.com"
+        },
+        {
+            "name": "Nicolas PHILIPPE",
+            "email": "nikophil@gmail.com"
         }
     ]
 }

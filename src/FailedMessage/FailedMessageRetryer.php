@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\FailedMessage;
+namespace SymfonyCasts\MessengerMonitorBundle\FailedMessage;
 
-use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
-use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnMessageLimitListener;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Transport\Receiver\SingleMessageReceiver;
 use Symfony\Component\Messenger\Worker;
+use SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
+use SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
 
 /**
  * all this code was stolen from \Symfony\Component\Messenger\Command\FailedMessagesRetryCommand.

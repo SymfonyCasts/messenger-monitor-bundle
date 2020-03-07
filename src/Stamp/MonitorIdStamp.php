@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Stamp;
+namespace SymfonyCasts\MessengerMonitorBundle\Stamp;
 
 use Symfony\Component\Messenger\Stamp\StampInterface;
 

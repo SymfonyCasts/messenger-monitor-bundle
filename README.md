@@ -57,7 +57,7 @@ in the `config/bundles.php` file of your project:
 
 return [
     // ...
-    KaroIO\MessengerMonitorBundle\KaroIOMessengerMonitorBundle::class => ['all' => true],
+    SymfonyCasts\MessengerMonitorBundle\SymfonyCastsMessengerMonitorBundle::class => ['all' => true],
 ];
 ```
 

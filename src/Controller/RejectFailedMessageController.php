@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Controller;
+namespace SymfonyCasts\MessengerMonitorBundle\Controller;
 
-use KaroIO\MessengerMonitorBundle\FailedMessage\FailedMessageRejecter;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRejecter;
 
 /**
  * @internal
@@ -34,6 +34,6 @@ final class RejectFailedMessageController
             $this->session->getBag('flashes')->add('messenger_monitor.error', sprintf('Error while rejecting message with id "%s": %s', $id, $exception->getMessage()));
         }
 
-        return new RedirectResponse($this->urlGenerator->generate('karo-io.dashboard'));
+        return new RedirectResponse($this->urlGenerator->generate('symfonycasts.messenger_monitor.controller.dashboard'));
     }
 }

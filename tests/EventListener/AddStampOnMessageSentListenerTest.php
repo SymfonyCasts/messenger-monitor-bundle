@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\EventListener;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests\EventListener;
 
-use KaroIO\MessengerMonitorBundle\EventListener\AddStampOnMessageSentListener;
-use KaroIO\MessengerMonitorBundle\Stamp\MonitorIdStamp;
-use KaroIO\MessengerMonitorBundle\Tests\TestableMessage;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
+use SymfonyCasts\MessengerMonitorBundle\EventListener\AddStampOnMessageSentListener;
+use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
+use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
 
 final class AddStampOnMessageSentListenerTest extends TestCase
 {

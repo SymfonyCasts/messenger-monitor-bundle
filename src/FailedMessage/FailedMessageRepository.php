@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\FailedMessage;
+namespace SymfonyCasts\MessengerMonitorBundle\FailedMessage;
 
-use KaroIO\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
+use SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
 
 /**
  * all this code was stolen from \Symfony\Component\Messenger\Command\FailedMessagesShowCommand.

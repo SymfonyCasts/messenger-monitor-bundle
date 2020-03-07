@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\Locator;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests\Locator;
 
-use KaroIO\MessengerMonitorBundle\Exception\ReceiverDoesNotExistException;
-use KaroIO\MessengerMonitorBundle\Locator\ReceiverLocator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Contracts\Service\ServiceProviderInterface;
+use SymfonyCasts\MessengerMonitorBundle\Exception\ReceiverDoesNotExistException;
+use SymfonyCasts\MessengerMonitorBundle\Locator\ReceiverLocator;
 
 final class ReceiverLocatorTest extends TestCase
 {

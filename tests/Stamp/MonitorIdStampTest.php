@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\Stamp;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests\Stamp;
 
-use KaroIO\MessengerMonitorBundle\Stamp\MonitorIdStamp;
 use PHPUnit\Framework\TestCase;
+use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
 
 final class MonitorIdStampTest extends TestCase
 {

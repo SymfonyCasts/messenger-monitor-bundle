@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Statistics;
+namespace SymfonyCasts\MessengerMonitorBundle\Statistics;
 
 final class MetricsAlreadyAddedForMessageClassException extends \RuntimeException
 {

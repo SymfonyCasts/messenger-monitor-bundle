@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use KaroIO\MessengerMonitorBundle\KaroIOMessengerMonitorBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -13,6 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouteCollectionBuilder;
+use SymfonyCasts\MessengerMonitorBundle\SymfonyCastsMessengerMonitorBundle;
 
 final class TestKernel extends Kernel
 {
@@ -29,7 +29,7 @@ final class TestKernel extends Kernel
         return [
             new FrameworkBundle(),
             new DoctrineBundle(),
-            new KaroIOMessengerMonitorBundle(),
+            new SymfonyCastsMessengerMonitorBundle(),
             new TwigBundle(),
         ];
     }
@@ -49,8 +49,8 @@ final class TestKernel extends Kernel
         $loader->load(
             function (ContainerBuilder $container) {
                 $container->setAlias(
-                    'test.karo-io.messenger_monitor.storage.doctrine_connection',
-                    'karo-io.messenger_monitor.storage.doctrine_connection'
+                    'test.symfonycasts.messenger_monitor.storage.doctrine_connection',
+                    'symfonycasts.messenger_monitor.storage.doctrine_connection'
                 )->setPublic(true);
 
                 $container->setParameter('kernel.secret', 123);
@@ -77,7 +77,7 @@ final class TestKernel extends Kernel
                         ],
                     ]
                 );
-                $container->loadFromExtension('karo_io_messenger_monitor', $this->bundleOptions);
+                $container->loadFromExtension('symfonycasts_messenger_monitor', $this->bundleOptions);
             }
         );
     }

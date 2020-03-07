@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\IntegrationTests\Configuration;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests\IntegrationTests\Configuration;
 
-use KaroIO\MessengerMonitorBundle\Tests\TestKernel;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use SymfonyCasts\MessengerMonitorBundle\Tests\TestKernel;
 
 final class ConfigurationTest extends TestCase
 {
@@ -40,6 +40,6 @@ final class ConfigurationTest extends TestCase
             ]
         );
         $kernel->boot();
-        $kernel->getContainer()->get('test.karo-io.messenger_monitor.storage.doctrine_connection');
+        $kernel->getContainer()->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection');
     }
 }

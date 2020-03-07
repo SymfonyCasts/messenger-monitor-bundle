@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\EventListener;
+namespace SymfonyCasts\MessengerMonitorBundle\EventListener;
 
-use KaroIO\MessengerMonitorBundle\Stamp\MonitorIdStamp;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
+use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
 
 /**
  * @internal

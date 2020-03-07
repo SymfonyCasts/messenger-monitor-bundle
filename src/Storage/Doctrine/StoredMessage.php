@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Storage\Doctrine;
+namespace SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine;
 
-use KaroIO\MessengerMonitorBundle\Stamp\MonitorIdStamp;
 use Symfony\Component\Messenger\Envelope;
+use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
 
 /**
  * todo handle retries.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Twig;
+namespace SymfonyCasts\MessengerMonitorBundle\Twig;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;

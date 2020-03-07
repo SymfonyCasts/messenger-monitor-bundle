@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Storage\Doctrine;
+namespace SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine;
 
 use Doctrine\Persistence\ConnectionRegistry;
-use KaroIO\MessengerMonitorBundle\Storage\Doctrine\Driver\MySQLDriver;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Driver\MySQLDriver;
 
 /**
  * @internal

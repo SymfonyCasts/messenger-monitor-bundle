@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\FailedMessage;
+namespace SymfonyCasts\MessengerMonitorBundle\FailedMessage;
 
 /**
  * @internal

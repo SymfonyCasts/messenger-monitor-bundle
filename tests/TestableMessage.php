@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests;
 
 final class TestableMessage
 {

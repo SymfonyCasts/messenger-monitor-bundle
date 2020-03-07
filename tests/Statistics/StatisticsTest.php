@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace KaroIO\MessengerMonitorBundle\Tests\Statistics;
+namespace SymfonyCasts\MessengerMonitorBundle\Tests\Statistics;
 
-use KaroIO\MessengerMonitorBundle\Statistics\MetricsAlreadyAddedForMessageClassException;
-use KaroIO\MessengerMonitorBundle\Statistics\MetricsPerMessageType;
-use KaroIO\MessengerMonitorBundle\Statistics\Statistics;
 use PHPUnit\Framework\TestCase;
+use SymfonyCasts\MessengerMonitorBundle\Statistics\MetricsAlreadyAddedForMessageClassException;
+use SymfonyCasts\MessengerMonitorBundle\Statistics\MetricsPerMessageType;
+use SymfonyCasts\MessengerMonitorBundle\Statistics\Statistics;
 
 final class StatisticsTest extends TestCase
 {
