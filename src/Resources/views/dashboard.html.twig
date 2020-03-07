@@ -74,8 +74,8 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">Messages count: {{ statistics.messagesCount }}</li>
                 <li class="list-group-item">Messages per hour: {{ statistics.messagesHandledPerHour }}</li>
-                <li class="list-group-item">Average waiting time: {{ statistics.averageWaitingTime }}</li>
-                <li class="list-group-item">Average handling time: {{ statistics.averageHandlingTime }}</li>
+                <li class="list-group-item">Average waiting time: {{ statistics.averageWaitingTime|time }}</li>
+                <li class="list-group-item">Average handling time: {{ statistics.averageHandlingTime|time }}</li>
             </ul>
         </div>
 
@@ -93,8 +93,8 @@
                     <td>{{ metrics.class }}</td>
                     <td>{{ metrics.messagesCount }}</td>
                     <td>{{ metrics.messagesHandledPerHour }}</td>
-                    <td>{{ metrics.averageWaitingTime }}</td>
-                    <td>{{ metrics.averageHandlingTime }}</td>
+                    <td>{{ metrics.averageWaitingTime|time }}</td>
+                    <td>{{ metrics.averageHandlingTime|time }}</td>
                 </tr>
             {% endfor %}
         </table>

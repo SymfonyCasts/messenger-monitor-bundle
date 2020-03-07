@@ -1,0 +1,45 @@
+<?php
+
+declare(strict_types=1);
+
+namespace KaroIO\MessengerMonitorBundle\Twig;
+
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+
+final class TimeDisplayExtension extends AbstractExtension
+{
+    public function getFilters(): array
+    {
+        return [
+            new TwigFilter('time', [$this, 'formatTime']),
+        ];
+    }
+
+    public function formatPrice(float $seconds): string
+    {
+        if ($seconds < 10) {
+            $seconds = round($seconds, 2);
+
+            return sprintf('%s %s', $seconds, $this->pluralize('second', $seconds));
+        }
+
+        if ($seconds < 60) {
+            return sprintf('%d seconds', round($seconds));
+        }
+
+        $minutes = (int) floor($seconds / 60);
+        $seconds %= 60;
+
+        if (0 === $seconds) {
+            return sprintf('%d %s', $minutes, $this->pluralize('minute', $minutes));
+        }
+
+        return sprintf('%d %s %d %s', $minutes, $this->pluralize('minute', $minutes), $seconds, $this->pluralize('second', $seconds));
+    }
+
+    private function pluralize(string $word, float $number): string
+    {
+        return $word.($number === 1.0 ? '' : 's');
+    }
+}

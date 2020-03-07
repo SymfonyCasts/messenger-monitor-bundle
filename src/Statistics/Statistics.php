@@ -23,14 +23,7 @@ final class Statistics
 
     public function add(MetricsPerMessageType $metrics): void
     {
-        $messageClasses = array_map(
-            static function (MetricsPerMessageType $metric): string {
-                return $metric->getClass();
-            },
-            $this->metrics
-        );
-
-        if (in_array($metrics->getClass(), $messageClasses, true)) {
+        if (array_key_exists($metrics->getClass(), $this->metrics)) {
             throw new MetricsAlreadyAddedForMessageClassException($metrics->getClass());
         }
 
