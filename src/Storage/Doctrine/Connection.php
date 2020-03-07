@@ -63,12 +63,14 @@ class Connection
             $this->driverConnection->createQueryBuilder()
                 ->update($this->tableName)
                 ->set('received_at', ':received_at')
+                ->set('receiver_name', ':receiver_name')
                 ->set('handled_at', ':handled_at')
                 ->where('id = :id')
                 ->getSQL(),
             [
                 'received_at' => $storedMessage->getReceivedAt(),
                 'handled_at' => $storedMessage->getHandledAt(),
+                'receiver_name' => $storedMessage->getReceiverName(),
                 'id' => $storedMessage->getId()
             ],
             [
@@ -98,7 +100,8 @@ class Connection
             $row['class'],
             new \DateTimeImmutable($row['dispatched_at']),
             null !== $row['received_at'] ? new \DateTimeImmutable($row['received_at']) : null,
-            null !== $row['handled_at'] ? new \DateTimeImmutable($row['handled_at']) : null
+            null !== $row['handled_at'] ? new \DateTimeImmutable($row['handled_at']) : null,
+            $row['receiver_name'] ?? null
         );
     }
 
@@ -166,6 +169,7 @@ class Connection
         $table->addColumn('dispatched_at', Types::DATETIME_IMMUTABLE)->setNotnull(true);
         $table->addColumn('received_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
         $table->addColumn('handled_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
+        $table->addColumn('receiver_name', Types::STRING)->setLength(255)->setNotnull(false);
         $table->addColumn('retries', Types::INTEGER)->setDefault(0);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['dispatched_at']);

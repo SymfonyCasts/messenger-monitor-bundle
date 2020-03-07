@@ -45,6 +45,7 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
         $doctrineConnection->saveMessage($storedMessage = new StoredMessage('id', TestableMessage::class, new \DateTimeImmutable()));
         $storedMessage->setReceivedAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
         $storedMessage->setHandledAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
+        $storedMessage->setReceiverName('receiver_name');
         $doctrineConnection->updateMessage($storedMessage);
 
         $storedMessageLoadedFromDatabase = $doctrineConnection->findMessage('id');
@@ -58,5 +59,7 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
             $storedMessage->getHandledAt()->format('Y-m-d H:i:s'),
             $storedMessageLoadedFromDatabase->getHandledAt()->format('Y-m-d H:i:s')
         );
+
+        $this->assertSame($storedMessage->getReceiverName(), $storedMessageLoadedFromDatabase->getReceiverName());
     }
 }

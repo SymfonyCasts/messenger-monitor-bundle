@@ -16,11 +16,12 @@ final class StoredMessage
 {
     private $id;
     private $messageClass;
+    private $receiverName;
     private $dispatchedAt;
     private $receivedAt;
     private $handledAt;
 
-    public function __construct(string $id, string $messageClass, \DateTimeImmutable $dispatchedAt, ?\DateTimeImmutable $receivedAt = null, ?\DateTimeImmutable $handledAt = null)
+    public function __construct(string $id, string $messageClass, \DateTimeImmutable $dispatchedAt, ?\DateTimeImmutable $receivedAt = null, ?\DateTimeImmutable $handledAt = null, ?string $receiverName = null)
     {
         $this->id = $id;
         $this->messageClass = $messageClass;
@@ -35,6 +36,8 @@ final class StoredMessage
         } elseif (null !== $handledAt) {
             throw new \RuntimeException('"receivedAt" could not be null if "handledAt" is not null');
         }
+
+        $this->receiverName = $receiverName;
     }
 
     public static function fromEnvelope(Envelope $envelope): self
@@ -76,6 +79,16 @@ final class StoredMessage
     public function getReceivedAt(): ?\DateTimeImmutable
     {
         return $this->receivedAt;
+    }
+
+    public function setReceiverName(string $receiverName): void
+    {
+        $this->receiverName = $receiverName;
+    }
+
+    public function getReceiverName(): ?string
+    {
+        return $this->receiverName;
     }
 
     public function setHandledAt(\DateTimeImmutable $handledAt): void
