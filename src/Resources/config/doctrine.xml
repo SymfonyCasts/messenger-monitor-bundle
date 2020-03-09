@@ -29,6 +29,11 @@
             <tag name="monolog.logger" channel="messenger-monitor-bundle"/>
         </service>
 
+        <service id="symfonycasts.messenger_monitor.listener.save_retied_message" class="SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener\SaveRetriedMessageListener">
+            <argument type="service" id="symfonycasts.messenger_monitor.storage.doctrine_connection"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
         <!-- Statistics -->
         <service id="symfonycasts.messenger_monitor.statistics.doctrine_processor" class="SymfonyCasts\MessengerMonitorBundle\Statistics\DoctrineProcessor">
             <argument type="service" id="symfonycasts.messenger_monitor.storage.doctrine_connection"/>
