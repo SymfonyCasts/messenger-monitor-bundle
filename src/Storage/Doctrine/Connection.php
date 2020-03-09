@@ -83,17 +83,17 @@ class Connection
         );
     }
 
-    public function findMessage(string $id): ?StoredMessage
+    public function findMessage(string $messageUid): ?StoredMessage
     {
         $statement = $this->executeQuery(
             $this->driverConnection->createQueryBuilder()
                 ->select('*')
                 ->from($this->tableName)
-                ->where('id = :id')
+                ->where('message_uid = :message_uid')
                 ->orderBy('dispatched_at', 'desc')
                 ->setMaxResults(1)
                 ->getSQL(),
-            ['id' => $id]
+            ['message_uid' => $messageUid]
         );
 
         if (false === $row = $statement->fetch()) {
