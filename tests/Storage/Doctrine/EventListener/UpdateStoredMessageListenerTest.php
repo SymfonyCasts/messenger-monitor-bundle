@@ -7,6 +7,7 @@ namespace SymfonyCasts\MessengerMonitorBundle\Tests\Storage\Doctrine\EventListen
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
 use Symfony\Component\Messenger\Event\WorkerMessageReceivedEvent;
 use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
@@ -89,5 +90,26 @@ final class UpdateStoredMessageListenerTest extends TestCase
 
         $listener->onMessageHandled(new WorkerMessageHandledEvent($envelope, 'receiver-name'));
         $this->assertNotNull($storedMessage->getHandledAt());
+    }
+
+    public function testUpdateOnMessageFailed(): void
+    {
+        $listener = new UpdateStoredMessageListener(
+            $doctrineConnection = $this->createMock(Connection::class)
+        );
+
+        $envelope = new Envelope(new TestableMessage(), [$stamp = new MonitorIdStamp()]);
+
+        $doctrineConnection->expects($this->once())
+            ->method('findMessage')
+            ->with($stamp->getId())
+            ->willReturn($storedMessage = new StoredMessage('id', $stamp->getId(), TestableMessage::class, new \DateTimeImmutable(), new \DateTimeImmutable()));
+
+        $doctrineConnection->expects($this->once())
+            ->method('updateMessage')
+            ->with($storedMessage);
+
+        $listener->onMessageFailed(new WorkerMessageFailedEvent($envelope, 'receiver-name', new \Exception()));
+        $this->assertNotNull($storedMessage->getFailedAt());
     }
 }

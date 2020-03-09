@@ -68,17 +68,20 @@ class Connection
                 ->set('received_at', ':received_at')
                 ->set('receiver_name', ':receiver_name')
                 ->set('handled_at', ':handled_at')
+                ->set('failed_at', ':failed_at')
                 ->where('id = :id')
                 ->getSQL(),
             [
                 'received_at' => $storedMessage->getReceivedAt(),
                 'handled_at' => $storedMessage->getHandledAt(),
+                'failed_at' => $storedMessage->getFailedAt(),
                 'receiver_name' => $storedMessage->getReceiverName(),
                 'id' => $storedMessage->getId(),
             ],
             [
                 'received_at' => Types::DATETIME_IMMUTABLE,
                 'handled_at' => Types::DATETIME_IMMUTABLE,
+                'failed_at' => Types::DATETIME_IMMUTABLE,
             ]
         );
     }
@@ -107,6 +110,7 @@ class Connection
             new \DateTimeImmutable($row['dispatched_at']),
             null !== $row['received_at'] ? new \DateTimeImmutable($row['received_at']) : null,
             null !== $row['handled_at'] ? new \DateTimeImmutable($row['handled_at']) : null,
+            null !== $row['failed_at'] ? new \DateTimeImmutable($row['failed_at']) : null,
             $row['receiver_name'] ?? null
         );
     }
@@ -176,6 +180,7 @@ class Connection
         $table->addColumn('dispatched_at', Types::DATETIME_IMMUTABLE)->setNotnull(true);
         $table->addColumn('received_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
         $table->addColumn('handled_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
+        $table->addColumn('failed_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
         $table->addColumn('receiver_name', Types::STRING)->setLength(255)->setNotnull(false);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['dispatched_at']);

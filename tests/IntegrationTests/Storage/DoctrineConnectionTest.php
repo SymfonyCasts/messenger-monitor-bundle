@@ -20,7 +20,7 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
             new StoredMessage('id', 'message_uid', TestableMessage::class, $dispatchedAt = (new \DateTimeImmutable())->setTime(0, 0, 0))
         );
 
-        $storedMessage = $doctrineConnection->findMessage('id');
+        $storedMessage = $doctrineConnection->findMessage('message_uid');
 
         $this->assertEquals(new StoredMessage('id', 'message_uid', TestableMessage::class, $dispatchedAt), $storedMessage);
     }
@@ -33,8 +33,8 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
         $doctrineConnection->saveMessage(new StoredMessage('id1', 'message_uid', TestableMessage::class, new \DateTimeImmutable()));
         $doctrineConnection->saveMessage(new StoredMessage('id2', 'message_uid', TestableMessage::class, new \DateTimeImmutable()));
 
-        $this->assertInstanceOf(StoredMessage::class, $doctrineConnection->findMessage('id1'));
-        $this->assertInstanceOf(StoredMessage::class, $doctrineConnection->findMessage('id2'));
+        $this->assertInstanceOf(StoredMessage::class, $doctrineConnection->findMessage('message_uid'));
+        $this->assertInstanceOf(StoredMessage::class, $doctrineConnection->findMessage('message_uid'));
     }
 
     public function testUpdateMessage(): void
@@ -45,10 +45,11 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
         $doctrineConnection->saveMessage($storedMessage = new StoredMessage('id', 'message_uid', TestableMessage::class, new \DateTimeImmutable()));
         $storedMessage->setReceivedAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
         $storedMessage->setHandledAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
+        $storedMessage->setFailedAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
         $storedMessage->setReceiverName('receiver_name');
         $doctrineConnection->updateMessage($storedMessage);
 
-        $storedMessageLoadedFromDatabase = $doctrineConnection->findMessage('id');
+        $storedMessageLoadedFromDatabase = $doctrineConnection->findMessage('message_uid');
 
         $this->assertSame(
             $storedMessage->getReceivedAt()->format('Y-m-d H:i:s'),
@@ -58,6 +59,11 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
         $this->assertSame(
             $storedMessage->getHandledAt()->format('Y-m-d H:i:s'),
             $storedMessageLoadedFromDatabase->getHandledAt()->format('Y-m-d H:i:s')
+        );
+
+        $this->assertSame(
+            $storedMessage->getFailedAt()->format('Y-m-d H:i:s'),
+            $storedMessageLoadedFromDatabase->getFailedAt()->format('Y-m-d H:i:s')
         );
 
         $this->assertSame($storedMessage->getReceiverName(), $storedMessageLoadedFromDatabase->getReceiverName());

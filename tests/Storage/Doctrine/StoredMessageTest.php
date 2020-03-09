@@ -21,6 +21,7 @@ final class StoredMessageTest extends TestCase
             $dispatchedAt = new \DateTimeImmutable(),
             $receivedAt = new \DateTimeImmutable(),
             $handledAt = new \DateTimeImmutable(),
+            $failedAt = new \DateTimeImmutable(),
             $receiverName = 'receiver_name'
         );
 
@@ -30,6 +31,7 @@ final class StoredMessageTest extends TestCase
         $this->assertSame($dispatchedAt, $storedMessage->getDispatchedAt());
         $this->assertSame($receivedAt, $storedMessage->getReceivedAt());
         $this->assertSame($handledAt, $storedMessage->getHandledAt());
+        $this->assertSame($failedAt, $storedMessage->getFailedAt());
         $this->assertSame($receiverName, $storedMessage->getReceiverName());
     }
 

@@ -28,7 +28,7 @@ final class SaveRetriedMessageListener implements EventSubscriberInterface
                 uuid_create(UUID_TYPE_RANDOM),
                 $retriedMessageEvent->getMessageUid(),
                 $retriedMessageEvent->getMessageClass(),
-                new \DateTimeImmutable()
+                \DateTimeImmutable::createFromFormat('U', (string) time())
             )
         );
     }

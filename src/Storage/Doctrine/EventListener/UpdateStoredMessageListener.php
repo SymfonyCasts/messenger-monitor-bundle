@@ -7,6 +7,7 @@ namespace SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
 use Symfony\Component\Messenger\Event\WorkerMessageReceivedEvent;
 use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
@@ -53,6 +54,18 @@ final class UpdateStoredMessageListener implements EventSubscriberInterface
         $this->doctrineConnection->updateMessage($storedMessage);
     }
 
+    public function onMessageFailed(WorkerMessageFailedEvent $event): void
+    {
+        $storedMessage = $this->getStoredMessage($event->getEnvelope());
+
+        if (null === $storedMessage) {
+            return;
+        }
+
+        $storedMessage->setFailedAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
+        $this->doctrineConnection->updateMessage($storedMessage);
+    }
+
     private function getStoredMessage(Envelope $envelope): ?StoredMessage
     {
         /** @var MonitorIdStamp|null $monitorIdStamp */
@@ -80,6 +93,7 @@ final class UpdateStoredMessageListener implements EventSubscriberInterface
         return [
             WorkerMessageReceivedEvent::class => 'onMessageReceived',
             WorkerMessageHandledEvent::class => 'onMessageHandled',
+            WorkerMessageFailedEvent::class => 'onMessageFailed',
         ];
     }
 
