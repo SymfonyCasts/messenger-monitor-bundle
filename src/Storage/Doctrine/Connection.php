@@ -42,6 +42,7 @@ class Connection
                 ->values(
                     [
                         'id' => ':id',
+                        'message_uid' => ':message_uid',
                         'class' => ':class',
                         'dispatched_at' => ':dispatched_at',
                     ]
@@ -49,6 +50,7 @@ class Connection
                 ->getSQL(),
             [
                 'id' => $storedMessage->getId(),
+                'message_uid' => $storedMessage->getMessageUid(),
                 'class' => $storedMessage->getMessageClass(),
                 'dispatched_at' => $storedMessage->getDispatchedAt(),
             ],
@@ -88,6 +90,8 @@ class Connection
                 ->select('*')
                 ->from($this->tableName)
                 ->where('id = :id')
+                ->orderBy('dispatched_at', 'desc')
+                ->setMaxResults(1)
                 ->getSQL(),
             ['id' => $id]
         );
@@ -98,6 +102,7 @@ class Connection
 
         return new StoredMessage(
             $row['id'],
+            $row['message_uid'],
             $row['class'],
             new \DateTimeImmutable($row['dispatched_at']),
             null !== $row['received_at'] ? new \DateTimeImmutable($row['received_at']) : null,
@@ -166,12 +171,12 @@ class Connection
         $schema = new Schema([], [], $this->driverConnection->getSchemaManager()->createSchemaConfig());
         $table = $schema->createTable($this->tableName);
         $table->addColumn('id', Types::GUID)->setNotnull(true);
+        $table->addColumn('message_uid', Types::GUID)->setNotnull(true);
         $table->addColumn('class', Types::STRING)->setLength(255)->setNotnull(true);
         $table->addColumn('dispatched_at', Types::DATETIME_IMMUTABLE)->setNotnull(true);
         $table->addColumn('received_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
         $table->addColumn('handled_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
         $table->addColumn('receiver_name', Types::STRING)->setLength(255)->setNotnull(false);
-        $table->addColumn('retries', Types::INTEGER)->setDefault(0);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['dispatched_at']);
         $table->addIndex(['class']);

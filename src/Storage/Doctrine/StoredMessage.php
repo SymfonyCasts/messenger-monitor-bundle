@@ -13,15 +13,17 @@ use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
 final class StoredMessage
 {
     private $id;
+    private $messageUid;
     private $messageClass;
     private $receiverName;
     private $dispatchedAt;
     private $receivedAt;
     private $handledAt;
 
-    public function __construct(string $id, string $messageClass, \DateTimeImmutable $dispatchedAt, ?\DateTimeImmutable $receivedAt = null, ?\DateTimeImmutable $handledAt = null, ?string $receiverName = null)
+    public function __construct(string $id, string $messageUid, string $messageClass, \DateTimeImmutable $dispatchedAt, ?\DateTimeImmutable $receivedAt = null, ?\DateTimeImmutable $handledAt = null, ?string $receiverName = null)
     {
         $this->id = $id;
+        $this->messageUid = $messageUid;
         $this->messageClass = $messageClass;
         $this->dispatchedAt = $dispatchedAt;
 
@@ -48,6 +50,7 @@ final class StoredMessage
         }
 
         return new self(
+            uuid_create(UUID_TYPE_RANDOM),
             $monitorIdStamp->getId(),
             \get_class($envelope->getMessage()),
             \DateTimeImmutable::createFromFormat('U', (string) time())
@@ -57,6 +60,11 @@ final class StoredMessage
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function getMessageUid(): string
+    {
+        return $this->messageUid;
     }
 
     public function getMessageClass(): string

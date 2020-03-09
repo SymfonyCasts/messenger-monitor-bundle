@@ -28,7 +28,7 @@ final class UpdateStoredMessageListenerTest extends TestCase
         $doctrineConnection->expects($this->once())
             ->method('findMessage')
             ->with($stamp->getId())
-            ->willReturn($storedMessage = new StoredMessage($stamp->getId(), TestableMessage::class, new \DateTimeImmutable()));
+            ->willReturn($storedMessage = new StoredMessage('id', $stamp->getId(), TestableMessage::class, new \DateTimeImmutable()));
 
         $doctrineConnection->expects($this->once())
             ->method('updateMessage')
@@ -81,7 +81,7 @@ final class UpdateStoredMessageListenerTest extends TestCase
         $doctrineConnection->expects($this->once())
             ->method('findMessage')
             ->with($stamp->getId())
-            ->willReturn($storedMessage = new StoredMessage($stamp->getId(), TestableMessage::class, new \DateTimeImmutable(), new \DateTimeImmutable()));
+            ->willReturn($storedMessage = new StoredMessage('id', $stamp->getId(), TestableMessage::class, new \DateTimeImmutable(), new \DateTimeImmutable()));
 
         $doctrineConnection->expects($this->once())
             ->method('updateMessage')

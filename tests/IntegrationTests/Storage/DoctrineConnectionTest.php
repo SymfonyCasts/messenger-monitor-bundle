@@ -17,21 +17,21 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
         $doctrineConnection = self::$container->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection');
 
         $doctrineConnection->saveMessage(
-            new StoredMessage('id', TestableMessage::class, $dispatchedAt = (new \DateTimeImmutable())->setTime(0, 0, 0))
+            new StoredMessage('id', 'message_uid', TestableMessage::class, $dispatchedAt = (new \DateTimeImmutable())->setTime(0, 0, 0))
         );
 
         $storedMessage = $doctrineConnection->findMessage('id');
 
-        $this->assertEquals(new StoredMessage('id', TestableMessage::class, $dispatchedAt), $storedMessage);
+        $this->assertEquals(new StoredMessage('id', 'message_uid', TestableMessage::class, $dispatchedAt), $storedMessage);
     }
 
-    public function testSeveralMessages(): void
+    public function testSaveSeveralMessages(): void
     {
         /** @var Connection $doctrineConnection */
         $doctrineConnection = self::$container->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection');
 
-        $doctrineConnection->saveMessage(new StoredMessage('id1', TestableMessage::class, new \DateTimeImmutable()));
-        $doctrineConnection->saveMessage(new StoredMessage('id2', TestableMessage::class, new \DateTimeImmutable()));
+        $doctrineConnection->saveMessage(new StoredMessage('id1', 'message_uid', TestableMessage::class, new \DateTimeImmutable()));
+        $doctrineConnection->saveMessage(new StoredMessage('id2', 'message_uid', TestableMessage::class, new \DateTimeImmutable()));
 
         $this->assertInstanceOf(StoredMessage::class, $doctrineConnection->findMessage('id1'));
         $this->assertInstanceOf(StoredMessage::class, $doctrineConnection->findMessage('id2'));
@@ -42,7 +42,7 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
         /** @var Connection $doctrineConnection */
         $doctrineConnection = self::$container->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection');
 
-        $doctrineConnection->saveMessage($storedMessage = new StoredMessage('id', TestableMessage::class, new \DateTimeImmutable()));
+        $doctrineConnection->saveMessage($storedMessage = new StoredMessage('id', 'message_uid', TestableMessage::class, new \DateTimeImmutable()));
         $storedMessage->setReceivedAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
         $storedMessage->setHandledAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
         $storedMessage->setReceiverName('receiver_name');
