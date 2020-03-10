@@ -73,6 +73,7 @@
             <errorLevel type="suppress">
                 <file name="src/Storage/Doctrine/EventListener/UpdateStoredMessageListener.php"/>
                 <file name="src/Storage/Doctrine/StoredMessage.php"/>
+                <file name="src/Storage/Doctrine/EventListener/SaveRetriedMessageListener.php"/>
             </errorLevel>
         </PossiblyFalseArgument>
     </issueHandlers>
