@@ -70,7 +70,7 @@ final class TestKernel extends Kernel
                         'dbal' => [
                             'connections' => [
                                 'default' => [
-                                    'url' => $_ENV['TEST_DATABASE_DSN'],
+                                    'url' => getenv('TEST_DATABASE_DSN'),
                                     'logging' => false,
                                 ],
                             ],
