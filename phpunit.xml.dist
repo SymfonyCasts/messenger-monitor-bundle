@@ -3,15 +3,16 @@
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.3/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          executionOrder="depends,defects"
-         forceCoversAnnotation="true"
-         beStrictAboutCoversAnnotation="true"
+         forceCoversAnnotation="false"
+         beStrictAboutCoversAnnotation="false"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTodoAnnotatedTests="true"
          verbose="true">
 
     <php>
         <ini name="error_reporting" value="-1"/>
-<!--        <env name="TEST_DATABASE_DSN" value="mysql://proot:password@127.0.0.1:3306/messenger_monitor_bundle_test"/>-->
+        <!-- Define this env var in your own phpunit.xml => this one overrides the one in github actions -->
+        <!--<env name="TEST_DATABASE_DSN" value="mysql://root:password@127.0.0.1:3306/messenger_monitor_bundle_test"/>-->
     </php>
 
     <testsuites>
