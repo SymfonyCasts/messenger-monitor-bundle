@@ -69,5 +69,11 @@
                 <file name="src/FailedMessage/FailedMessageDetails.php"/>
             </errorLevel>
         </MissingReturnType>
+        <PossiblyFalseArgument>
+            <errorLevel type="suppress">
+                <file name="src/Storage/Doctrine/EventListener/UpdateStoredMessageListener.php"/>
+                <file name="src/Storage/Doctrine/StoredMessage.php"/>
+            </errorLevel>
+        </PossiblyFalseArgument>
     </issueHandlers>
 </psalm>

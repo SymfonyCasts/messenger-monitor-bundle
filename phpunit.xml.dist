@@ -11,7 +11,7 @@
 
     <php>
         <ini name="error_reporting" value="-1"/>
-        <env name="TEST_DATABASE_DSN" value="mysql://root:@127.0.0.1:3306/messenger_monitor_bundle_test"/>
+<!--        <env name="TEST_DATABASE_DSN" value="mysql://proot:password@127.0.0.1:3306/messenger_monitor_bundle_test"/>-->
     </php>
 
     <testsuites>
