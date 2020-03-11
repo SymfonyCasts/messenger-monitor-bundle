@@ -7,9 +7,6 @@ namespace SymfonyCasts\MessengerMonitorBundle\Tests\Twig;
 use PHPUnit\Framework\TestCase;
 use SymfonyCasts\MessengerMonitorBundle\Twig\TimeDisplayExtension;
 
-/**
- * @covers \SymfonyCasts\MessengerMonitorBundle\Twig\TimeDisplayExtension
- */
 final class TimeDisplayExtensionTest extends TestCase
 {
     public function testFormatTime(): void

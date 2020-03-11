@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SymfonyCasts\MessengerMonitorBundle\FailedMessage;
 
-final class RetriedMessageEvent
+final class MessageRetriedByUserEvent
 {
     private $messageUid;
     private $messageClass;

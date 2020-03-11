@@ -54,7 +54,7 @@ final class FailedMessageRetryer
             throw new \RuntimeException('Envelope should have a MonitorIdStamp!');
         }
 
-        $this->eventDispatcher->dispatch(new RetriedMessageEvent($monitorIdStamp->getId(), \get_class($envelope->getMessage())));
+        $this->eventDispatcher->dispatch(new MessageRetriedByUserEvent($monitorIdStamp->getId(), \get_class($envelope->getMessage())));
 
         $singleReceiver = new SingleMessageReceiver($failureReceiver, $envelope);
         $worker = new Worker(

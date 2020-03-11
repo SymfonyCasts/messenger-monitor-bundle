@@ -32,8 +32,8 @@ final class SymfonyCastsMessengerMonitorExtensionTest extends TestCase
                     'doctrine' => [
                         'connection' => 'custom_connection',
                         'table_name' => 'custom_table_name',
-                    ]
-                ]
+                    ],
+                ],
             ],
             $container = new ContainerBuilder()
         );
@@ -48,8 +48,8 @@ final class SymfonyCastsMessengerMonitorExtensionTest extends TestCase
         (new SymfonyCastsMessengerMonitorExtension())->load(
             [
                 [
-                    'driver' => 'redis'
-                ]
+                    'driver' => 'redis',
+                ],
             ],
             $container = new ContainerBuilder()
         );
