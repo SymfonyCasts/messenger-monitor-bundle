@@ -16,8 +16,24 @@ final class TimeDisplayExtension extends AbstractExtension
         ];
     }
 
-    public function formatTime(float $seconds): string
+    public function formatTime(?float $seconds): string
     {
+        if (null === $seconds) {
+            return '-';
+        }
+
+        if ($seconds < 0.001) {
+            $time = (string) (round($seconds, 6) * 1000000);
+
+            return sprintf('%d µs', $time);
+        }
+
+        if ($seconds < 1) {
+            $time = (string) (round($seconds, 3) * 1000);
+
+            return sprintf('%d ms', $time);
+        }
+
         if ($seconds < 10) {
             $seconds = round($seconds, 2);
 

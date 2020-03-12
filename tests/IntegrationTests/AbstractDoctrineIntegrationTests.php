@@ -35,12 +35,9 @@ abstract class AbstractDoctrineIntegrationTests extends KernelTestCase
             $this->markTestSkipped(sprintf('Can\'t connect to connection: %s', $exception->getMessage()));
         }
 
-        $this->doctrineConnection = self::getContainer()->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection');
+        $connection->executeQuery('DROP TABLE IF EXISTS messenger_monitor');
 
-        try {
-            $connection->executeQuery('TRUNCATE TABLE messenger_monitor');
-        } catch (\Throwable) {
-            $this->doctrineConnection->configureSchema(new Schema(), $connection);
-        }
+        $this->doctrineConnection = self::getContainer()->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection');
+        $this->doctrineConnection->configureSchema(new Schema(), $connection);
     }
 }

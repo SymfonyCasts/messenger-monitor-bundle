@@ -13,19 +13,16 @@ use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Exception\MessengerIdSt
  */
 final class StoredMessage
 {
-    private ?\DateTimeImmutable $receivedAt = null;
-    private ?\DateTimeImmutable $handledAt = null;
-    private ?\DateTimeImmutable $failedAt = null;
-
-    public function __construct(private string $messageUid, private string $messageClass, private \DateTimeImmutable $dispatchedAt, private ?int $id = null, ?\DateTimeImmutable $receivedAt = null, ?\DateTimeImmutable $handledAt = null, ?\DateTimeImmutable $failedAt = null, private ?string $receiverName = null)
-    {
-        if (null !== $receivedAt) {
-            $this->receivedAt = $receivedAt;
-            $this->handledAt = $handledAt;
-            $this->failedAt = $failedAt;
-        } elseif (null !== $handledAt || null !== $failedAt) {
-            throw new \RuntimeException('"receivedAt" could not be null if "handledAt" or "failedAt" is not null');
-        }
+    public function __construct(
+        private string $messageUid,
+        private string $messageClass,
+        private \DateTimeImmutable $dispatchedAt,
+        private ?int $id = null,
+        private ?float $waitingTime = null,
+        private ?string $receiverName = null,
+        private ?float $handlingTime = null,
+        private ?float $failingTime = null
+    ) {
     }
 
     public static function fromEnvelope(Envelope $envelope): self
@@ -37,11 +34,11 @@ final class StoredMessage
             throw new MessengerIdStampMissingException();
         }
 
+        /** @psalm-suppress PossiblyFalseArgument */
         return new self(
             $monitorIdStamp->getId(),
             $envelope->getMessage()::class,
-            \DateTimeImmutable::createFromFormat('U', (string) time()),
-            null
+            \DateTimeImmutable::createFromFormat('0.u00 U', microtime())
         );
     }
 
@@ -73,34 +70,19 @@ final class StoredMessage
         return $this->dispatchedAt;
     }
 
-    public function getReceivedAt(): ?\DateTimeImmutable
+    public function getWaitingTime(): ?float
     {
-        return $this->receivedAt;
+        return $this->waitingTime;
     }
 
-    public function setReceivedAt(\DateTimeImmutable $receivedAt): void
+    /**
+     * @param float $delay The delay in seconds
+     */
+    public function updateWaitingTime(float $delay = 0): void
     {
-        $this->receivedAt = $receivedAt;
-    }
-
-    public function getHandledAt(): ?\DateTimeImmutable
-    {
-        return $this->handledAt;
-    }
-
-    public function setHandledAt(\DateTimeImmutable $handledAt): void
-    {
-        $this->handledAt = $handledAt;
-    }
-
-    public function getFailedAt(): ?\DateTimeImmutable
-    {
-        return $this->failedAt;
-    }
-
-    public function setFailedAt(\DateTimeImmutable $failedAt): void
-    {
-        $this->failedAt = $failedAt;
+        $now = \DateTimeImmutable::createFromFormat('0.u00 U', microtime());
+        /** @psalm-suppress PossiblyFalseReference */
+        $this->waitingTime = round((float) $now->format('U.u') - (float) $this->dispatchedAt->format('U.u'), 6) - $delay;
     }
 
     public function setReceiverName(string $receiverName): void
@@ -111,5 +93,38 @@ final class StoredMessage
     public function getReceiverName(): ?string
     {
         return $this->receiverName;
+    }
+
+    public function getHandlingTime(): ?float
+    {
+        return $this->handlingTime;
+    }
+
+    public function updateHandlingTime(): void
+    {
+        $this->handlingTime = $this->computePassedTimeSinceReceived();
+    }
+
+    public function getFailingTime(): ?float
+    {
+        return $this->failingTime;
+    }
+
+    public function updateFailingTime(): void
+    {
+        $this->failingTime = $this->computePassedTimeSinceReceived();
+    }
+
+    private function computePassedTimeSinceReceived(): float
+    {
+        $now = \DateTimeImmutable::createFromFormat('0.u00 U', microtime());
+
+        /** @psalm-suppress PossiblyFalseReference */
+        return round(
+            (float) $now->format('U.u')
+            - (float) $this->dispatchedAt->format('U.u')
+            - $this->waitingTime,
+            6
+        );
     }
 }
