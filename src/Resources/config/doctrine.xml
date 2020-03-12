@@ -36,7 +36,6 @@
 
         <service id="symfonycasts.messenger_monitor.listener.save_retried_message" class="SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener\SaveRetriedMessageListener">
             <argument type="service" id="symfonycasts.messenger_monitor.storage.doctrine_connection"/>
-            <argument type="service" id="symfonycasts.messenger_monitor.storage.stored_message_provider"/>
             <tag name="kernel.event_subscriber"/>
         </service>
 

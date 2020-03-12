@@ -68,8 +68,8 @@ final class UpdateStoredMessageListener implements EventSubscriberInterface
         return [
             WorkerMessageReceivedEvent::class => 'onMessageReceived',
             WorkerMessageHandledEvent::class => 'onMessageHandled',
-            // Should have a lower priority than SendFailedMessageForRetryListener
-            WorkerMessageFailedEvent::class => ['onMessageFailed', 50],
+            // Should have a higher priority than SendFailedMessageForRetryListener
+            WorkerMessageFailedEvent::class => ['onMessageFailed', 150],
         ];
     }
 }
