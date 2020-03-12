@@ -13,6 +13,7 @@
         <ini name="error_reporting" value="-1"/>
         <!-- Define this env var in your own phpunit.xml => this one overrides the one in github actions -->
         <!--<env name="TEST_DATABASE_DSN" value="mysql://root:password@127.0.0.1:3306/messenger_monitor_bundle_test"/>-->
+        <server name="SHELL_VERBOSITY" value="-1"/>
     </php>
 
     <testsuites>

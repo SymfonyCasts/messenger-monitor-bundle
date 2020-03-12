@@ -17,7 +17,7 @@
     {% endfor %}
 
     <h2>Transports list</h2>
-    <table class="table">
+    <table class="table" id="transports-list">
         <tr>
             <th>Transport name</th>
             <th>Messages count</th>
@@ -39,7 +39,7 @@
         {% if cannotListFailedMessages == constant('SymfonyCasts\\MessengerMonitorBundle\\Controller\\DashboardController::FAILURE_RECEIVER_NOT_LISTABLE') %}
             The failure transport does not support listing or showing specific messages
         {% else %}
-            <table class="table">
+            <table class="table" id="failed-messages-list">
                 <tr>
                     <th>Id</th>
                     <th>Class</th>

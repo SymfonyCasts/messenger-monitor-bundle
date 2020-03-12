@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouteCollectionBuilder;
@@ -21,6 +22,7 @@ final class TestKernel extends Kernel
     public function __construct(array $bundleOptions = [])
     {
         parent::__construct('test', true);
+
         $this->bundleOptions = $bundleOptions;
     }
 
@@ -53,17 +55,52 @@ final class TestKernel extends Kernel
                     'symfonycasts.messenger_monitor.storage.doctrine_connection'
                 )->setPublic(true);
 
+                $container->setAlias('test.messenger.bus.default', 'messenger.bus.default')->setPublic(true);
+                $container->setAlias('test.messenger.receiver_locator', 'messenger.receiver_locator')->setPublic(true);
+
+                $messageHandlerDefinition = new Definition(TestableMessageHandler::class);
+                $messageHandlerDefinition->addTag('messenger.message_handler');
+                $container->setDefinition('test.message_handler', $messageHandlerDefinition);
+
                 $container->setParameter('kernel.secret', 123);
                 $container->prependExtensionConfig(
                     'framework',
                     [
-                        'session' => ['enabled' => true],
+                        'session' => [
+                            'enabled' => true,
+                            'storage_id' => 'session.storage.mock_file'
+                        ],
                         'router' => [
                             'resource' => 'kernel::loadRoutes',
+                            'type' => 'service',
                             'enabled' => true,
                         ],
+                        'messenger' => [
+                            'failure_transport' => 'failed',
+                            'transports' => [
+                                'queue' => [
+                                    'dsn' => 'doctrine://default?queue_name=queue',
+                                    'retry_strategy' => ['max_retries' => 0]
+                                ],
+                                'failed' => 'doctrine://default?queue_name=failed',
+                            ],
+                            'routing' => [
+                                TestableMessage::class => 'queue'
+                            ]
+                        ],
+                        'test' => true,
                     ]
                 );
+
+                if (!$container->hasDefinition('kernel')) {
+                    $container->register('kernel', static::class)
+                        ->setSynthetic(true)
+                        ->setPublic(true);
+                }
+
+                $kernelDefinition = $container->getDefinition('kernel');
+                $kernelDefinition->addTag('routing.route_loader');
+
                 $container->prependExtensionConfig(
                     'doctrine',
                     [
@@ -85,7 +122,7 @@ final class TestKernel extends Kernel
     public function loadRoutes(LoaderInterface $loader): RouteCollection
     {
         $routes = new RouteCollectionBuilder($loader);
-        $routes->import(__DIR__.'/../Resources/config/routing.xml');
+        $routes->import(__DIR__.'/../src/Resources/config/routing.xml');
 
         return $routes->build();
     }
