@@ -16,18 +16,18 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
     public function testSaveAndLoadMessage(): void
     {
         $this->doctrineConnection->saveMessage(
-            new StoredMessage('id', 'message_uid', TestableMessage::class, $dispatchedAt = (new \DateTimeImmutable())->setTime(0, 0, 0))
+            new StoredMessage('message_uid', TestableMessage::class, $dispatchedAt = (new \DateTimeImmutable())->setTime(0, 0, 0))
         );
 
         $storedMessage = $this->doctrineConnection->findMessage('message_uid');
 
-        $this->assertEquals(new StoredMessage('id', 'message_uid', TestableMessage::class, $dispatchedAt), $storedMessage);
+        $this->assertEquals(new StoredMessage('message_uid', TestableMessage::class, $dispatchedAt, 1), $storedMessage);
     }
 
     public function testSaveSeveralMessages(): void
     {
-        $this->doctrineConnection->saveMessage(new StoredMessage('id1', 'message_uid', TestableMessage::class, new \DateTimeImmutable()));
-        $this->doctrineConnection->saveMessage(new StoredMessage('id2', 'message_uid', TestableMessage::class, new \DateTimeImmutable()));
+        $this->doctrineConnection->saveMessage(new StoredMessage('message_uid', TestableMessage::class, new \DateTimeImmutable()));
+        $this->doctrineConnection->saveMessage(new StoredMessage('message_uid', TestableMessage::class, new \DateTimeImmutable()));
 
         $this->assertInstanceOf(StoredMessage::class, $this->doctrineConnection->findMessage('message_uid'));
         $this->assertInstanceOf(StoredMessage::class, $this->doctrineConnection->findMessage('message_uid'));
@@ -35,7 +35,7 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
 
     public function testUpdateMessage(): void
     {
-        $this->doctrineConnection->saveMessage($storedMessage = new StoredMessage('id', 'message_uid', TestableMessage::class, new \DateTimeImmutable()));
+        $this->doctrineConnection->saveMessage($storedMessage = new StoredMessage('message_uid', TestableMessage::class, new \DateTimeImmutable()));
         $storedMessage->setReceivedAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
         $storedMessage->setHandledAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
         $storedMessage->setFailedAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
@@ -86,7 +86,6 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
         $connection->insert(
             'messenger_monitor',
             [
-                'id' => ':id_1',
                 'message_uid' => 'message_uid_1',
                 'class' => TestableMessage::class,
                 'dispatched_at' => (new \DateTimeImmutable('3 minutes ago'))->format('Y-m-d H:i:s'),
@@ -98,7 +97,6 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
         $connection->insert(
             'messenger_monitor',
             [
-                'id' => ':id_2',
                 'message_uid' => 'message_uid_2',
                 'class' => TestableMessage::class,
                 'dispatched_at' => (new \DateTimeImmutable('10 minutes ago'))->format('Y-m-d H:i:s'),
@@ -110,7 +108,6 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
         $connection->insert(
             'messenger_monitor',
             [
-                'id' => ':id_3',
                 'message_uid' => 'message_uid_3',
                 'class' => 'Another'.TestableMessage::class,
                 'dispatched_at' => (new \DateTimeImmutable('3 minutes ago'))->format('Y-m-d H:i:s'),
@@ -123,7 +120,6 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
         $connection->insert(
             'messenger_monitor',
             [
-                'id' => ':id_4',
                 'message_uid' => 'message_uid_2',
                 'class' => TestableMessage::class,
                 'dispatched_at' => (new \DateTimeImmutable('6 hours ago'))->format('Y-m-d H:i:s'),

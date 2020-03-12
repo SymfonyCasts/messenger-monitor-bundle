@@ -21,7 +21,7 @@ final class StoredMessage
     private $handledAt;
     private $failedAt;
 
-    public function __construct(string $id, string $messageUid, string $messageClass, \DateTimeImmutable $dispatchedAt, ?\DateTimeImmutable $receivedAt = null, ?\DateTimeImmutable $handledAt = null, ?\DateTimeImmutable $failedAt = null, ?string $receiverName = null)
+    public function __construct(string $messageUid, string $messageClass, \DateTimeImmutable $dispatchedAt, int $id = null, ?\DateTimeImmutable $receivedAt = null, ?\DateTimeImmutable $handledAt = null, ?\DateTimeImmutable $failedAt = null, ?string $receiverName = null)
     {
         $this->id = $id;
         $this->messageUid = $messageUid;
@@ -49,14 +49,19 @@ final class StoredMessage
         }
 
         return new self(
-            uuid_create(UUID_TYPE_RANDOM),
             $monitorIdStamp->getId(),
             \get_class($envelope->getMessage()),
-            \DateTimeImmutable::createFromFormat('U', (string) time())
+            \DateTimeImmutable::createFromFormat('U', (string) time()),
+            null
         );
     }
 
-    public function getId(): string
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function getId(): int
     {
         return $this->id;
     }

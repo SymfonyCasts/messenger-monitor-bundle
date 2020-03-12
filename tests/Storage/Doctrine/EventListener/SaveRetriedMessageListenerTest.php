@@ -67,7 +67,7 @@ final class SaveRetriedMessageListenerTest extends TestCase
         $storedMessageProvider->expects($this->once())
             ->method('getStoredMessage')
             ->willReturn(
-                new StoredMessage('id', 'message_uid', TestableMessage::class, new \DateTimeImmutable())
+                new StoredMessage('message_uid', TestableMessage::class, new \DateTimeImmutable())
             );
 
         $doctrineConnection->expects($this->once())

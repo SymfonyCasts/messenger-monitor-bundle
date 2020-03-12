@@ -47,7 +47,6 @@ final class SaveRetriedMessageListener implements EventSubscriberInterface
 
         $this->doctrineConnection->saveMessage(
             new StoredMessage(
-                uuid_create(UUID_TYPE_RANDOM),
                 $storedMessage->getMessageUid(),
                 $storedMessage->getMessageClass(),
                 \DateTimeImmutable::createFromFormat('U', (string) time())
@@ -59,7 +58,6 @@ final class SaveRetriedMessageListener implements EventSubscriberInterface
     {
         $this->doctrineConnection->saveMessage(
             new StoredMessage(
-                uuid_create(UUID_TYPE_RANDOM),
                 $retriedMessageEvent->getMessageUid(),
                 $retriedMessageEvent->getMessageClass(),
                 \DateTimeImmutable::createFromFormat('U', (string) time())

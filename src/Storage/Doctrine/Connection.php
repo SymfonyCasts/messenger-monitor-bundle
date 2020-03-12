@@ -41,7 +41,6 @@ class Connection
                 ->insert($this->tableName)
                 ->values(
                     [
-                        'id' => ':id',
                         'message_uid' => ':message_uid',
                         'class' => ':class',
                         'dispatched_at' => ':dispatched_at',
@@ -49,7 +48,6 @@ class Connection
                 )
                 ->getSQL(),
             [
-                'id' => $storedMessage->getId(),
                 'message_uid' => $storedMessage->getMessageUid(),
                 'class' => $storedMessage->getMessageClass(),
                 'dispatched_at' => $storedMessage->getDispatchedAt(),
@@ -58,6 +56,8 @@ class Connection
                 'dispatched_at' => Types::DATETIME_IMMUTABLE,
             ]
         );
+
+        $storedMessage->setId((int) $this->driverConnection->lastInsertId());
     }
 
     public function updateMessage(StoredMessage $storedMessage): void
@@ -104,10 +104,10 @@ class Connection
         }
 
         return new StoredMessage(
-            $row['id'],
             $row['message_uid'],
             $row['class'],
             new \DateTimeImmutable($row['dispatched_at']),
+            (int) $row['id'],
             null !== $row['received_at'] ? new \DateTimeImmutable($row['received_at']) : null,
             null !== $row['handled_at'] ? new \DateTimeImmutable($row['handled_at']) : null,
             null !== $row['failed_at'] ? new \DateTimeImmutable($row['failed_at']) : null,
@@ -174,7 +174,7 @@ class Connection
     {
         $schema = new Schema([], [], $this->driverConnection->getSchemaManager()->createSchemaConfig());
         $table = $schema->createTable($this->tableName);
-        $table->addColumn('id', Types::GUID)->setNotnull(true);
+        $table->addColumn('id', Types::INTEGER)->setNotnull(true)->setAutoincrement(true);
         $table->addColumn('message_uid', Types::GUID)->setNotnull(true);
         $table->addColumn('class', Types::STRING)->setLength(255)->setNotnull(true);
         $table->addColumn('dispatched_at', Types::DATETIME_IMMUTABLE)->setNotnull(true);
@@ -182,9 +182,9 @@ class Connection
         $table->addColumn('handled_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
         $table->addColumn('failed_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
         $table->addColumn('receiver_name', Types::STRING)->setLength(255)->setNotnull(false);
-        $table->setPrimaryKey(['id']);
         $table->addIndex(['dispatched_at']);
         $table->addIndex(['class']);
+        $table->setPrimaryKey(['id']);
 
         return $schema;
     }
