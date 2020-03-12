@@ -137,7 +137,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
     protected function assertAlertIsPresent(Crawler $crawler, string $class, string $text): void
     {
         $this->assertSame(1, $crawler->filter($class)->count());
-        $this->assertStringContainsString($text, $crawler->filter('.alert-success')->text());
+        $this->assertStringContainsString($text, $crawler->filter($class)->text());
     }
 
     private function getReceiver(string $queueName): ListableReceiverInterface

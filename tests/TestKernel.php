@@ -114,6 +114,7 @@ final class TestKernel extends Kernel
                         ],
                     ]
                 );
+
                 $container->loadFromExtension('symfonycasts_messenger_monitor', $this->bundleOptions);
             }
         );

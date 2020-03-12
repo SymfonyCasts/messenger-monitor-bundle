@@ -9,6 +9,7 @@ final class TestableMessageHandler implements MessageHandlerInterface
     public function __invoke(TestableMessage $message)
     {
         if (true === $message->willFail) {
+            $message->willFail = false;
             throw new \Exception('oops!');
         }
     }
