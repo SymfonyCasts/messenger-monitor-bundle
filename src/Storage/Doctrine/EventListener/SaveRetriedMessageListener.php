@@ -20,11 +20,12 @@ final class SaveRetriedMessageListener implements EventSubscriberInterface
 
     public function onMessageRetried(MessageRetriedByUserEvent $retriedMessageEvent): void
     {
+        /** @psalm-suppress PossiblyFalseArgument */
         $this->doctrineConnection->saveMessage(
             new StoredMessage(
                 $retriedMessageEvent->getMessageUid(),
                 $retriedMessageEvent->getMessageClass(),
-                \DateTimeImmutable::createFromFormat('U', (string) time())
+                \DateTimeImmutable::createFromFormat('0.u00 U', microtime())
             )
         );
     }

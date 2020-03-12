@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace SymfonyCasts\MessengerMonitorBundle\Tests\IntegrationTests\Storage;
 
 use Doctrine\DBAL\Connection;
+use Symfony\Bridge\PhpUnit\ClockMock;
 use SymfonyCasts\MessengerMonitorBundle\Statistics\MetricsPerMessageType;
 use SymfonyCasts\MessengerMonitorBundle\Statistics\Statistics;
 use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\TestableMessage;
 use SymfonyCasts\MessengerMonitorBundle\Tests\IntegrationTests\AbstractDoctrineIntegrationTests;
-use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
 
 final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
 {
@@ -18,7 +19,7 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
         $uuid = uuid_create(UUID_TYPE_RANDOM);
 
         $this->doctrineConnection->saveMessage(
-            new StoredMessage($uuid, TestableMessage::class, $dispatchedAt = (new \DateTimeImmutable())->setTime(0, 0, 0))
+            new StoredMessage($uuid, TestableMessage::class, $dispatchedAt = (new \DateTimeImmutable())->setTime(0, 0, 0, 1000))
         );
 
         $storedMessage = $this->doctrineConnection->findMessage($uuid);
@@ -42,31 +43,22 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
     {
         $uuid = uuid_create(UUID_TYPE_RANDOM);
 
-        $this->doctrineConnection->saveMessage($storedMessage = new StoredMessage($uuid, TestableMessage::class, new \DateTimeImmutable()));
-        $storedMessage->setReceivedAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
-        $storedMessage->setHandledAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
-        $storedMessage->setFailedAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
+        ClockMock::register(StoredMessage::class);
+        ClockMock::withClockMock((new \DateTimeImmutable('2020-01-01 00:00:01.123'))->format('U.u'));
+
+        $this->doctrineConnection->saveMessage($storedMessage = new StoredMessage($uuid, TestableMessage::class, new \DateTimeImmutable('2020-01-01 00:00:00.123')));
+        $storedMessage->updateWaitingTime();
         $storedMessage->setReceiverName('receiver_name');
+        $storedMessage->updateHandlingTime();
+        $storedMessage->updateFailingTime();
         $this->doctrineConnection->updateMessage($storedMessage);
 
         $storedMessageLoadedFromDatabase = $this->doctrineConnection->findMessage($uuid);
 
-        $this->assertSame(
-            $storedMessage->getReceivedAt()->format('Y-m-d H:i:s'),
-            $storedMessageLoadedFromDatabase->getReceivedAt()->format('Y-m-d H:i:s')
-        );
-
-        $this->assertSame(
-            $storedMessage->getHandledAt()->format('Y-m-d H:i:s'),
-            $storedMessageLoadedFromDatabase->getHandledAt()->format('Y-m-d H:i:s')
-        );
-
-        $this->assertSame(
-            $storedMessage->getFailedAt()->format('Y-m-d H:i:s'),
-            $storedMessageLoadedFromDatabase->getFailedAt()->format('Y-m-d H:i:s')
-        );
-
+        $this->assertSame($storedMessage->getWaitingTime(), $storedMessageLoadedFromDatabase->getWaitingTime());
         $this->assertSame($storedMessage->getReceiverName(), $storedMessageLoadedFromDatabase->getReceiverName());
+        $this->assertSame($storedMessage->getHandlingTime(), $storedMessageLoadedFromDatabase->getHandlingTime());
+        $this->assertSame($storedMessage->getFailingTime(), $storedMessageLoadedFromDatabase->getFailingTime());
     }
 
     public function testGetStatistics(): void
@@ -79,8 +71,8 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
         $statistics = $this->doctrineConnection->getStatistics($fromDate = new \DateTimeImmutable('1 hour ago'), $toDate = new \DateTimeImmutable());
 
         $expectedStatistics = new Statistics($fromDate, $toDate);
-        $expectedStatistics->add(new MetricsPerMessageType($fromDate, $toDate, TestableMessage::class, 2, 120.0, 120.0));
-        $expectedStatistics->add(new MetricsPerMessageType($fromDate, $toDate, 'Another'.TestableMessage::class, 1, 60.0, 60.0));
+        $expectedStatistics->add(new MetricsPerMessageType($fromDate, $toDate, TestableMessage::class, 2, 0.2, 0.3));
+        $expectedStatistics->add(new MetricsPerMessageType($fromDate, $toDate, 'Another'.TestableMessage::class, 2, 0.1, 0.2));
 
         $this->assertEquals($expectedStatistics, $statistics);
     }
@@ -99,9 +91,9 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
             [
                 'message_uid' => $uuid,
                 'class' => TestableMessage::class,
-                'dispatched_at' => (new \DateTimeImmutable('3 minutes ago'))->format('Y-m-d H:i:s'),
-                'received_at' => (new \DateTimeImmutable('2 minutes ago'))->format('Y-m-d H:i:s'),
-                'handled_at' => (new \DateTimeImmutable('1 minute ago'))->format('Y-m-d H:i:s'),
+                'dispatched_at' => (new \DateTimeImmutable('3 minutes ago'))->format('U.u'),
+                'waiting_time' => 0.1,
+                'handling_time' => 0.2,
             ]
         );
 
@@ -110,9 +102,9 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
             [
                 'message_uid' => $uuid2,
                 'class' => TestableMessage::class,
-                'dispatched_at' => (new \DateTimeImmutable('10 minutes ago'))->format('Y-m-d H:i:s'),
-                'received_at' => (new \DateTimeImmutable('7 minutes ago'))->format('Y-m-d H:i:s'),
-                'handled_at' => (new \DateTimeImmutable('4 minute ago'))->format('Y-m-d H:i:s'),
+                'dispatched_at' => (new \DateTimeImmutable('10 minutes ago'))->format('U.u'),
+                'waiting_time' => 0.3,
+                'handling_time' => 0.4,
             ]
         );
 
@@ -121,21 +113,33 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
             [
                 'message_uid' => $uuid3,
                 'class' => 'Another'.TestableMessage::class,
-                'dispatched_at' => (new \DateTimeImmutable('3 minutes ago'))->format('Y-m-d H:i:s'),
-                'received_at' => (new \DateTimeImmutable('2 minutes ago'))->format('Y-m-d H:i:s'),
-                'handled_at' => (new \DateTimeImmutable('1 minute ago'))->format('Y-m-d H:i:s'),
+                'dispatched_at' => (new \DateTimeImmutable('3 minutes ago'))->format('U.u'),
+                'waiting_time' => 0.1,
+                'handling_time' => 0.2,
             ]
         );
 
-        // should not be part of statistics
+        // this one should only affect waiting_time metric
+        // proves that "null" values are not assumed as "0" in AVG() sql function
+        $connection->insert(
+            'messenger_monitor',
+            [
+                'message_uid' => $uuid3,
+                'class' => 'Another'.TestableMessage::class,
+                'dispatched_at' => (new \DateTimeImmutable('3 minutes ago'))->format('U.u'),
+                'waiting_time' => 0.1,
+            ]
+        );
+
+        // should not be part of statistics because it is too old
         $connection->insert(
             'messenger_monitor',
             [
                 'message_uid' => $uuid2,
                 'class' => TestableMessage::class,
-                'dispatched_at' => (new \DateTimeImmutable('6 hours ago'))->format('Y-m-d H:i:s'),
-                'received_at' => (new \DateTimeImmutable('6 hours ago'))->format('Y-m-d H:i:s'),
-                'handled_at' => (new \DateTimeImmutable('6 hours ago'))->format('Y-m-d H:i:s'),
+                'dispatched_at' => (new \DateTimeImmutable('6 hours ago'))->format('U.u'),
+                'waiting_time' => 1,
+                'handling_time' => 2,
             ]
         );
     }

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace SymfonyCasts\MessengerMonitorBundle\Tests\FunctionalTests;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Schema\Schema;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -21,7 +21,7 @@ use Symfony\Component\Messenger\Worker;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
-use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\Message;
 use SymfonyCasts\MessengerMonitorBundle\Tests\TestKernel;
 
 abstract class AbstractFunctionalTests extends WebTestCase
@@ -48,27 +48,16 @@ abstract class AbstractFunctionalTests extends WebTestCase
         }
 
         $connection->executeQuery('DROP TABLE IF EXISTS messenger_messages');
+        $connection->executeQuery('DROP TABLE IF EXISTS messenger_monitor');
 
-        $databasePlatform = $connection->getDatabasePlatform()->getName();
-
-        $truncateTable = match ($databasePlatform) {
-            'mysql' => 'TRUNCATE TABLE messenger_monitor',
-            'postgresql' => 'TRUNCATE TABLE messenger_monitor RESTART IDENTITY',
-            default => throw new InvalidConfigurationException(sprintf('Doctrine platform "%s" is not supported', $databasePlatform))
-        };
-
-        try {
-            $connection->executeQuery($truncateTable);
-        } catch (\Throwable) {
-            self::getContainer()->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection')->executeSchema(new Schema(), $connection);
-        }
+        self::getContainer()->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection')->executeSchema(new Schema(), $connection);
 
         $this->messageBus = self::getContainer()->get('test.messenger.bus.default');
     }
 
-    protected function dispatchMessage(bool $willFail = false): Envelope
+    protected function dispatchMessage(Message $message): Envelope
     {
-        return $this->messageBus->dispatch(new Envelope(new TestableMessage($willFail)));
+        return $this->messageBus->dispatch(new Envelope($message));
     }
 
     protected function assertQueuesCounts(array $expectedQueues, Crawler $crawler): void
@@ -103,19 +92,24 @@ abstract class AbstractFunctionalTests extends WebTestCase
         );
     }
 
-    protected function assertStoredMessageIsInDB(Envelope $envelope): void
+    protected function assertStoredMessageIsInDB(Envelope $envelope, int $count = 1): void
     {
         /** @var Connection $connection */
         $connection = self::getContainer()->get('doctrine.dbal.default_connection');
 
         /** @var MonitorIdStamp $monitorIdStamp */
         $monitorIdStamp = $envelope->last(MonitorIdStamp::class);
-        $this->assertNotFalse(
-            $connection->executeQuery('SELECT id FROM messenger_monitor WHERE message_uid = :id', ['id' => $monitorIdStamp->getId()])
+
+        $this->assertSame(
+            $count,
+            (int) $connection->executeQuery(
+                'SELECT count(id) FROM messenger_monitor WHERE message_uid = :message_uid',
+                ['message_uid' => $monitorIdStamp->getId()]
+            )->fetch(FetchMode::COLUMN)
         );
     }
 
-    protected function handleMessage(Envelope $envelope, string $queueName): void
+    protected function handleLastMessageInQueue(string $queueName): void
     {
         /** @var EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = self::getContainer()->get('event_dispatcher');
@@ -124,7 +118,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
         $receiver = $this->getReceiver($queueName);
 
         $worker = new Worker(
-            [$queueName => new SingleMessageReceiver($receiver, $receiver->find($this->getMessageId($envelope)))],
+            [$queueName => new SingleMessageReceiver($receiver, $receiver->find($this->getLastMessageId($queueName)))],
             $this->messageBus,
             $eventDispatcher
         );
@@ -139,6 +133,13 @@ abstract class AbstractFunctionalTests extends WebTestCase
         $transportMessageIdStamp = $envelope->last(TransportMessageIdStamp::class);
 
         return $transportMessageIdStamp->getId();
+    }
+
+    protected function getLastMessageId(string $queueName): mixed
+    {
+        $receiver = $this->getReceiver($queueName);
+
+        return $this->getMessageId(current($receiver->get()));
     }
 
     protected function getLastFailedMessageId(): mixed
