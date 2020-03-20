@@ -59,10 +59,10 @@ abstract class AbstractFunctionalTests extends WebTestCase
 
     protected function assertQueuesCounts(array $expectedQueues, Crawler $crawler): void
     {
-        $this->assertSame(count($expectedQueues), $crawler->filter('#transports-list tr')->count() - 1);
+        $this->assertSame(\count($expectedQueues), $crawler->filter('#transports-list tr')->count() - 1);
 
         $queues = [];
-        foreach (range(1, count($expectedQueues)) as $item) {
+        foreach (range(1, \count($expectedQueues)) as $item) {
             $queue = $crawler->filter('#transports-list tr')->eq($item);
             $queues[$queue->filter('td')->first()->text()] = (int) $queue->filter('td')->last()->text();
         }
@@ -76,7 +76,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
 
     protected function assertFailedMessagesCount(int $count, Crawler $crawler): void
     {
-        if ($count === 0) {
+        if (0 === $count) {
             $this->assertSame(1, $crawler->filter('#failed-messages-list tr')->count() - 1);
             $this->assertSame(1, $crawler->filter('#failed-messages-list tr td')->count());
 
