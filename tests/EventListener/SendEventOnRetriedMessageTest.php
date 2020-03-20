@@ -11,7 +11,7 @@ use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 use Symfony\Component\Messenger\EventListener\SendFailedMessageForRetryListener;
 use Symfony\Component\Messenger\Stamp\SentToFailureTransportStamp;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use SymfonyCasts\MessengerMonitorBundle\EventListener\SendEventOnRetriedMessage;
+use SymfonyCasts\MessengerMonitorBundle\EventListener\SendEventOnRetriedMessageListener;
 use SymfonyCasts\MessengerMonitorBundle\FailedMessage\MessageRetriedByUserEvent;
 use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
 use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
@@ -20,7 +20,7 @@ final class SendEventOnRetriedMessageTest extends TestCase
 {
     public function testOnMessageFailedDoesNotDispatchEventIfWillNotRetryEvent(): void
     {
-        $sendEventOnRetriedMessage = new SendEventOnRetriedMessage(
+        $sendEventOnRetriedMessage = new SendEventOnRetriedMessageListener(
             $sendFailedMessageForRetryListener = $this->createMock(SendFailedMessageForRetryListener::class),
             $eventDispatcher = $this->createMock(EventDispatcherInterface::class)
         );
@@ -39,7 +39,7 @@ final class SendEventOnRetriedMessageTest extends TestCase
 
     public function testOnMessageFailedDoesNotDispatchEventIfEnvelopeIsSentFromFailureTransport(): void
     {
-        $sendEventOnRetriedMessage = new SendEventOnRetriedMessage(
+        $sendEventOnRetriedMessage = new SendEventOnRetriedMessageListener(
             $sendFailedMessageForRetryListener = $this->createMock(SendFailedMessageForRetryListener::class),
             $eventDispatcher = $this->createMock(EventDispatcherInterface::class)
         );
@@ -59,7 +59,7 @@ final class SendEventOnRetriedMessageTest extends TestCase
 
     public function testOnMessageFailedDoesNotDispatchEventIfEnvelopeDoesNotHaveMonitorIdStamp(): void
     {
-        $sendEventOnRetriedMessage = new SendEventOnRetriedMessage(
+        $sendEventOnRetriedMessage = new SendEventOnRetriedMessageListener(
             $sendFailedMessageForRetryListener = $this->createMock(SendFailedMessageForRetryListener::class),
             $eventDispatcher = $this->createMock(EventDispatcherInterface::class),
             $logger = $this->createMock(LoggerInterface::class)
@@ -81,7 +81,7 @@ final class SendEventOnRetriedMessageTest extends TestCase
 
     public function testOnMessageFailedDispatchesEvent(): void
     {
-        $sendEventOnRetriedMessage = new SendEventOnRetriedMessage(
+        $sendEventOnRetriedMessage = new SendEventOnRetriedMessageListener(
             $sendFailedMessageForRetryListener = $this->createMock(SendFailedMessageForRetryListener::class),
             $eventDispatcher = $this->createMock(EventDispatcherInterface::class)
         );

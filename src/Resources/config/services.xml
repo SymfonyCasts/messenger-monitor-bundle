@@ -68,7 +68,7 @@
                 id="symfony_casts_messenger_monitor.listener.send_event_on_retried_message"
                 decorates="messenger.retry.send_failed_message_for_retry_listener"
                 decoration-inner-name="messenger.retry.send_failed_message_for_retry_listener.inner"
-                class="SymfonyCasts\MessengerMonitorBundle\EventListener\SendEventOnRetriedMessage">
+                class="SymfonyCasts\MessengerMonitorBundle\EventListener\SendEventOnRetriedMessageListener">
             <argument type="service" id="messenger.retry.send_failed_message_for_retry_listener.inner"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="logger" on-invalid="null"/>

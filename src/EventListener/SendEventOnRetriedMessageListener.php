@@ -15,8 +15,11 @@ use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
 
 /**
  * @internal
+ *
+ * This listener decorates symfony/messenger's core SendFailedMessageForRetryListener, in order to dispatch an event
+ * if a message was retried by a RetryStrategy
  */
-final class SendEventOnRetriedMessage implements EventSubscriberInterface
+final class SendEventOnRetriedMessageListener implements EventSubscriberInterface
 {
     private $decorated;
     private $eventDispatcher;
