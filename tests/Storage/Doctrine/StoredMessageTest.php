@@ -15,19 +15,16 @@ final class StoredMessageTest extends TestCase
     public function testStoredMessage(): void
     {
         $storedMessage = new StoredMessage(
-            'id',
-            TestableMessage::class,
-            $dispatchedAt = new \DateTimeImmutable(),
-            $receivedAt = new \DateTimeImmutable(),
-            $handledAt = new \DateTimeImmutable(),
-            $receiverName = 'receiver_name'
+            'message_uid', TestableMessage::class, $dispatchedAt = new \DateTimeImmutable(), 1, $receivedAt = new \DateTimeImmutable(), $handledAt = new \DateTimeImmutable(), $failedAt = new \DateTimeImmutable(), $receiverName = 'receiver_name'
         );
 
-        $this->assertSame('id', $storedMessage->getId());
+        $this->assertSame(1, $storedMessage->getId());
+        $this->assertSame('message_uid', $storedMessage->getMessageUid());
         $this->assertSame(TestableMessage::class, $storedMessage->getMessageClass());
         $this->assertSame($dispatchedAt, $storedMessage->getDispatchedAt());
         $this->assertSame($receivedAt, $storedMessage->getReceivedAt());
         $this->assertSame($handledAt, $storedMessage->getHandledAt());
+        $this->assertSame($failedAt, $storedMessage->getFailedAt());
         $this->assertSame($receiverName, $storedMessage->getReceiverName());
     }
 
@@ -37,7 +34,7 @@ final class StoredMessageTest extends TestCase
             new Envelope(new TestableMessage(), [$stamp = new MonitorIdStamp()])
         );
 
-        $this->assertSame($stamp->getId(), $storedMessage->getId());
+        $this->assertSame($stamp->getId(), $storedMessage->getMessageUid());
         $this->assertSame(TestableMessage::class, $storedMessage->getMessageClass());
     }
 

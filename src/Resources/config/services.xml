@@ -41,7 +41,8 @@
             <argument type="service" id="symfonycasts.messenger_monitor.failed_receiver.name"/>
             <argument type="service" id="messenger.routable_message_bus"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="logger"/>
+            <argument type="service" id="logger" on-invalid="null"/>
+            <tag name="monolog.logger" channel="messenger-monitor-bundle"/>
         </service>
 
         <service id="symfonycasts.messenger_monitor.failed_message.reject" class="SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRejecter">
@@ -61,6 +62,17 @@
         <!-- EventListener -->
         <service id="symfonycasts.messenger_monitor.listener.add_monitor_id_stamp" class="SymfonyCasts\MessengerMonitorBundle\EventListener\AddStampOnMessageSentListener">
             <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <service
+                id="symfony_casts_messenger_monitor.listener.send_event_on_retried_message"
+                decorates="messenger.retry.send_failed_message_for_retry_listener"
+                decoration-inner-name="messenger.retry.send_failed_message_for_retry_listener.inner"
+                class="SymfonyCasts\MessengerMonitorBundle\EventListener\SendEventOnRetriedMessage">
+            <argument type="service" id="messenger.retry.send_failed_message_for_retry_listener.inner"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="logger" on-invalid="null"/>
+            <tag name="monolog.logger" channel="messenger-monitor-bundle"/>
         </service>
 
         <!-- TwigExtensions -->

@@ -41,14 +41,14 @@ class Connection
                 ->insert($this->tableName)
                 ->values(
                     [
-                        'id' => ':id',
+                        'message_uid' => ':message_uid',
                         'class' => ':class',
                         'dispatched_at' => ':dispatched_at',
                     ]
                 )
                 ->getSQL(),
             [
-                'id' => $storedMessage->getId(),
+                'message_uid' => $storedMessage->getMessageUid(),
                 'class' => $storedMessage->getMessageClass(),
                 'dispatched_at' => $storedMessage->getDispatchedAt(),
             ],
@@ -56,6 +56,8 @@ class Connection
                 'dispatched_at' => Types::DATETIME_IMMUTABLE,
             ]
         );
+
+        $storedMessage->setId((int) $this->driverConnection->lastInsertId());
     }
 
     public function updateMessage(StoredMessage $storedMessage): void
@@ -66,30 +68,35 @@ class Connection
                 ->set('received_at', ':received_at')
                 ->set('receiver_name', ':receiver_name')
                 ->set('handled_at', ':handled_at')
+                ->set('failed_at', ':failed_at')
                 ->where('id = :id')
                 ->getSQL(),
             [
                 'received_at' => $storedMessage->getReceivedAt(),
                 'handled_at' => $storedMessage->getHandledAt(),
+                'failed_at' => $storedMessage->getFailedAt(),
                 'receiver_name' => $storedMessage->getReceiverName(),
                 'id' => $storedMessage->getId(),
             ],
             [
                 'received_at' => Types::DATETIME_IMMUTABLE,
                 'handled_at' => Types::DATETIME_IMMUTABLE,
+                'failed_at' => Types::DATETIME_IMMUTABLE,
             ]
         );
     }
 
-    public function findMessage(string $id): ?StoredMessage
+    public function findMessage(string $messageUid): ?StoredMessage
     {
         $statement = $this->executeQuery(
             $this->driverConnection->createQueryBuilder()
                 ->select('*')
                 ->from($this->tableName)
-                ->where('id = :id')
+                ->where('message_uid = :message_uid')
+                ->orderBy('dispatched_at', 'desc')
+                ->setMaxResults(1)
                 ->getSQL(),
-            ['id' => $id]
+            ['message_uid' => $messageUid]
         );
 
         if (false === $row = $statement->fetch()) {
@@ -97,11 +104,13 @@ class Connection
         }
 
         return new StoredMessage(
-            $row['id'],
+            $row['message_uid'],
             $row['class'],
             new \DateTimeImmutable($row['dispatched_at']),
+            (int) $row['id'],
             null !== $row['received_at'] ? new \DateTimeImmutable($row['received_at']) : null,
             null !== $row['handled_at'] ? new \DateTimeImmutable($row['handled_at']) : null,
+            null !== $row['failed_at'] ? new \DateTimeImmutable($row['failed_at']) : null,
             $row['receiver_name'] ?? null
         );
     }
@@ -165,16 +174,17 @@ class Connection
     {
         $schema = new Schema([], [], $this->driverConnection->getSchemaManager()->createSchemaConfig());
         $table = $schema->createTable($this->tableName);
-        $table->addColumn('id', Types::GUID)->setNotnull(true);
+        $table->addColumn('id', Types::INTEGER)->setNotnull(true)->setAutoincrement(true);
+        $table->addColumn('message_uid', Types::GUID)->setNotnull(true);
         $table->addColumn('class', Types::STRING)->setLength(255)->setNotnull(true);
         $table->addColumn('dispatched_at', Types::DATETIME_IMMUTABLE)->setNotnull(true);
         $table->addColumn('received_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
         $table->addColumn('handled_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
+        $table->addColumn('failed_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
         $table->addColumn('receiver_name', Types::STRING)->setLength(255)->setNotnull(false);
-        $table->addColumn('retries', Types::INTEGER)->setDefault(0);
-        $table->setPrimaryKey(['id']);
         $table->addIndex(['dispatched_at']);
         $table->addIndex(['class']);
+        $table->setPrimaryKey(['id']);
 
         return $schema;
     }

@@ -16,6 +16,12 @@
             <argument/> <!-- Doctrine's table name -->
         </service>
 
+        <service id="symfonycasts.messenger_monitor.storage.stored_message_provider" class="SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessageProvider">
+            <argument type="service" id="symfonycasts.messenger_monitor.storage.doctrine_connection"/>
+            <argument type="service" id="logger" on-invalid="null"/>
+            <tag name="monolog.logger" channel="messenger-monitor-bundle"/>
+        </service>
+
         <!-- EventListeners -->
         <service id="symfonycasts.messenger_monitor.listener.store_in_doctrine" class="SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener\SaveStoredMessageOnMessageSentListener">
             <argument type="service" id="symfonycasts.messenger_monitor.storage.doctrine_connection"/>
@@ -24,9 +30,13 @@
 
         <service id="symfonycasts.messenger_monitor.listener.update_doctrine" class="SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener\UpdateStoredMessageListener">
             <argument type="service" id="symfonycasts.messenger_monitor.storage.doctrine_connection"/>
-            <argument type="service" id="logger" on-invalid="null"/>
+            <argument type="service" id="symfonycasts.messenger_monitor.storage.stored_message_provider"/>
             <tag name="kernel.event_subscriber"/>
-            <tag name="monolog.logger" channel="messenger-monitor-bundle"/>
+        </service>
+
+        <service id="symfonycasts.messenger_monitor.listener.save_retried_message" class="SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener\SaveRetriedMessageListener">
+            <argument type="service" id="symfonycasts.messenger_monitor.storage.doctrine_connection"/>
+            <tag name="kernel.event_subscriber"/>
         </service>
 
         <!-- Statistics -->

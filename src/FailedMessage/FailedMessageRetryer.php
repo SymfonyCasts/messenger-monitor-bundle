@@ -12,6 +12,7 @@ use Symfony\Component\Messenger\Transport\Receiver\SingleMessageReceiver;
 use Symfony\Component\Messenger\Worker;
 use SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
 use SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
+use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
 
 /**
  * all this code was stolen from \Symfony\Component\Messenger\Command\FailedMessagesRetryCommand.
@@ -37,7 +38,7 @@ final class FailedMessageRetryer
 
     public function retryFailedMessage(int $id): void
     {
-        $this->eventDispatcher->addSubscriber(new StopWorkerOnMessageLimitListener(1));
+        $this->eventDispatcher->addSubscriber($subscriber = new StopWorkerOnMessageLimitListener(1));
 
         $failureReceiver = $this->failureReceiverProvider->getFailureReceiver();
 
@@ -45,6 +46,15 @@ final class FailedMessageRetryer
         if (null === $envelope) {
             throw new \RuntimeException(sprintf('The message "%s" was not found.', $id));
         }
+
+        /** @var MonitorIdStamp|null $monitorIdStamp */
+        $monitorIdStamp = $envelope->last(MonitorIdStamp::class);
+
+        if (null === $monitorIdStamp) {
+            throw new \RuntimeException('Envelope should have a MonitorIdStamp!');
+        }
+
+        $this->eventDispatcher->dispatch(new MessageRetriedByUserEvent($monitorIdStamp->getId(), \get_class($envelope->getMessage())));
 
         $singleReceiver = new SingleMessageReceiver($failureReceiver, $envelope);
         $worker = new Worker(
@@ -54,5 +64,7 @@ final class FailedMessageRetryer
             $this->logger
         );
         $worker->run();
+
+        $this->eventDispatcher->removeSubscriber($subscriber);
     }
 }
