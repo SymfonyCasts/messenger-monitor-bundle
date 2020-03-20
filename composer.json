@@ -20,6 +20,8 @@
         "ext-json": "*",
         "doctrine/dbal": "^2.10",
         "doctrine/doctrine-bundle": "^2.0",
+        "symfony/browser-kit": "^5.0",
+        "symfony/css-selector": "^5.0",
         "symfony/phpunit-bridge": "^5.0",
         "vimeo/psalm": "^3.9"
     },
