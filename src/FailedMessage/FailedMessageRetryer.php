@@ -56,7 +56,9 @@ final class FailedMessageRetryer
 
         $this->eventDispatcher->dispatch(new MessageRetriedByUserEvent($monitorIdStamp->getId(), \get_class($envelope->getMessage())));
 
+        /** @psalm-suppress InternalClass */
         $singleReceiver = new SingleMessageReceiver($failureReceiver, $envelope);
+        /** @psalm-suppress InvalidArgument */
         $worker = new Worker(
             [$this->failureReceiverName->toString() => $singleReceiver],
             $this->messageBus,

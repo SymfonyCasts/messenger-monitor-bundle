@@ -14,66 +14,16 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
-        <InternalClass>
-            <errorLevel type="suppress">
-                <file name="src/FailedMessage/FailedMessageRetryer.php"/>
-            </errorLevel>
-        </InternalClass>
-        <InvalidArgument>
-            <errorLevel type="suppress">
-                <file name="src/FailedMessage/FailedMessageRetryer.php"/>
-            </errorLevel>
-        </InvalidArgument>
-        <UndefinedInterfaceMethod>
-            <errorLevel type="suppress">
-                <!-- Can't inject FlashBagInterface directly: https://github.com/symfony/symfony/issues/33084 -->
-                <file name="src/Controller/RejectFailedMessageController.php"/>
-                <file name="src/Controller/RetryFailedMessageController.php"/>
-            </errorLevel>
-        </UndefinedInterfaceMethod>
-        <PossiblyUndefinedMethod>
-            <errorLevel type="suppress">
-                <file name="src/DependencyInjection/Configuration.php"/>
-            </errorLevel>
-        </PossiblyUndefinedMethod>
-        <PossiblyNullReference>
-            <errorLevel type="suppress">
-                <file name="src/DependencyInjection/Configuration.php"/>
-            </errorLevel>
-        </PossiblyNullReference>
-        <PossiblyNullArgument>
-            <errorLevel type="suppress">
-                <file name="src/DependencyInjection/SymfonyCastsMessengerMonitorExtension.php"/>
-                <file name="src/FailureReceiver/FailureReceiverProvider.php"/>
-            </errorLevel>
-        </PossiblyNullArgument>
-        <ArgumentTypeCoercion>
-            <errorLevel type="suppress">
-                <file name="src/Storage/Doctrine/ConnectionFactory.php"/>
-            </errorLevel>
-        </ArgumentTypeCoercion>
         <MissingPropertyType>
             <errorLevel type="suppress">
-                <!-- https://github.com/vimeo/psalm/issues/2231 -->
                 <file name="src/Storage/Doctrine/StoredMessage.php"/>
-                <file name="src/FailedMessage/FailedMessageDetails.php"/>
             </errorLevel>
         </MissingPropertyType>
-        <MissingParamType>
-            <errorLevel type="suppress">
-                <file name="src/FailedMessage/FailedMessageDetails.php"/>
-            </errorLevel>
-        </MissingParamType>
-        <MissingReturnType>
-            <errorLevel type="suppress">
-                <file name="src/FailedMessage/FailedMessageDetails.php"/>
-            </errorLevel>
-        </MissingReturnType>
         <PossiblyFalseArgument>
             <errorLevel type="suppress">
                 <file name="src/Storage/Doctrine/EventListener/UpdateStoredMessageListener.php"/>
-                <file name="src/Storage/Doctrine/StoredMessage.php"/>
                 <file name="src/Storage/Doctrine/EventListener/SaveRetriedMessageListener.php"/>
+                <file name="src/Storage/Doctrine/StoredMessage.php"/>
             </errorLevel>
         </PossiblyFalseArgument>
     </issueHandlers>

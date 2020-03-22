@@ -9,11 +9,13 @@ namespace SymfonyCasts\MessengerMonitorBundle\FailedMessage;
  */
 final class FailedMessageDetails
 {
+    /** @psalm-suppress MissingParamType */
     private $id;
     private $class;
     private $failedAt;
     private $error;
 
+    /** @psalm-suppress MissingParamType */
     public function __construct($id, string $class, string $failedAt, ?string $error)
     {
         $this->id = $id;
@@ -22,6 +24,7 @@ final class FailedMessageDetails
         $this->error = $error;
     }
 
+    /** @psalm-suppress MissingReturnType */
     public function getId()
     {
         return $this->id;
