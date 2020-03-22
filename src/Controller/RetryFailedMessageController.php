@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SymfonyCasts\MessengerMonitorBundle\Controller;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRetryer;
@@ -27,11 +28,14 @@ final class RetryFailedMessageController
 
     public function __invoke(int $id): RedirectResponse
     {
+        /** @var FlashBagInterface $sessionBag */
+        $sessionBag = $this->session->getBag('flashes');
+
         try {
             $this->failedMessageRetryer->retryFailedMessage($id);
-            $this->session->getBag('flashes')->add('messenger_monitor.success', sprintf('Message with id "%s" correctly retried.', $id));
+            $sessionBag->add('messenger_monitor.success', sprintf('Message with id "%s" correctly retried.', $id));
         } catch (\Exception $exception) {
-            $this->session->getBag('flashes')->add('messenger_monitor.error', sprintf('Error while retrying message with id "%s": %s', $id, $exception->getMessage()));
+            $sessionBag->add('messenger_monitor.error', sprintf('Error while retrying message with id "%s": %s', $id, $exception->getMessage()));
         }
 
         return new RedirectResponse($this->urlGenerator->generate('symfonycasts.messenger_monitor.dashboard'));

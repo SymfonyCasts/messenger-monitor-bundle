@@ -17,7 +17,8 @@ return PhpCsFixer\Config::create()
         '@PHPUnit75Migration:risky' => true,
         'array_syntax' => ['syntax' => 'short'],
         'protected_to_private' => false,
-        'semicolon_after_instruction' => false
+        'semicolon_after_instruction' => false,
+        'phpdoc_to_comment' => false,
     ))
     ->setRiskyAllowed(true)
     ->setFinder($finder)

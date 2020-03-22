@@ -20,6 +20,8 @@ final class SymfonyCastsMessengerMonitorExtension extends Extension
         $loader->load('services.xml');
 
         $configuration = $this->getConfiguration($configs, $container);
+
+        /** @psalm-suppress PossiblyNullArgument */
         $config = $this->processConfiguration($configuration, $configs);
 
         if ('doctrine' === $config['driver']) {

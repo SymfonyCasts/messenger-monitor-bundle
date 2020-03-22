@@ -61,7 +61,10 @@ final class StoredMessage
         $this->id = $id;
     }
 
-    public function getId(): int
+    /**
+     * @psalm-ignore-nullable-return
+     */
+    public function getId(): ?int
     {
         return $this->id;
     }
