@@ -7,6 +7,7 @@ namespace SymfonyCasts\MessengerMonitorBundle\Tests\Storage\Doctrine;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Exception\MessengerIdStampMissingException;
 use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
 use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
 
@@ -40,7 +41,7 @@ final class StoredMessageTest extends TestCase
 
     public function testExceptionWhenCreateFromEnvelopeWithoutStamp(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(MessengerIdStampMissingException::class);
         $this->expectExceptionMessage('Envelope should have a MonitorIdStamp!');
 
         StoredMessage::fromEnvelope(new Envelope(new TestableMessage()));

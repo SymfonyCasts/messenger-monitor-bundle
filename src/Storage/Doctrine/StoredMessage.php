@@ -6,6 +6,7 @@ namespace SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine;
 
 use Symfony\Component\Messenger\Envelope;
 use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
+use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Exception\MessengerIdStampMissingException;
 
 /**
  * @internal
@@ -45,7 +46,7 @@ final class StoredMessage
         $monitorIdStamp = $envelope->last(MonitorIdStamp::class);
 
         if (null === $monitorIdStamp) {
-            throw new \RuntimeException('Envelope should have a MonitorIdStamp!');
+            throw new MessengerIdStampMissingException();
         }
 
         return new self(
