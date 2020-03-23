@@ -6,6 +6,7 @@ namespace SymfonyCasts\MessengerMonitorBundle\FailedMessage;
 
 /**
  * @internal
+ * @psalm-immutable
  */
 final class FailedMessageDetails
 {

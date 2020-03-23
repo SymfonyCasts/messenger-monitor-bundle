@@ -9,8 +9,8 @@
         <service id="symfonycasts.messenger_monitor.controller.dashboard" class="SymfonyCasts\MessengerMonitorBundle\Controller\DashboardController" public="true">
             <argument type="service" id="twig"/>
             <argument type="service" id="symfonycasts.messenger_monitor.receiver_locator"/>
-            <argument type="service" id="symfonycasts.messenger_monitor.failed_message.repository"/>
             <argument type="service" id="symfonycasts.messenger_monitor.statistics.processor"/>
+            <argument type="service" id="symfonycasts.messenger_monitor.failed_message.repository" on-invalid="null"/>
         </service>
 
         <service id="symfonycasts.messenger_monitor.controller.retry_failed_message" class="SymfonyCasts\MessengerMonitorBundle\Controller\RetryFailedMessageController" public="true">
@@ -21,6 +21,11 @@
 
         <service id="symfonycasts.messenger_monitor.controller.reject_failed_message" class="SymfonyCasts\MessengerMonitorBundle\Controller\RejectFailedMessageController" public="true">
             <argument type="service" id="symfonycasts.messenger_monitor.failed_message.reject"/>
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="router"/>
+        </service>
+
+        <service id="symfonycasts.messenger_monitor.controller.no_failure_transport" class="SymfonyCasts\MessengerMonitorBundle\Controller\NoFailureTransportController" public="true">
             <argument type="service" id="request_stack"/>
             <argument type="service" id="router"/>
         </service>
@@ -70,7 +75,7 @@
         </service>
 
         <service
-                id="symfony_casts_messenger_monitor.listener.send_event_on_retried_message"
+                id="symfonycasts_messenger_monitor.listener.send_event_on_retried_message"
                 decorates="messenger.retry.send_failed_message_for_retry_listener"
                 decoration-inner-name="messenger.retry.send_failed_message_for_retry_listener.inner"
                 class="SymfonyCasts\MessengerMonitorBundle\EventListener\SendEventOnRetriedMessageListener">

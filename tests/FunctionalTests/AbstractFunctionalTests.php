@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SymfonyCasts\MessengerMonitorBundle\Tests\FunctionalTests;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Schema\Schema;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -21,7 +20,10 @@ use Symfony\Component\Messenger\Worker;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\FailureMessage;
 use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\Message;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\RetryableMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\TestableMessage;
 use SymfonyCasts\MessengerMonitorBundle\Tests\TestKernel;
 
 abstract class AbstractFunctionalTests extends WebTestCase
@@ -31,7 +33,28 @@ abstract class AbstractFunctionalTests extends WebTestCase
 
     protected static function createKernel(array $options = []): KernelInterface
     {
-        return new TestKernel();
+        return TestKernel::withMessengerConfig(
+            [
+                'reset_on_message' => true,
+                'failure_transport' => 'failed',
+                'transports' => [
+                    'queue' => [
+                        'dsn' => 'doctrine://default?queue_name=queue',
+                        'retry_strategy' => ['max_retries' => 0],
+                    ],
+                    'queue_with_retry' => [
+                        'dsn' => 'doctrine://default?queue_name=queue_with_retry',
+                        'retry_strategy' => ['max_retries' => 1, 'delay' => 0, 'multiplier' => 1],
+                    ],
+                    'failed' => 'doctrine://default?queue_name=failed',
+                ],
+                'routing' => [
+                    TestableMessage::class => 'queue',
+                    FailureMessage::class => 'queue',
+                    RetryableMessage::class => 'queue_with_retry',
+                ],
+            ]
+        );
     }
 
     protected function setUp(): void
@@ -103,9 +126,9 @@ abstract class AbstractFunctionalTests extends WebTestCase
         $this->assertSame(
             $count,
             (int) $connection->executeQuery(
-                'SELECT count(id) FROM messenger_monitor WHERE message_uid = :message_uid',
+                'SELECT count(id) as count FROM messenger_monitor WHERE message_uid = :message_uid',
                 ['message_uid' => $monitorIdStamp->getId()]
-            )->fetch(FetchMode::COLUMN)
+            )->fetchOne()
         );
     }
 

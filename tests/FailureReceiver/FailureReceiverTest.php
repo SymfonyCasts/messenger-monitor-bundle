@@ -14,10 +14,4 @@ final class FailureReceiverTest extends TestCase
         $failureReceiverName = new FailureReceiverName('foo');
         $this->assertSame('foo', $failureReceiverName->toString());
     }
-
-    public function testFailureReceiverNameWithEmptyName(): void
-    {
-        $failureReceiverName = new FailureReceiverName(null);
-        $this->assertNull($failureReceiverName->toString());
-    }
 }
