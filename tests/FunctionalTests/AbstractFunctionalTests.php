@@ -35,7 +35,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
 
     public function setUp(): void
     {
-        $this->client = self::createClient();
+        $this->client = self::createClient([], ['PHP_AUTH_USER' => 'admin', 'PHP_AUTH_PW' => 'password']);
 
         /** @var Connection $connection */
         $connection = self::$container->get('doctrine.dbal.default_connection');

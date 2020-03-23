@@ -8,11 +8,13 @@ use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\Security\Core\User\User;
 use SymfonyCasts\MessengerMonitorBundle\SymfonyCastsMessengerMonitorBundle;
 
 final class TestKernel extends Kernel
@@ -35,6 +37,7 @@ final class TestKernel extends Kernel
             new DoctrineBundle(),
             new SymfonyCastsMessengerMonitorBundle(),
             new TwigBundle(),
+            new SecurityBundle(),
         ];
     }
 
@@ -110,6 +113,29 @@ final class TestKernel extends Kernel
                             'url' => getenv('TEST_DATABASE_DSN'),
                             'logging' => false,
                         ],
+                    ],
+                ],
+            ]
+        );
+
+        $container->loadFromExtension(
+            'security',
+            [
+                'providers' => [
+                    'in_memory' => [
+                        'memory' => [
+                            'users' => [
+                                'admin' => ['password' => 'password', 'roles' => ['ROLE_MESSENGER_ADMIN']],
+                                'user' => ['password' => 'password'],
+                            ],
+                        ],
+                    ],
+                ],
+                'encoders' => [User::class => 'plaintext'],
+                'firewalls' => [
+                    'main' => [
+                        'provider' => 'in_memory',
+                        'http_basic' => true,
                     ],
                 ],
             ]
