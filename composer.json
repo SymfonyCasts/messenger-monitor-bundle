@@ -13,7 +13,6 @@
         "symfony/messenger": "^4.4|^5.0",
         "symfony/polyfill-uuid": "^1.13",
         "symfony/routing": "^4.4|^5.0",
-        "symfony/security-bundle": "^5.0",
         "symfony/twig-bundle": "^4.4|^5.0",
         "twig/twig": "^2.10|^3.0"
     },
@@ -24,6 +23,7 @@
         "symfony/browser-kit": "^5.0",
         "symfony/css-selector": "^5.0",
         "symfony/phpunit-bridge": "^5.0",
+        "symfony/security-bundle": "^5.4",
         "vimeo/psalm": "^3.9"
     },
     "conflict": {

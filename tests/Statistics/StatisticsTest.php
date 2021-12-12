@@ -13,7 +13,7 @@ final class StatisticsTest extends TestCase
 {
     private $statistics;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->statistics = new Statistics(
             new \DateTimeImmutable('24 hours ago'),

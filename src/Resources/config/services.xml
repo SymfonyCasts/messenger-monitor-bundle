@@ -65,7 +65,7 @@
         </service>
 
         <service id="symfonycasts.messenger_monitor.listener.authorize_user_on_kernel_request" class="SymfonyCasts\MessengerMonitorBundle\EventListener\AuthorizeUserOnKernelRequestListener">
-            <argument type="service" id="security.authorization_checker" />
+            <argument type="service" id="security.authorization_checker" on-invalid="null" />
             <tag name="kernel.event_subscriber"/>
         </service>
 

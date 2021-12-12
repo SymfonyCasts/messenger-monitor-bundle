@@ -25,7 +25,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
 {
     /** @var KernelBrowser */
     protected $client;
-    /** @var MessageBusInterface $messageBus */
+    /** @var MessageBusInterface */
     protected $messageBus;
 
     protected static function createKernel(array $options = [])
@@ -33,7 +33,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
         return new TestKernel();
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->client = self::createClient([], ['PHP_AUTH_USER' => 'admin', 'PHP_AUTH_PW' => 'password']);
 

@@ -17,13 +17,17 @@ final class AuthorizeUserOnKernelRequestListener implements EventSubscriberInter
 {
     private $authorizationChecker;
 
-    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker = null)
     {
         $this->authorizationChecker = $authorizationChecker;
     }
 
     public function onKernelRequest(RequestEvent $event): void
     {
+        if (null === $this->authorizationChecker) {
+            return;
+        }
+
         if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
             return;
         }
