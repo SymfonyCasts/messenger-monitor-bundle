@@ -14,15 +14,8 @@ use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Driver\MySQLDriver;
  */
 final class ConnectionFactory
 {
-    private $registry;
-    private $connectionName;
-    private $tableName;
-
-    public function __construct(ConnectionRegistry $registry, string $connectionName, string $tableName)
+    public function __construct(private ConnectionRegistry $registry, private string $connectionName, private string $tableName)
     {
-        $this->registry = $registry;
-        $this->connectionName = $connectionName;
-        $this->tableName = $tableName;
     }
 
     public function __invoke(): Connection
@@ -32,7 +25,7 @@ final class ConnectionFactory
             $driverConnection = $this->registry->getConnection($this->connectionName);
 
             return new Connection($driverConnection, new MySQLDriver(), $this->tableName);
-        } catch (\InvalidArgumentException $exception) {
+        } catch (\InvalidArgumentException) {
             throw new InvalidConfigurationException(sprintf('Doctrine connection with name "%s" does not exist', $this->connectionName));
         }
     }

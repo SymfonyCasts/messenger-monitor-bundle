@@ -15,11 +15,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 final class AuthorizeUserOnKernelRequestListener implements EventSubscriberInterface
 {
-    private $authorizationChecker;
-
-    public function __construct(AuthorizationCheckerInterface $authorizationChecker = null)
+    public function __construct(private ?AuthorizationCheckerInterface $authorizationChecker = null)
     {
-        $this->authorizationChecker = $authorizationChecker;
     }
 
     public function onKernelRequest(RequestEvent $event): void
@@ -28,13 +25,13 @@ final class AuthorizeUserOnKernelRequestListener implements EventSubscriberInter
             return;
         }
 
-        if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
+        if (HttpKernelInterface::MAIN_REQUEST !== $event->getRequestType()) {
             return;
         }
 
         $request = $event->getRequest();
 
-        if (0 !== strpos($request->attributes->get('_route'), 'symfonycasts.messenger_monitor.')) {
+        if (!str_starts_with($request->attributes->get('_route'), 'symfonycasts.messenger_monitor.')) {
             return;
         }
 

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine;
 
 use Doctrine\DBAL\Connection as DBALConnection;
+use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\Exception\TableNotFoundException;
-use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Synchronizer\SingleDatabaseSynchronizer;
 use Doctrine\DBAL\Types\Types;
@@ -21,17 +21,10 @@ use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Driver\SQLDriverInterfa
  */
 class Connection
 {
-    private $driverConnection;
-    private $SQLDriver;
-    private $tableName;
-    /** @var SingleDatabaseSynchronizer|null */
-    private $schemaSynchronizer;
+    private ?SingleDatabaseSynchronizer $schemaSynchronizer = null;
 
-    public function __construct(DBALConnection $driverConnection, SQLDriverInterface $SQLDriver, string $tableName)
+    public function __construct(private DBALConnection $driverConnection, private SQLDriverInterface $SQLDriver, private string $tableName)
     {
-        $this->driverConnection = $driverConnection;
-        $this->SQLDriver = $SQLDriver;
-        $this->tableName = $tableName;
     }
 
     public function saveMessage(StoredMessage $storedMessage): void
@@ -99,7 +92,7 @@ class Connection
             ['message_uid' => $messageUid]
         );
 
-        if (false === $row = $statement->fetch()) {
+        if (false === $row = $statement->fetchAssociative()) {
             return null;
         }
 
@@ -132,7 +125,7 @@ class Connection
         );
 
         $statistics = new Statistics($fromDate, $toDate);
-        while (false !== ($row = $statement->fetch(FetchMode::ASSOCIATIVE))) {
+        while (false !== ($row = $statement->fetchAssociative())) {
             $statistics->add(
                 new MetricsPerMessageType(
                     $fromDate,
@@ -148,6 +141,9 @@ class Connection
         return $statistics;
     }
 
+    /**
+     * @return Result&ResultStatement
+     */
     private function executeQuery(string $sql, array $parameters = [], array $types = []): ResultStatement
     {
         try {

@@ -6,6 +6,7 @@ namespace SymfonyCasts\MessengerMonitorBundle\Tests\FailedMessage;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Stamp\ErrorDetailsStamp;
 use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
 use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
@@ -57,7 +58,8 @@ class FailedMessageRepositoryTest extends TestCase
             new TestableMessage(),
             [
                 new TransportMessageIdStamp($id),
-                new RedeliveryStamp(0, 'exceptionMessage'),
+                new RedeliveryStamp(0, new \DateTimeImmutable()),
+                new ErrorDetailsStamp(\Exception::class, 0, 'exceptionMessage'),
             ]
         );
     }

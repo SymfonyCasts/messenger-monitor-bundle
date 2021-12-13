@@ -21,19 +21,13 @@ use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
  */
 final class FailedMessageRetryer
 {
-    private $failureReceiverProvider;
-    private $failureReceiverName;
-    private $eventDispatcher;
-    private $messageBus;
-    private $logger;
-
-    public function __construct(FailureReceiverProvider $failureReceiverProvider, FailureReceiverName $failureReceiverName, MessageBusInterface $messageBus, EventDispatcherInterface $eventDispatcher, LoggerInterface $logger)
-    {
-        $this->failureReceiverProvider = $failureReceiverProvider;
-        $this->failureReceiverName = $failureReceiverName;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->messageBus = $messageBus;
-        $this->logger = $logger;
+    public function __construct(
+        private FailureReceiverProvider $failureReceiverProvider,
+        private FailureReceiverName $failureReceiverName,
+        private MessageBusInterface $messageBus,
+        private EventDispatcherInterface $eventDispatcher,
+        private LoggerInterface $logger
+    ) {
     }
 
     public function retryFailedMessage(int $id): void
@@ -54,11 +48,12 @@ final class FailedMessageRetryer
             throw new \RuntimeException('Envelope should have a MonitorIdStamp!');
         }
 
-        $this->eventDispatcher->dispatch(new MessageRetriedByUserEvent($monitorIdStamp->getId(), \get_class($envelope->getMessage())));
+        $this->eventDispatcher->dispatch(new MessageRetriedByUserEvent($monitorIdStamp->getId(), $envelope->getMessage()::class));
 
-        /** @psalm-suppress InternalClass */
+        /** @psalm-suppress InternalClass,InternalMethod */
         $singleReceiver = new SingleMessageReceiver($failureReceiver, $envelope);
-        /** @psalm-suppress InvalidArgument */
+
+        /** @psalm-suppress InvalidArgument,InvalidArrayOffset */
         $worker = new Worker(
             [$this->failureReceiverName->toString() => $singleReceiver],
             $this->messageBus,

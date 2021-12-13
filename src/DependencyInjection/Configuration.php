@@ -25,15 +25,11 @@ final class Configuration implements ConfigurationInterface
                     ->defaultValue('doctrine')
                     ->values(['doctrine', 'redis'])
                     ->validate()
-                        ->ifTrue(static function (string $value): bool {
-                            return 'doctrine' === $value && !class_exists(DBALConnection::class);
-                        })
+                        ->ifTrue(static fn (string $value): bool => 'doctrine' === $value && !class_exists(DBALConnection::class))
                         ->thenInvalid('Package doctrine/dbal and doctrine/doctrine-bundle are required to use doctrine driver.')
                     ->end()
                     ->validate()
-                        ->ifTrue(static function (string $value): bool {
-                            return 'redis' === $value && !class_exists(\Redis::class);
-                        })
+                        ->ifTrue(static fn (string $value): bool => 'redis' === $value && !class_exists(\Redis::class))
                         ->thenInvalid('Extension php-redis is required to use redis driver.')
                     ->end()
                 ->end()
@@ -45,9 +41,7 @@ final class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
             ->validate()
-                ->ifTrue(static function (array $value): bool {
-                    return (isset($value['doctrine']['table_name']) || isset($value['doctrine']['connection'])) && 'redis' === $value['driver'];
-                })
+                ->ifTrue(static fn (array $value): bool => (isset($value['doctrine']['table_name']) || isset($value['doctrine']['connection'])) && 'redis' === $value['driver'])
                 ->thenInvalid('"doctrine.table_name" and "doctrine.connection" can only be used with doctrine driver.')
             ->end();
 

@@ -16,13 +16,8 @@ use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessageProvider;
  */
 final class UpdateStoredMessageListener implements EventSubscriberInterface
 {
-    private $doctrineConnection;
-    private $storedMessageProvider;
-
-    public function __construct(Connection $doctrineConnection, StoredMessageProvider $storedMessageProvider)
+    public function __construct(private Connection $doctrineConnection, private StoredMessageProvider $storedMessageProvider)
     {
-        $this->doctrineConnection = $doctrineConnection;
-        $this->storedMessageProvider = $storedMessageProvider;
     }
 
     public function onMessageReceived(WorkerMessageReceivedEvent $event): void

@@ -16,13 +16,8 @@ use SymfonyCasts\MessengerMonitorBundle\Locator\ReceiverLocator;
  */
 class FailureReceiverProvider
 {
-    private $receiverLocator;
-    private $failureReceiverName;
-
-    public function __construct(ReceiverLocator $receiverLocator, FailureReceiverName $failureReceiverName)
+    public function __construct(private ReceiverLocator $receiverLocator, private FailureReceiverName $failureReceiverName)
     {
-        $this->receiverLocator = $receiverLocator;
-        $this->failureReceiverName = $failureReceiverName;
     }
 
     public function getFailureReceiver(): ListableReceiverInterface

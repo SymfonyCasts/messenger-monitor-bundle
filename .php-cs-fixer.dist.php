@@ -10,7 +10,7 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude('tmp')
 ;
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setRules(array(
         '@Symfony' => true,
         '@Symfony:risky' => true,

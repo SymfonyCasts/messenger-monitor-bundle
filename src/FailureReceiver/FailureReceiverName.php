@@ -10,11 +10,8 @@ namespace SymfonyCasts\MessengerMonitorBundle\FailureReceiver;
  */
 final class FailureReceiverName
 {
-    private $failureReceiverName;
-
-    public function __construct(?string $failureReceiverName)
+    public function __construct(private ?string $failureReceiverName)
     {
-        $this->failureReceiverName = $failureReceiverName;
     }
 
     public function toString(): ?string

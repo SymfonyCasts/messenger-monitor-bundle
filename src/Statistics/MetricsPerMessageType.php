@@ -9,21 +9,14 @@ namespace SymfonyCasts\MessengerMonitorBundle\Statistics;
  */
 final class MetricsPerMessageType
 {
-    private $fromDate;
-    private $toDate;
-    private $class;
-    private $messagesCountOnPeriod;
-    private $averageWaitingTime;
-    private $averageHandlingTime;
-
-    public function __construct(\DateTimeImmutable $fromDate, \DateTimeImmutable $toDate, string $class, int $messagesCountOnPeriod, float $averageWaitingTime, float $averageHandlingTime)
-    {
-        $this->fromDate = $fromDate;
-        $this->toDate = $toDate;
-        $this->class = $class;
-        $this->messagesCountOnPeriod = $messagesCountOnPeriod;
-        $this->averageWaitingTime = $averageWaitingTime;
-        $this->averageHandlingTime = $averageHandlingTime;
+    public function __construct(
+        private \DateTimeImmutable $fromDate,
+        private \DateTimeImmutable $toDate,
+        private string $class,
+        private int $messagesCountOnPeriod,
+        private float $averageWaitingTime,
+        private float $averageHandlingTime
+    ) {
     }
 
     public function getClass(): string

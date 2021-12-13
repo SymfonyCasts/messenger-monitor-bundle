@@ -14,11 +14,8 @@ use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
  */
 final class SaveRetriedMessageListener implements EventSubscriberInterface
 {
-    private $doctrineConnection;
-
-    public function __construct(Connection $doctrineConnection)
+    public function __construct(private Connection $doctrineConnection)
     {
-        $this->doctrineConnection = $doctrineConnection;
     }
 
     public function onMessageRetried(MessageRetriedByUserEvent $retriedMessageEvent): void

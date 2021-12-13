@@ -16,13 +16,8 @@ use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
  */
 final class SaveStoredMessageOnMessageSentListener implements EventSubscriberInterface
 {
-    private $doctrineConnection;
-    private $logger;
-
-    public function __construct(Connection $doctrineConnection, LoggerInterface $logger = null)
+    public function __construct(private Connection $doctrineConnection, private ?LoggerInterface $logger = null)
     {
-        $this->doctrineConnection = $doctrineConnection;
-        $this->logger = $logger;
     }
 
     public function onMessageSent(SendMessageToTransportsEvent $event): void
@@ -30,9 +25,7 @@ final class SaveStoredMessageOnMessageSentListener implements EventSubscriberInt
         try {
             $this->doctrineConnection->saveMessage(StoredMessage::fromEnvelope($event->getEnvelope()));
         } catch (MessengerIdStampMissingException $exception) {
-            if (null !== $this->logger) {
-                $this->logger->error($exception->getMessage());
-            }
+            $this->logger?->error($exception->getMessage());
         }
     }
 
