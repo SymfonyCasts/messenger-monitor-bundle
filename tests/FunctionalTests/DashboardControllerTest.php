@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace SymfonyCasts\MessengerMonitorBundle\Tests\FunctionalTests;
 
+use Symfony\Component\HttpFoundation\Response;
+
 final class DashboardControllerTest extends AbstractFunctionalTests
 {
     public function testDashboardEmpty(): void
@@ -13,6 +15,12 @@ final class DashboardControllerTest extends AbstractFunctionalTests
 
         $this->assertQueuesCounts(['queue' => 0, 'failed' => 0], $crawler);
         $this->assertFailedMessagesCount(0, $crawler);
+    }
+
+    public function testDashboardWithForbiddenUser(): void
+    {
+        $this->client->request('GET', '/', [], [], ['PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'password']);
+        $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
     }
 
     public function testDashboardWithOneQueuedMessage(): void

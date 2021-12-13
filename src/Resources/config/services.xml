@@ -64,6 +64,11 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
+        <service id="symfonycasts.messenger_monitor.listener.authorize_user_on_kernel_request" class="SymfonyCasts\MessengerMonitorBundle\EventListener\AuthorizeUserOnKernelRequestListener">
+            <argument type="service" id="security.authorization_checker" on-invalid="null" />
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
         <service
                 id="symfony_casts_messenger_monitor.listener.send_event_on_retried_message"
                 decorates="messenger.retry.send_failed_message_for_retry_listener"

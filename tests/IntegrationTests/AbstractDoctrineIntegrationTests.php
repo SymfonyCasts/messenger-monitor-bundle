@@ -11,7 +11,7 @@ use SymfonyCasts\MessengerMonitorBundle\Tests\TestKernel;
 
 abstract class AbstractDoctrineIntegrationTests extends KernelTestCase
 {
-    /** @var DoctrineConnection $doctrineConnection */
+    /** @var DoctrineConnection */
     protected $doctrineConnection;
 
     protected static function createKernel(array $options = [])
@@ -19,7 +19,7 @@ abstract class AbstractDoctrineIntegrationTests extends KernelTestCase
         return new TestKernel();
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

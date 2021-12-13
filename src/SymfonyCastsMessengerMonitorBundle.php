@@ -19,7 +19,7 @@ final class SymfonyCastsMessengerMonitorBundle extends Bundle
         $container->addCompilerPass(new FailureReceiverPass());
     }
 
-    public function getContainerExtension(): ExtensionInterface
+    public function getContainerExtension(): ?ExtensionInterface
     {
         if (null === $this->extension) {
             $this->extension = new SymfonyCastsMessengerMonitorExtension();
