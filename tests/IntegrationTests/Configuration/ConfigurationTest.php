@@ -10,6 +10,9 @@ use SymfonyCasts\MessengerMonitorBundle\Tests\TestKernel;
 
 final class ConfigurationTest extends TestCase
 {
+    /**
+     * @requires extension redis
+     */
     public function testUseTableNameWithRedisDriverThrowsException(): void
     {
         $this->expectException(InvalidConfigurationException::class);
