@@ -131,7 +131,7 @@ final class TestKernel extends Kernel
                         'memory' => [
                             'users' => [
                                 'admin' => ['password' => 'password', 'roles' => ['ROLE_MESSENGER_ADMIN']],
-                                'user' => ['password' => 'password'],
+                                'user' => ['password' => 'password', 'roles' => ['ROLE_USER']],
                             ],
                         ],
                     ],
