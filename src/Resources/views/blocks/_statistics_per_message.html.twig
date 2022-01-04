@@ -1,0 +1,28 @@
+{% extends "@SymfonyCastsMessengerMonitor/template/card.html.twig" %}
+
+{% block card_title %}Per message type statistics{% endblock %}
+
+{% block card_body %}
+    <table class="table table-in-card">
+        <thead>
+        <tr>
+            <th>Message class</th>
+            <th>Messages count</th>
+            <th>Messages per hour</th>
+            <th>Average waiting time</th>
+            <th>Average handling time</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for metrics in statistics.metrics %}
+            <tr>
+                <td>{{ metrics.class }}</td>
+                <td>{{ metrics.messagesCount }}</td>
+                <td>{{ metrics.messagesHandledPerHour }}</td>
+                <td>{{ metrics.averageWaitingTime|time }}</td>
+                <td>{{ metrics.averageHandlingTime|time }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

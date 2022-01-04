@@ -1,0 +1,26 @@
+{% extends "@SymfonyCastsMessengerMonitor/template/card.html.twig" %}
+
+{% block card_title %}Transports list{% endblock %}
+
+{% block card_body %}
+<table class="table table-in-card" id="transports-list">
+    <thead>
+    <tr>
+        <th>Transport name</th>
+        <th>Messages count</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for receiverName, messagesCount in receivers %}
+        <tr>
+            <td>{{ receiverName }}</td>
+            <td>{{ messagesCount is not null ? messagesCount : 'no value available' }}</td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="2">No transport available</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

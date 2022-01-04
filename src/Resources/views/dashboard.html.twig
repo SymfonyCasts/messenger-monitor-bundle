@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Messenger monitor dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-<body>
-<h1>Messenger monitor dashboard</h1>
-<div class="container">
+{% extends "@SymfonyCastsMessengerMonitor/template/base.html.twig" %}
 
+{% block messenger_monitor_main %}
     {% for label, messages in app.flashes(['messenger_monitor.success', 'messenger_monitor.error']) %}
         {% for message in messages %}
             <div class="alert alert-{{ label == 'messenger_monitor.success' ? 'success' : 'danger' }}">
@@ -16,92 +9,32 @@
         {% endfor %}
     {% endfor %}
 
-    <h2>Transports list</h2>
-    <table class="table" id="transports-list">
-        <tr>
-            <th>Transport name</th>
-            <th>Messages count</th>
-        </tr>
-        {% for receiverName, messagesCount in receivers %}
-            <tr>
-                <td>{{ receiverName }}</td>
-                <td>{{ messagesCount is not null ? messagesCount : 'no value available' }}</td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="2">No transport available</td>
-            </tr>
-        {% endfor %}
-    </table>
+    <div class="row">
+        <div class="col-lg-6">
+            {% include "@SymfonyCastsMessengerMonitor/blocks/_transports_list.html.twig" %}
+        </div>
+    </div>
 
     {% if cannotListFailedMessages != constant('SymfonyCasts\\MessengerMonitorBundle\\Controller\\DashboardController::NO_FAILURE_RECEIVER') %}
-        <h2>Failure transport</h2>
-        {% if cannotListFailedMessages == constant('SymfonyCasts\\MessengerMonitorBundle\\Controller\\DashboardController::FAILURE_RECEIVER_NOT_LISTABLE') %}
-            The failure transport does not support listing or showing specific messages
-        {% else %}
-            <table class="table" id="failed-messages-list">
-                <tr>
-                    <th>Id</th>
-                    <th>Class</th>
-                    <th>Failed at</th>
-                    <th>Error</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-                {% for failedMessage in failedMessages %}
-                    <tr>
-                        <td>{{ failedMessage.id }}</td>
-                        <td>{{ failedMessage.class }}</td>
-                        <td>{{ failedMessage.failedAt }}</td>
-                        <td>{{ failedMessage.error }}</td>
-                        <td><a class="btn btn-primary" href="{{ path('symfonycasts.messenger_monitor.retry_failed_message', {id: failedMessage.id}) }}">Retry</a></td>
-                        <td><a class="btn btn-danger" href="{{ path('symfonycasts.messenger_monitor.reject_failed_message', {id: failedMessage.id}) }}">Reject</a></td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="6">Your failure transport is empty. You're killing it!</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        {% endif %}
+        <div class="row">
+            <div class="col-lg-12">
+                {% include "@SymfonyCastsMessengerMonitor/blocks/_failure_transport.html.twig" %}
+            </div>
+        </div>
     {% endif %}
 
     {% if statistics.metrics is not empty %}
         <h2>Statistics for last 24 hours</h2>
 
-        <h3 class="mt-3">Overall statistics</h3>
-        <div class="card" style="width: 18rem;">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Messages count: {{ statistics.messagesCount }}</li>
-                <li class="list-group-item">Messages per hour: {{ statistics.messagesHandledPerHour }}</li>
-                <li class="list-group-item">Average waiting time: {{ statistics.averageWaitingTime|time }}</li>
-                <li class="list-group-item">Average handling time: {{ statistics.averageHandlingTime|time }}</li>
-            </ul>
+        <div class="row">
+            <div class="col-lg-4">
+                {% include "@SymfonyCastsMessengerMonitor/blocks/_statistics_overall.html.twig" %}
+            </div>
+            <div class="col-lg-8">
+                {% include "@SymfonyCastsMessengerMonitor/blocks/_statistics_per_message.html.twig" %}
+            </div>
         </div>
-
-        <h3 class="mt-3">Per message type statistics</h3>
-        <table class="table">
-            <tr>
-                <th>Message class</th>
-                <th>Messages count</th>
-                <th>Messages per hour</th>
-                <th>Average waiting time</th>
-                <th>Average handling time</th>
-            </tr>
-            {% for metrics in statistics.metrics %}
-                <tr>
-                    <td>{{ metrics.class }}</td>
-                    <td>{{ metrics.messagesCount }}</td>
-                    <td>{{ metrics.messagesHandledPerHour }}</td>
-                    <td>{{ metrics.averageWaitingTime|time }}</td>
-                    <td>{{ metrics.averageHandlingTime|time }}</td>
-                </tr>
-            {% endfor %}
-        </table>
     {% else %}
-        <h2>Statistics</h2>
-        <p>Still no messages handled</p>
+        {% include "@SymfonyCastsMessengerMonitor/blocks/_statistics_empty.html.twig" %}
     {% endif %}
-</div>
-</body>
-</html>
+{% endblock %}
