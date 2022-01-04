@@ -48,6 +48,8 @@ final class SymfonyCastsMessengerMonitorExtensionTest extends TestCase
      */
     public function testLoadWithRedisConfiguration(): void
     {
+        $this->markTestSkipped('Redis not available yet.');
+
         (new SymfonyCastsMessengerMonitorExtension())->load(
             [
                 [

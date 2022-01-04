@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SymfonyCasts\MessengerMonitorBundle\Tests\FunctionalTests;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Schema;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
@@ -45,8 +46,13 @@ abstract class AbstractFunctionalTests extends WebTestCase
             self::markTestSkipped(sprintf('Can\'t connect to connection: %s', $exception->getMessage()));
         }
 
-        $connection->executeQuery('DROP TABLE IF EXISTS messenger_monitor');
         $connection->executeQuery('DROP TABLE IF EXISTS messenger_messages');
+
+        try {
+            $connection->executeQuery('TRUNCATE TABLE messenger_monitor');
+        } catch (\Throwable) {
+            self::getContainer()->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection')->configureSchema(new Schema(), $connection);
+        }
 
         $this->messageBus = self::getContainer()->get('test.messenger.bus.default');
     }

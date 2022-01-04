@@ -23,7 +23,7 @@ final class Configuration implements ConfigurationInterface
             ->children()
                 ->enumNode('driver')
                     ->defaultValue('doctrine')
-                    ->values(['doctrine', 'redis'])
+                    ->values(['doctrine'/*, 'redis'*/])
                     ->validate()
                         ->ifTrue(static fn (string $value): bool => 'doctrine' === $value && !class_exists(DBALConnection::class))
                         ->thenInvalid('Package doctrine/dbal and doctrine/doctrine-bundle are required to use doctrine driver.')

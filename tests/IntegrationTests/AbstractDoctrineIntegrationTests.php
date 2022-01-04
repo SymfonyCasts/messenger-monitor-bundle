@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SymfonyCasts\MessengerMonitorBundle\Tests\IntegrationTests;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Schema;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
 use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection as DoctrineConnection;
@@ -34,8 +35,12 @@ abstract class AbstractDoctrineIntegrationTests extends KernelTestCase
             $this->markTestSkipped(sprintf('Can\'t connect to connection: %s', $exception->getMessage()));
         }
 
-        $connection->executeQuery('DROP TABLE IF EXISTS messenger_monitor');
-
         $this->doctrineConnection = self::getContainer()->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection');
+
+        try {
+            $connection->executeQuery('TRUNCATE TABLE messenger_monitor');
+        } catch (\Throwable) {
+            $this->doctrineConnection->configureSchema(new Schema(), $connection);
+        }
     }
 }

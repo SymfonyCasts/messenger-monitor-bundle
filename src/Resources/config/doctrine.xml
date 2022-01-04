@@ -39,6 +39,11 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
+        <service id="symfonycasts.messenger_monitor.doctrine_listener.create_schema" class="SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener\CreateSchemaListener">
+            <argument type="service" id="symfonycasts.messenger_monitor.storage.doctrine_connection"/>
+            <tag name="doctrine.event_subscriber"/>
+        </service>
+
         <!-- Statistics -->
         <service id="symfonycasts.messenger_monitor.statistics.doctrine_processor" class="SymfonyCasts\MessengerMonitorBundle\Statistics\DoctrineProcessor">
             <argument type="service" id="symfonycasts.messenger_monitor.storage.doctrine_connection"/>
