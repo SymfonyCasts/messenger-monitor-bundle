@@ -11,14 +11,10 @@ use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection;
  */
 final class DoctrineProcessor implements StatisticsProcessorInterface
 {
-    private $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
-    /** {@inheritdoc} */
     public function createStatistics(): Statistics
     {
         return $this->connection->getStatistics(

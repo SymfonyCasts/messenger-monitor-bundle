@@ -11,8 +11,7 @@ use Symfony\Component\Messenger\Stamp\StampInterface;
  */
 final class MonitorIdStamp implements StampInterface
 {
-    /** @var string */
-    private $id;
+    private string $id;
 
     public function __construct()
     {

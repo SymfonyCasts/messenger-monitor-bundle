@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine;
 
 use Doctrine\DBAL\Connection as DBALConnection;
+use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\Exception\TableNotFoundException;
-use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Schema\Synchronizer\SingleDatabaseSynchronizer;
 use Doctrine\DBAL\Types\Types;
 use SymfonyCasts\MessengerMonitorBundle\Statistics\MetricsPerMessageType;
 use SymfonyCasts\MessengerMonitorBundle\Statistics\Statistics;
@@ -21,17 +20,8 @@ use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Driver\SQLDriverInterfa
  */
 class Connection
 {
-    private $driverConnection;
-    private $SQLDriver;
-    private $tableName;
-    /** @var SingleDatabaseSynchronizer|null */
-    private $schemaSynchronizer;
-
-    public function __construct(DBALConnection $driverConnection, SQLDriverInterface $SQLDriver, string $tableName)
+    public function __construct(private DBALConnection $driverConnection, private SQLDriverInterface $SQLDriver, private string $tableName)
     {
-        $this->driverConnection = $driverConnection;
-        $this->SQLDriver = $SQLDriver;
-        $this->tableName = $tableName;
     }
 
     public function saveMessage(StoredMessage $storedMessage): void
@@ -99,7 +89,7 @@ class Connection
             ['message_uid' => $messageUid]
         );
 
-        if (false === $row = $statement->fetch()) {
+        if (false === $row = $statement->fetchAssociative()) {
             return null;
         }
 
@@ -132,7 +122,7 @@ class Connection
         );
 
         $statistics = new Statistics($fromDate, $toDate);
-        while (false !== ($row = $statement->fetch(FetchMode::ASSOCIATIVE))) {
+        while (false !== ($row = $statement->fetchAssociative())) {
             $statistics->add(
                 new MetricsPerMessageType(
                     $fromDate,
@@ -148,6 +138,27 @@ class Connection
         return $statistics;
     }
 
+    public function configureSchema(Schema $schema, DBALConnection $forConnection): void
+    {
+        // only update the schema for this connection
+        if ($forConnection !== $this->driverConnection) {
+            return;
+        }
+
+        if ($schema->hasTable($this->tableName)) {
+            return;
+        }
+
+        $this->addTableToSchema($schema);
+
+        foreach ($schema->toSql($this->driverConnection->getDatabasePlatform()) as $sql) {
+            $this->driverConnection->executeStatement($sql);
+        }
+    }
+
+    /**
+     * @return Result&ResultStatement
+     */
     private function executeQuery(string $sql, array $parameters = [], array $types = []): ResultStatement
     {
         try {
@@ -157,22 +168,14 @@ class Connection
                 throw $e;
             }
 
-            $this->setup();
-
-            $stmt = $this->driverConnection->executeQuery($sql, $parameters, $types);
+            throw new \RuntimeException('messenger-monitor SQL table does not exist. Maybe you should create a migration or run "doctrine:schema:update"', 0, $e);
         }
 
         return $stmt;
     }
 
-    private function setup(): void
+    private function addTableToSchema(Schema $schema): void
     {
-        $this->getSchemaSynchronizer()->updateSchema($this->getSchema(), true);
-    }
-
-    private function getSchema(): Schema
-    {
-        $schema = new Schema([], [], $this->driverConnection->getSchemaManager()->createSchemaConfig());
         $table = $schema->createTable($this->tableName);
         $table->addColumn('id', Types::INTEGER)->setNotnull(true)->setAutoincrement(true);
         $table->addColumn('message_uid', Types::GUID)->setNotnull(true);
@@ -185,16 +188,5 @@ class Connection
         $table->addIndex(['dispatched_at']);
         $table->addIndex(['class']);
         $table->setPrimaryKey(['id']);
-
-        return $schema;
-    }
-
-    private function getSchemaSynchronizer(): SingleDatabaseSynchronizer
-    {
-        if (null === $this->schemaSynchronizer) {
-            $this->schemaSynchronizer = new SingleDatabaseSynchronizer($this->driverConnection);
-        }
-
-        return $this->schemaSynchronizer;
     }
 }

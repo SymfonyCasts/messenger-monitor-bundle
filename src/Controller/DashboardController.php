@@ -18,24 +18,15 @@ use Twig\Environment;
  */
 final class DashboardController
 {
-    private $twig;
-    private $receiverLocator;
-    private $failedMessageRepository;
-    private $statisticsProcessor;
-
     public const FAILURE_RECEIVER_NOT_LISTABLE = 'failure-receiver-not-listable';
     public const NO_FAILURE_RECEIVER = 'no-failure-receiver';
 
     public function __construct(
-        Environment $twig,
-        ReceiverLocator $receiverLocator,
-        FailedMessageRepository $failedMessageRepository,
-        StatisticsProcessorInterface $statisticsProcessor
+        private Environment $twig,
+        private ReceiverLocator $receiverLocator,
+        private FailedMessageRepository $failedMessageRepository,
+        private StatisticsProcessorInterface $statisticsProcessor
     ) {
-        $this->twig = $twig;
-        $this->receiverLocator = $receiverLocator;
-        $this->failedMessageRepository = $failedMessageRepository;
-        $this->statisticsProcessor = $statisticsProcessor;
     }
 
     public function __invoke(): Response
@@ -49,9 +40,9 @@ final class DashboardController
         try {
             $failedMessages = $this->failedMessageRepository->listFailedMessages();
             $cannotListFailedMessages = null;
-        } catch (FailureReceiverNotListableException $exception) {
+        } catch (FailureReceiverNotListableException) {
             $cannotListFailedMessages = self::FAILURE_RECEIVER_NOT_LISTABLE;
-        } catch (FailureReceiverDoesNotExistException $exception) {
+        } catch (FailureReceiverDoesNotExistException) {
             $cannotListFailedMessages = self::NO_FAILURE_RECEIVER;
         }
 

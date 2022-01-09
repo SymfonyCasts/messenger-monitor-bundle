@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace SymfonyCasts\MessengerMonitorBundle\Tests\FunctionalTests;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Schema;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnMessageLimitListener;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -23,12 +25,10 @@ use SymfonyCasts\MessengerMonitorBundle\Tests\TestKernel;
 
 abstract class AbstractFunctionalTests extends WebTestCase
 {
-    /** @var KernelBrowser */
-    protected $client;
-    /** @var MessageBusInterface */
-    protected $messageBus;
+    protected KernelBrowser $client;
+    protected MessageBusInterface $messageBus;
 
-    protected static function createKernel(array $options = [])
+    protected static function createKernel(array $options = []): KernelInterface
     {
         return new TestKernel();
     }
@@ -38,7 +38,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
         $this->client = self::createClient([], ['PHP_AUTH_USER' => 'admin', 'PHP_AUTH_PW' => 'password']);
 
         /** @var Connection $connection */
-        $connection = self::$container->get('doctrine.dbal.default_connection');
+        $connection = self::getContainer()->get('doctrine.dbal.default_connection');
 
         try {
             $connection->connect();
@@ -46,10 +46,15 @@ abstract class AbstractFunctionalTests extends WebTestCase
             self::markTestSkipped(sprintf('Can\'t connect to connection: %s', $exception->getMessage()));
         }
 
-        $connection->executeQuery('DROP TABLE IF EXISTS messenger_monitor');
         $connection->executeQuery('DROP TABLE IF EXISTS messenger_messages');
 
-        $this->messageBus = self::$container->get('test.messenger.bus.default');
+        try {
+            $connection->executeQuery('TRUNCATE TABLE messenger_monitor');
+        } catch (\Throwable) {
+            self::getContainer()->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection')->configureSchema(new Schema(), $connection);
+        }
+
+        $this->messageBus = self::getContainer()->get('test.messenger.bus.default');
     }
 
     protected function dispatchMessage(bool $willFail = false): Envelope
@@ -64,7 +69,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
         $queues = [];
         foreach (range(1, \count($expectedQueues)) as $item) {
             $queue = $crawler->filter('#transports-list tr')->eq($item);
-            $queues[$queue->filter('td')->first()->text()] = (int) $queue->filter('td')->last()->text();
+            $queues[$queue->filter('td')->first()->text(null, false)] = (int) $queue->filter('td')->last()->text(null, false);
         }
         $this->assertSame($expectedQueues, $queues);
 
@@ -92,7 +97,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
     protected function assertStoredMessageIsInDB(Envelope $envelope): void
     {
         /** @var Connection $connection */
-        $connection = self::$container->get('doctrine.dbal.default_connection');
+        $connection = self::getContainer()->get('doctrine.dbal.default_connection');
 
         /** @var MonitorIdStamp $monitorIdStamp */
         $monitorIdStamp = $envelope->last(MonitorIdStamp::class);
@@ -104,7 +109,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
     protected function handleMessage(Envelope $envelope, string $queueName): void
     {
         /** @var EventDispatcherInterface $eventDispatcher */
-        $eventDispatcher = self::$container->get('event_dispatcher');
+        $eventDispatcher = self::getContainer()->get('event_dispatcher');
         $eventDispatcher->addSubscriber($subscriber = new StopWorkerOnMessageLimitListener(1));
 
         $receiver = $this->getReceiver($queueName);
@@ -119,7 +124,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
         $eventDispatcher->removeSubscriber($subscriber);
     }
 
-    protected function getMessageId(Envelope $envelope): string
+    protected function getMessageId(Envelope $envelope): mixed
     {
         /** @var TransportMessageIdStamp $transportMessageIdStamp */
         $transportMessageIdStamp = $envelope->last(TransportMessageIdStamp::class);
@@ -127,7 +132,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
         return $transportMessageIdStamp->getId();
     }
 
-    protected function getLastFailedMessageId(): string
+    protected function getLastFailedMessageId(): mixed
     {
         $receiver = $this->getReceiver('failed');
 
@@ -137,13 +142,13 @@ abstract class AbstractFunctionalTests extends WebTestCase
     protected function assertAlertIsPresent(Crawler $crawler, string $class, string $text): void
     {
         $this->assertSame(1, $crawler->filter($class)->count());
-        $this->assertStringContainsString($text, $crawler->filter($class)->text());
+        $this->assertStringContainsString($text, $crawler->filter($class)->text(null, false));
     }
 
     private function getReceiver(string $queueName): ListableReceiverInterface
     {
         /** @var ServiceProviderInterface $receiverLocator */
-        $receiverLocator = self::$container->get('test.messenger.receiver_locator');
+        $receiverLocator = self::getContainer()->get('test.messenger.receiver_locator');
 
         return $receiverLocator->get($queueName);
     }

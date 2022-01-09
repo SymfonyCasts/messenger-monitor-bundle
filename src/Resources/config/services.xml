@@ -15,13 +15,13 @@
 
         <service id="symfonycasts.messenger_monitor.controller.retry_failed_message" class="SymfonyCasts\MessengerMonitorBundle\Controller\RetryFailedMessageController" public="true">
             <argument type="service" id="symfonycasts.messenger_monitor.failed_message.retry"/>
-            <argument type="service" id="session"/>
+            <argument type="service" id="request_stack"/>
             <argument type="service" id="router"/>
         </service>
 
         <service id="symfonycasts.messenger_monitor.controller.reject_failed_message" class="SymfonyCasts\MessengerMonitorBundle\Controller\RejectFailedMessageController" public="true">
             <argument type="service" id="symfonycasts.messenger_monitor.failed_message.reject"/>
-            <argument type="service" id="session"/>
+            <argument type="service" id="request_stack"/>
             <argument type="service" id="router"/>
         </service>
 

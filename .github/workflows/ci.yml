@@ -12,7 +12,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: [ '7.4' ]
+        include:
+          - php: '8.0'
+          - php: '8.1'
+          - php: '8.0'
+            mode: low-deps
+          - php: '8.1'
+            mode: low-deps
     services:
       mariadb:
         image: mariadb:latest
@@ -31,7 +37,7 @@ jobs:
       - name: Setup PHP with PECL extension
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: ${{ matrix.php }}
           tools: php-cs-fixer
 
       - name: Verify MariaDB connection
@@ -42,25 +48,16 @@ jobs:
             sleep 1
           done
 
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+        run: |
+          if [[ "${{ matrix.mode }}" = low-deps ]]; then
+              COMPOSER_OPTION="--prefer-lowest"
+          fi
 
-      - name: Install php-cs-Fixer
-        run: composer require friendsofphp/php-cs-fixer:^2.0
+          composer update --prefer-dist --no-progress ${COMPOSER_OPTION:=""}
 
       - name: Check src with php-cs-Fixer
-        run: vendor/bin/php-cs-fixer fix --config ./.php_cs.dist --diff --diff-format udiff --dry-run
+        run: php-cs-fixer fix --diff --dry-run
 
       - name: Psalm Static Analysis
         run: vendor/bin/psalm -c psalm.xml

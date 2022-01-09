@@ -9,16 +9,11 @@ namespace SymfonyCasts\MessengerMonitorBundle\Statistics;
  */
 final class Statistics
 {
-    private $fromDate;
-    private $toDate;
+    /** @var array<string, MetricsPerMessageType> */
+    private array $metrics = [];
 
-    /** @var MetricsPerMessageType[] */
-    private $metrics = [];
-
-    public function __construct(\DateTimeImmutable $fromDate, \DateTimeImmutable $toDate)
+    public function __construct(private \DateTimeImmutable $fromDate, private \DateTimeImmutable $toDate)
     {
-        $this->fromDate = $fromDate;
-        $this->toDate = $toDate;
     }
 
     public function add(MetricsPerMessageType $metrics): void
@@ -31,7 +26,7 @@ final class Statistics
     }
 
     /**
-     * @return MetricsPerMessageType[]
+     * @return array<string, MetricsPerMessageType>
      */
     public function getMetrics(): array
     {
@@ -40,11 +35,9 @@ final class Statistics
 
     public function getMessagesCount(): int
     {
-        return (int) array_sum(
+        return array_sum(
             array_map(
-                static function (MetricsPerMessageType $metrics) {
-                    return $metrics->getMessagesCount();
-                },
+                static fn (MetricsPerMessageType $metrics) => $metrics->getMessagesCount(),
                 $this->metrics
             )
         );

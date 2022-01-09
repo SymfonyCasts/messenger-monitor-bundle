@@ -81,7 +81,7 @@ final class DoctrineConnectionTest extends AbstractDoctrineIntegrationTests
     private function storeMessages(): void
     {
         /** @var Connection $connection */
-        $connection = self::$container->get('doctrine.dbal.default_connection');
+        $connection = self::getContainer()->get('doctrine.dbal.default_connection');
 
         $connection->insert(
             'messenger_monitor',

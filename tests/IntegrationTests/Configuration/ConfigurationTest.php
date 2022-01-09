@@ -10,8 +10,13 @@ use SymfonyCasts\MessengerMonitorBundle\Tests\TestKernel;
 
 final class ConfigurationTest extends TestCase
 {
+    /**
+     * @requires extension redis
+     */
     public function testUseTableNameWithRedisDriverThrowsException(): void
     {
+        $this->markTestSkipped('Redis not available yet.');
+
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('"doctrine.table_name" and "doctrine.connection" can only be used with doctrine driver.');
 

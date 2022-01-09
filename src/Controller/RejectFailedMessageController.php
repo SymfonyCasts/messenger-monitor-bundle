@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace SymfonyCasts\MessengerMonitorBundle\Controller;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRejecter;
 
@@ -15,21 +15,17 @@ use SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRejecter;
  */
 final class RejectFailedMessageController
 {
-    private $failedMessageRejecter;
-    private $session;
-    private $urlGenerator;
-
-    public function __construct(FailedMessageRejecter $failedMessageRejecter, SessionInterface $session, UrlGeneratorInterface $urlGenerator)
-    {
-        $this->failedMessageRejecter = $failedMessageRejecter;
-        $this->session = $session;
-        $this->urlGenerator = $urlGenerator;
+    public function __construct(
+        private FailedMessageRejecter $failedMessageRejecter,
+        private RequestStack $requestStack,
+        private UrlGeneratorInterface $urlGenerator
+    ) {
     }
 
     public function __invoke(int $id): RedirectResponse
     {
         /** @var FlashBagInterface $sessionBag */
-        $sessionBag = $this->session->getBag('flashes');
+        $sessionBag = $this->requestStack->getSession()->getBag('flashes');
 
         try {
             $this->failedMessageRejecter->rejectFailedMessage($id);

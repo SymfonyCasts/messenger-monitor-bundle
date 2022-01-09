@@ -21,15 +21,11 @@ use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
  */
 final class SendEventOnRetriedMessageListener implements EventSubscriberInterface
 {
-    private $decorated;
-    private $eventDispatcher;
-    private $logger;
-
-    public function __construct(SendFailedMessageForRetryListener $decorated, EventDispatcherInterface $eventDispatcher, LoggerInterface $logger = null)
-    {
-        $this->decorated = $decorated;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->logger = $logger;
+    public function __construct(
+        private SendFailedMessageForRetryListener $decorated,
+        private EventDispatcherInterface $eventDispatcher,
+        private ?LoggerInterface $logger = null
+    ) {
     }
 
     public function onMessageFailed(WorkerMessageFailedEvent $event): void
@@ -50,9 +46,7 @@ final class SendEventOnRetriedMessageListener implements EventSubscriberInterfac
         $monitorIdStamp = $event->getEnvelope()->last(MonitorIdStamp::class);
 
         if (null === $monitorIdStamp) {
-            if (null !== $this->logger) {
-                $this->logger->error('Envelope should have a MonitorIdStamp!');
-            }
+            $this->logger?->error('Envelope should have a MonitorIdStamp!');
 
             return;
         }
@@ -60,7 +54,7 @@ final class SendEventOnRetriedMessageListener implements EventSubscriberInterfac
         $this->eventDispatcher->dispatch(
             new MessageRetriedByUserEvent(
                 $monitorIdStamp->getId(),
-                \get_class($event->getEnvelope()->getMessage())
+                $event->getEnvelope()->getMessage()::class
             )
         );
     }

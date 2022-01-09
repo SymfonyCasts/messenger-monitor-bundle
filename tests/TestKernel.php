@@ -13,8 +13,8 @@ use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Routing\RouteCollectionBuilder;
-use Symfony\Component\Security\Core\User\User;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 use SymfonyCasts\MessengerMonitorBundle\SymfonyCastsMessengerMonitorBundle;
 
 final class TestKernel extends Kernel
@@ -30,7 +30,7 @@ final class TestKernel extends Kernel
         $this->bundleOptions = $bundleOptions;
     }
 
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         return [
             new FrameworkBundle(),
@@ -54,7 +54,7 @@ final class TestKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    protected function configureRoutes(RouteCollectionBuilder $routes)
+    protected function configureRoutes(RoutingConfigurator $routes)
     {
         $routes->import(__DIR__.'/../src/Resources/config/routing.xml');
     }
@@ -83,11 +83,15 @@ final class TestKernel extends Kernel
         $container->loadFromExtension(
             'framework',
             [
+                'router' => [
+                    'utf8' => true,
+                ],
                 'session' => [
                     'enabled' => true,
-                    'storage_id' => 'session.storage.mock_file',
+                    'storage_factory_id' => 'session.storage.factory.mock_file',
                 ],
                 'messenger' => [
+                    'reset_on_message' => true,
                     'failure_transport' => 'failed',
                     'transports' => [
                         'queue' => [
@@ -121,17 +125,18 @@ final class TestKernel extends Kernel
         $container->loadFromExtension(
             'security',
             [
+                'enable_authenticator_manager' => true,
                 'providers' => [
                     'in_memory' => [
                         'memory' => [
                             'users' => [
                                 'admin' => ['password' => 'password', 'roles' => ['ROLE_MESSENGER_ADMIN']],
-                                'user' => ['password' => 'password'],
+                                'user' => ['password' => 'password', 'roles' => ['ROLE_USER']],
                             ],
                         ],
                     ],
                 ],
-                'encoders' => [User::class => 'plaintext'],
+                'password_hashers' => [InMemoryUser::class => 'plaintext'],
                 'firewalls' => [
                     'main' => [
                         'provider' => 'in_memory',

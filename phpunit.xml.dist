@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.3/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          executionOrder="depends,defects"
          forceCoversAnnotation="false"
@@ -9,10 +9,17 @@
          beStrictAboutTodoAnnotatedTests="true"
          verbose="true">
 
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </coverage>
+
     <php>
         <ini name="error_reporting" value="-1"/>
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0&amp;max[direct]=0"/>
         <!-- Define this env var in your own phpunit.xml => this one overrides the one in github actions -->
-        <!--<env name="TEST_DATABASE_DSN" value="mysql://root:password@127.0.0.1:3306/messenger_monitor_bundle_test"/>-->
+        <!--<env name="TEST_DATABASE_DSN" value="mysql://messenger-monitor:messenger-monitor@127.0.0.1:13306/messenger-monitor"/>-->
     </php>
 
     <testsuites>
@@ -20,10 +27,4 @@
             <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
-        </whitelist>
-    </filter>
 </phpunit>

@@ -14,13 +14,8 @@ use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
  */
 class StoredMessageProvider
 {
-    private $doctrineConnection;
-    private $logger;
-
-    public function __construct(Connection $doctrineConnection, LoggerInterface $logger = null)
+    public function __construct(private Connection $doctrineConnection, private ?LoggerInterface $logger = null)
     {
-        $this->doctrineConnection = $doctrineConnection;
-        $this->logger = $logger;
     }
 
     public function getStoredMessage(Envelope $envelope): ?StoredMessage

@@ -11,11 +11,8 @@ use SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
  */
 final class FailedMessageRejecter
 {
-    private $failureReceiverProvider;
-
-    public function __construct(FailureReceiverProvider $failureReceiverProvider)
+    public function __construct(private FailureReceiverProvider $failureReceiverProvider)
     {
-        $this->failureReceiverProvider = $failureReceiverProvider;
     }
 
     public function rejectFailedMessage(int $id): void

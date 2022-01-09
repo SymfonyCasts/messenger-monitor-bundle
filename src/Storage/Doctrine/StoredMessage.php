@@ -13,22 +13,12 @@ use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Exception\MessengerIdSt
  */
 final class StoredMessage
 {
-    private $id;
-    private $messageUid;
-    private $messageClass;
-    private $receiverName;
-    private $dispatchedAt;
-    private $receivedAt;
-    private $handledAt;
-    private $failedAt;
+    private ?\DateTimeImmutable $receivedAt = null;
+    private ?\DateTimeImmutable $handledAt = null;
+    private ?\DateTimeImmutable $failedAt = null;
 
-    public function __construct(string $messageUid, string $messageClass, \DateTimeImmutable $dispatchedAt, int $id = null, ?\DateTimeImmutable $receivedAt = null, ?\DateTimeImmutable $handledAt = null, ?\DateTimeImmutable $failedAt = null, ?string $receiverName = null)
+    public function __construct(private string $messageUid, private string $messageClass, private \DateTimeImmutable $dispatchedAt, private ?int $id = null, ?\DateTimeImmutable $receivedAt = null, ?\DateTimeImmutable $handledAt = null, ?\DateTimeImmutable $failedAt = null, private ?string $receiverName = null)
     {
-        $this->id = $id;
-        $this->messageUid = $messageUid;
-        $this->messageClass = $messageClass;
-        $this->dispatchedAt = $dispatchedAt;
-
         if (null !== $receivedAt) {
             $this->receivedAt = $receivedAt;
             $this->handledAt = $handledAt;
@@ -36,8 +26,6 @@ final class StoredMessage
         } elseif (null !== $handledAt || null !== $failedAt) {
             throw new \RuntimeException('"receivedAt" could not be null if "handledAt" or "failedAt" is not null');
         }
-
-        $this->receiverName = $receiverName;
     }
 
     public static function fromEnvelope(Envelope $envelope): self
@@ -51,7 +39,7 @@ final class StoredMessage
 
         return new self(
             $monitorIdStamp->getId(),
-            \get_class($envelope->getMessage()),
+            $envelope->getMessage()::class,
             \DateTimeImmutable::createFromFormat('U', (string) time()),
             null
         );

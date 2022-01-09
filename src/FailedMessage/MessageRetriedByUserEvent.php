@@ -9,13 +9,8 @@ namespace SymfonyCasts\MessengerMonitorBundle\FailedMessage;
  */
 final class MessageRetriedByUserEvent
 {
-    private $messageUid;
-    private $messageClass;
-
-    public function __construct(string $messageUid, string $messageClass)
+    public function __construct(private string $messageUid, private string $messageClass)
     {
-        $this->messageUid = $messageUid;
-        $this->messageClass = $messageClass;
     }
 
     public function getMessageUid(): string

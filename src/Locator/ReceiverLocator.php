@@ -15,13 +15,8 @@ use SymfonyCasts\MessengerMonitorBundle\Exception\ReceiverDoesNotExistException;
  */
 class ReceiverLocator
 {
-    private $receiverLocator;
-    private $receiverNames;
-
-    public function __construct(ServiceProviderInterface $receiverLocator, array $receiverNames)
+    public function __construct(private ServiceProviderInterface $receiverLocator, private array $receiverNames)
     {
-        $this->receiverLocator = $receiverLocator;
-        $this->receiverNames = $receiverNames;
     }
 
     /**
