@@ -13,18 +13,4 @@
             <directory name="vendor"/>
         </ignoreFiles>
     </projectFiles>
-    <issueHandlers>
-        <MissingPropertyType>
-            <errorLevel type="suppress">
-                <file name="src/Storage/Doctrine/StoredMessage.php"/>
-            </errorLevel>
-        </MissingPropertyType>
-        <PossiblyFalseArgument>
-            <errorLevel type="suppress">
-                <file name="src/Storage/Doctrine/EventListener/UpdateStoredMessageListener.php"/>
-                <file name="src/Storage/Doctrine/EventListener/SaveRetriedMessageListener.php"/>
-                <file name="src/Storage/Doctrine/StoredMessage.php"/>
-            </errorLevel>
-        </PossiblyFalseArgument>
-    </issueHandlers>
 </psalm>

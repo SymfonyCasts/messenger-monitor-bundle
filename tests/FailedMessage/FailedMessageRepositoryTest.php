@@ -13,7 +13,7 @@ use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
 use SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageDetails;
 use SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRepository;
 use SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
-use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\TestableMessage;
 
 class FailedMessageRepositoryTest extends TestCase
 {

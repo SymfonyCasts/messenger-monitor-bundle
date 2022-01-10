@@ -8,6 +8,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
 use Symfony\Component\Messenger\Event\WorkerMessageReceivedEvent;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection;
 use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessageProvider;
 
@@ -28,7 +29,10 @@ final class UpdateStoredMessageListener implements EventSubscriberInterface
             return;
         }
 
-        $storedMessage->setReceivedAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
+        /** @var DelayStamp $delayStamp */
+        $delayStamp = $event->getEnvelope()->last(DelayStamp::class) ?? new DelayStamp(0);
+
+        $storedMessage->updateWaitingTime($delayStamp->getDelay() / 1000);
         $storedMessage->setReceiverName($event->getReceiverName());
 
         $this->doctrineConnection->updateMessage($storedMessage);
@@ -42,7 +46,7 @@ final class UpdateStoredMessageListener implements EventSubscriberInterface
             return;
         }
 
-        $storedMessage->setHandledAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
+        $storedMessage->updateHandlingTime();
         $this->doctrineConnection->updateMessage($storedMessage);
     }
 
@@ -54,7 +58,7 @@ final class UpdateStoredMessageListener implements EventSubscriberInterface
             return;
         }
 
-        $storedMessage->setFailedAt(\DateTimeImmutable::createFromFormat('U', (string) time()));
+        $storedMessage->updateFailingTime();
         $this->doctrineConnection->updateMessage($storedMessage);
     }
 

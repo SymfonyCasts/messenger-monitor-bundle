@@ -13,12 +13,17 @@ final class TimeDisplayExtensionTest extends TestCase
     {
         $timeDisplayExtension = new TimeDisplayExtension();
 
-        $this->assertSame('10 seconds', $timeDisplayExtension->formatTime(10));
+        $this->assertSame('-', $timeDisplayExtension->formatTime(null));
 
-        $this->assertSame('1 second', $timeDisplayExtension->formatTime(1));
+        $this->assertSame('12 µs', $timeDisplayExtension->formatTime(0.000012));
+
+        $this->assertSame('12 ms', $timeDisplayExtension->formatTime(0.012));
+
+        $this->assertSame('10 seconds', $timeDisplayExtension->formatTime(10.0));
+
+        $this->assertSame('1 second', $timeDisplayExtension->formatTime(1.0));
         $this->assertSame('1 second', $timeDisplayExtension->formatTime(1.004));
 
-        $this->assertSame('0.12 seconds', $timeDisplayExtension->formatTime(0.123));
         $this->assertSame('11 seconds', $timeDisplayExtension->formatTime(11.123));
 
         $this->assertSame('1 minute', $timeDisplayExtension->formatTime(60.123));
