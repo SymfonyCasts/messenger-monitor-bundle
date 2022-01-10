@@ -16,18 +16,34 @@ use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use SymfonyCasts\MessengerMonitorBundle\SymfonyCastsMessengerMonitorBundle;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\TestableMessageHandler;
 
 final class TestKernel extends Kernel
 {
     use MicroKernelTrait;
 
-    private $bundleOptions;
+    private array $bundleOptions = [];
+    private array $messengerConfig = [];
 
-    public function __construct(array $bundleOptions = [])
+    public function __construct()
     {
         parent::__construct('test', true);
+    }
 
-        $this->bundleOptions = $bundleOptions;
+    public static function withBundleOptions(array $bundleOptions): self
+    {
+        $kernel = new self();
+        $kernel->bundleOptions = $bundleOptions;
+
+        return $kernel;
+    }
+
+    public static function withMessengerConfig(array $messengerConfig): self
+    {
+        $kernel = new self();
+        $kernel->messengerConfig = $messengerConfig;
+
+        return $kernel;
     }
 
     public function registerBundles(): iterable
@@ -48,7 +64,7 @@ final class TestKernel extends Kernel
 
     public function getCacheDir(): string
     {
-        return $this->getProjectDir().'/cache/'.md5(json_encode($this->bundleOptions));
+        return $this->getProjectDir().'/cache/'.md5(json_encode(array_merge($this->bundleOptions, $this->messengerConfig)));
     }
 
     /**
@@ -90,20 +106,7 @@ final class TestKernel extends Kernel
                     'enabled' => true,
                     'storage_factory_id' => 'session.storage.factory.mock_file',
                 ],
-                'messenger' => [
-                    'reset_on_message' => true,
-                    'failure_transport' => 'failed',
-                    'transports' => [
-                        'queue' => [
-                            'dsn' => 'doctrine://default?queue_name=queue',
-                            'retry_strategy' => ['max_retries' => 0],
-                        ],
-                        'failed' => 'doctrine://default?queue_name=failed',
-                    ],
-                    'routing' => [
-                        TestableMessage::class => 'queue',
-                    ],
-                ],
+                'messenger' => $this->messengerConfig,
                 'test' => true,
             ]
         );

@@ -20,7 +20,10 @@ use Symfony\Component\Messenger\Worker;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
-use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\FailureMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\Message;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\RetryableMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\TestableMessage;
 use SymfonyCasts\MessengerMonitorBundle\Tests\TestKernel;
 
 abstract class AbstractFunctionalTests extends WebTestCase
@@ -30,7 +33,28 @@ abstract class AbstractFunctionalTests extends WebTestCase
 
     protected static function createKernel(array $options = []): KernelInterface
     {
-        return new TestKernel();
+        return TestKernel::withMessengerConfig(
+            [
+                'reset_on_message' => true,
+                'failure_transport' => 'failed',
+                'transports' => [
+                    'queue' => [
+                        'dsn' => 'doctrine://default?queue_name=queue',
+                        'retry_strategy' => ['max_retries' => 0],
+                    ],
+                    'queue_with_retry' => [
+                        'dsn' => 'doctrine://default?queue_name=queue_with_retry',
+                        'retry_strategy' => ['max_retries' => 1, 'delay' => 0, 'multiplier' => 1],
+                    ],
+                    'failed' => 'doctrine://default?queue_name=failed',
+                ],
+                'routing' => [
+                    TestableMessage::class => 'queue',
+                    FailureMessage::class => 'queue',
+                    RetryableMessage::class => 'queue_with_retry',
+                ],
+            ]
+        );
     }
 
     protected function setUp(): void
@@ -47,19 +71,16 @@ abstract class AbstractFunctionalTests extends WebTestCase
         }
 
         $connection->executeQuery('DROP TABLE IF EXISTS messenger_messages');
+        $connection->executeQuery('DROP TABLE IF EXISTS messenger_monitor');
 
-        try {
-            $connection->executeQuery('TRUNCATE TABLE messenger_monitor');
-        } catch (\Throwable) {
-            self::getContainer()->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection')->configureSchema(new Schema(), $connection);
-        }
+        self::getContainer()->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection')->configureSchema(new Schema(), $connection);
 
         $this->messageBus = self::getContainer()->get('test.messenger.bus.default');
     }
 
-    protected function dispatchMessage(bool $willFail = false): Envelope
+    protected function dispatchMessage(Message $message): Envelope
     {
-        return $this->messageBus->dispatch(new Envelope(new TestableMessage($willFail)));
+        return $this->messageBus->dispatch(new Envelope($message));
     }
 
     protected function assertQueuesCounts(array $expectedQueues, Crawler $crawler): void
@@ -94,19 +115,24 @@ abstract class AbstractFunctionalTests extends WebTestCase
         );
     }
 
-    protected function assertStoredMessageIsInDB(Envelope $envelope): void
+    protected function assertStoredMessageIsInDB(Envelope $envelope, int $count = 1): void
     {
         /** @var Connection $connection */
         $connection = self::getContainer()->get('doctrine.dbal.default_connection');
 
         /** @var MonitorIdStamp $monitorIdStamp */
         $monitorIdStamp = $envelope->last(MonitorIdStamp::class);
-        $this->assertNotFalse(
-            $connection->executeQuery('SELECT id FROM messenger_monitor WHERE id = :id', ['id' => $monitorIdStamp->getId()])
+
+        $this->assertSame(
+            $count,
+            (int) $connection->executeQuery(
+                'SELECT count(id) as count FROM messenger_monitor WHERE message_uid = :message_uid',
+                ['message_uid' => $monitorIdStamp->getId()]
+            )->fetchOne()
         );
     }
 
-    protected function handleMessage(Envelope $envelope, string $queueName): void
+    protected function handleLastMessageInQueue(string $queueName): void
     {
         /** @var EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = self::getContainer()->get('event_dispatcher');
@@ -115,7 +141,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
         $receiver = $this->getReceiver($queueName);
 
         $worker = new Worker(
-            [$queueName => new SingleMessageReceiver($receiver, $receiver->find($this->getMessageId($envelope)))],
+            [$queueName => new SingleMessageReceiver($receiver, $receiver->find($this->getLastMessageId($queueName)))],
             $this->messageBus,
             $eventDispatcher
         );
@@ -130,6 +156,13 @@ abstract class AbstractFunctionalTests extends WebTestCase
         $transportMessageIdStamp = $envelope->last(TransportMessageIdStamp::class);
 
         return $transportMessageIdStamp->getId();
+    }
+
+    protected function getLastMessageId(string $queueName): mixed
+    {
+        $receiver = $this->getReceiver($queueName);
+
+        return $this->getMessageId(current($receiver->get()));
     }
 
     protected function getLastFailedMessageId(): mixed

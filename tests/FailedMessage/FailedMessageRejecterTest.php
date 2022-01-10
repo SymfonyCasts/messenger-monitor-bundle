@@ -9,7 +9,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
 use SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRejecter;
 use SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
-use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\TestableMessage;
 
 class FailedMessageRejecterTest extends TestCase
 {

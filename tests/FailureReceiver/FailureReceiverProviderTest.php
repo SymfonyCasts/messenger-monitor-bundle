@@ -7,7 +7,6 @@ namespace SymfonyCasts\MessengerMonitorBundle\Tests\FailureReceiver;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
-use SymfonyCasts\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
 use SymfonyCasts\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
 use SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverName;
 use SymfonyCasts\MessengerMonitorBundle\FailureReceiver\FailureReceiverProvider;
@@ -26,16 +25,6 @@ final class FailureReceiverProviderTest extends TestCase
             ->willReturn($failureReceiver = $this->createMock(ListableReceiverInterface::class));
 
         $this->assertSame($failureReceiver, $failureReceiverProvider->getFailureReceiver());
-    }
-
-    public function testExceptionWithNoReceiverName(): void
-    {
-        $this->expectException(FailureReceiverDoesNotExistException::class);
-
-        $receiverLocator = $this->createMock(ReceiverLocator::class);
-        $failureReceiverProvider = new FailureReceiverProvider($receiverLocator, new FailureReceiverName(null));
-
-        $failureReceiverProvider->getFailureReceiver();
     }
 
     public function testExceptionWithNoReceiverNotListable(): void

@@ -9,7 +9,7 @@ use SymfonyCasts\MessengerMonitorBundle\FailedMessage\MessageRetriedByUserEvent;
 use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection;
 use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener\SaveRetriedMessageListener;
 use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
-use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\TestableMessage;
 
 final class SaveRetriedMessageListenerTest extends TestCase
 {

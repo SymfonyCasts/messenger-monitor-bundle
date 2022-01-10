@@ -14,7 +14,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use SymfonyCasts\MessengerMonitorBundle\EventListener\SendEventOnRetriedMessageListener;
 use SymfonyCasts\MessengerMonitorBundle\FailedMessage\MessageRetriedByUserEvent;
 use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
-use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\TestableMessage;
 
 final class SendEventOnRetriedMessageTest extends TestCase
 {

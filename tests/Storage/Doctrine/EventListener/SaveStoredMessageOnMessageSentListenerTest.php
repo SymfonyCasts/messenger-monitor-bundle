@@ -11,7 +11,7 @@ use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
 use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection;
 use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener\SaveStoredMessageOnMessageSentListener;
 use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\StoredMessage;
-use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\TestableMessage;
 
 final class SaveStoredMessageOnMessageSentListenerTest extends TestCase
 {

@@ -6,7 +6,6 @@ namespace SymfonyCasts\MessengerMonitorBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
-use SymfonyCasts\MessengerMonitorBundle\Exception\FailureReceiverDoesNotExistException;
 use SymfonyCasts\MessengerMonitorBundle\Exception\FailureReceiverNotListableException;
 use SymfonyCasts\MessengerMonitorBundle\FailedMessage\FailedMessageRepository;
 use SymfonyCasts\MessengerMonitorBundle\Locator\ReceiverLocator;
@@ -24,8 +23,8 @@ final class DashboardController
     public function __construct(
         private Environment $twig,
         private ReceiverLocator $receiverLocator,
-        private FailedMessageRepository $failedMessageRepository,
-        private StatisticsProcessorInterface $statisticsProcessor
+        private StatisticsProcessorInterface $statisticsProcessor,
+        private ?FailedMessageRepository $failedMessageRepository = null,
     ) {
     }
 
@@ -37,13 +36,16 @@ final class DashboardController
         }
 
         $failedMessages = null;
-        try {
-            $failedMessages = $this->failedMessageRepository->listFailedMessages();
-            $cannotListFailedMessages = null;
-        } catch (FailureReceiverNotListableException) {
-            $cannotListFailedMessages = self::FAILURE_RECEIVER_NOT_LISTABLE;
-        } catch (FailureReceiverDoesNotExistException) {
+
+        if (null === $this->failedMessageRepository) {
             $cannotListFailedMessages = self::NO_FAILURE_RECEIVER;
+        } else {
+            try {
+                $failedMessages = $this->failedMessageRepository->listFailedMessages();
+                $cannotListFailedMessages = null;
+            } catch (FailureReceiverNotListableException) {
+                $cannotListFailedMessages = self::FAILURE_RECEIVER_NOT_LISTABLE;
+            }
         }
 
         return new Response(

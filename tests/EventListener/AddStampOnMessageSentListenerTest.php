@@ -9,7 +9,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
 use SymfonyCasts\MessengerMonitorBundle\EventListener\AddStampOnMessageSentListener;
 use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
-use SymfonyCasts\MessengerMonitorBundle\Tests\TestableMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\TestableMessage;
 
 final class AddStampOnMessageSentListenerTest extends TestCase
 {
