@@ -152,6 +152,15 @@ class Connection
         $this->addTableToSchema($schema);
     }
 
+    public function executeSchema(Schema $schema, DBALConnection $forConnection): void
+    {
+        $this->configureSchema($schema, $forConnection);
+
+        foreach ($schema->toSql($this->driverConnection->getDatabasePlatform()) as $sql) {
+            $this->driverConnection->executeStatement($sql);
+        }
+    }
+
     /**
      * @return Result&ResultStatement
      */

@@ -51,7 +51,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
         try {
             $connection->executeQuery('TRUNCATE TABLE messenger_monitor');
         } catch (\Throwable) {
-            self::getContainer()->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection')->configureSchema(new Schema(), $connection);
+            self::getContainer()->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection')->executeSchema(new Schema(), $connection);
         }
 
         $this->messageBus = self::getContainer()->get('test.messenger.bus.default');
