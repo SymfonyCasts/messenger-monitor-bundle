@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine;
 
 use Doctrine\DBAL\Connection as DBALConnection;
-use Doctrine\DBAL\Driver\Result;
-use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 use SymfonyCasts\MessengerMonitorBundle\Statistics\MetricsPerMessageType;
@@ -161,10 +160,7 @@ class Connection
         }
     }
 
-    /**
-     * @return Result&ResultStatement
-     */
-    private function executeQuery(string $sql, array $parameters = [], array $types = []): ResultStatement
+    private function executeQuery(string $sql, array $parameters = [], array $types = []): Result
     {
         try {
             $stmt = $this->driverConnection->executeQuery($sql, $parameters, $types);
