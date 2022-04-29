@@ -150,10 +150,6 @@ class Connection
         }
 
         $this->addTableToSchema($schema);
-
-        foreach ($schema->toSql($this->driverConnection->getDatabasePlatform()) as $sql) {
-            $this->driverConnection->executeStatement($sql);
-        }
     }
 
     /**
