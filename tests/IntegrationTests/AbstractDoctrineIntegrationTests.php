@@ -40,7 +40,7 @@ abstract class AbstractDoctrineIntegrationTests extends KernelTestCase
         try {
             $connection->executeQuery('TRUNCATE TABLE messenger_monitor');
         } catch (\Throwable) {
-            $this->doctrineConnection->configureSchema(new Schema(), $connection);
+            $this->doctrineConnection->executeSchema(new Schema(), $connection);
         }
     }
 }
