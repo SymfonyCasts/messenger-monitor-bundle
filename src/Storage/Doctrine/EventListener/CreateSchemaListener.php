@@ -7,6 +7,7 @@ namespace SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\EventListener;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 use Doctrine\ORM\Tools\ToolEvents;
+use Psr\Container\ContainerInterface;
 use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection;
 
 /**
@@ -14,13 +15,13 @@ use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection;
  */
 final class CreateSchemaListener implements EventSubscriber
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private ContainerInterface $container)
     {
     }
 
     public function postGenerateSchema(GenerateSchemaEventArgs $event): void
     {
-        $this->connection->configureSchema(
+        $this->container->get(Connection::class)->configureSchema(
             $event->getSchema(),
             $event->getEntityManager()->getConnection()
         );
