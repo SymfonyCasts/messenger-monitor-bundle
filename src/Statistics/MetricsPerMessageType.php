@@ -24,6 +24,11 @@ final class MetricsPerMessageType
         return $this->class;
     }
 
+    public function getShortClassName(): string
+    {
+        return basename(str_replace('\\', '/', $this->class));
+    }
+
     public function getMessagesCount(): int
     {
         return $this->messagesCountOnPeriod;

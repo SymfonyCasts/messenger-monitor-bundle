@@ -16,7 +16,7 @@
         <tbody>
         {% for metrics in statistics.metrics %}
             <tr>
-                <td>{{ metrics.class }}</td>
+                <td title="{{ metrics.class }}">{{ metrics.shortClassName }}</td>
                 <td>{{ metrics.messagesCount }}</td>
                 <td>{{ metrics.messagesHandledPerHour }}</td>
                 <td>{{ metrics.averageWaitingTime|time }}</td>
