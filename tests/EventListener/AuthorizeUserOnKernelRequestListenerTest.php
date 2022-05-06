@@ -26,7 +26,24 @@ final class AuthorizeUserOnKernelRequestListenerTest extends TestCase
             new RequestEvent(
                 $this->createMock(HttpKernelInterface::class),
                 new Request([], [], ['_route' => 'foo']),
-                HttpKernelInterface::MASTER_REQUEST
+                HttpKernelInterface::MAIN_REQUEST
+            )
+        );
+    }
+
+    public function testOnKernelRequestAllowedFor404Page(): void
+    {
+        $authorizeUserOnKernelRequest = new AuthorizeUserOnKernelRequestListener(
+            $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class)
+        );
+
+        $authorizationChecker->expects($this->never())->method('isGranted');
+
+        $authorizeUserOnKernelRequest->onKernelRequest(
+            new RequestEvent(
+                $this->createMock(HttpKernelInterface::class),
+                new Request(), // missing _route attribute
+                HttpKernelInterface::MAIN_REQUEST
             )
         );
     }
@@ -43,7 +60,7 @@ final class AuthorizeUserOnKernelRequestListenerTest extends TestCase
             new RequestEvent(
                 $this->createMock(HttpKernelInterface::class),
                 new Request([], [], ['_route' => 'symfonycasts.messenger_monitor.awesome_route']),
-                HttpKernelInterface::MASTER_REQUEST
+                HttpKernelInterface::MAIN_REQUEST
             )
         );
     }
@@ -62,7 +79,7 @@ final class AuthorizeUserOnKernelRequestListenerTest extends TestCase
             new RequestEvent(
                 $this->createMock(HttpKernelInterface::class),
                 new Request([], [], ['_route' => 'symfonycasts.messenger_monitor.awesome_route']),
-                HttpKernelInterface::MASTER_REQUEST
+                HttpKernelInterface::MAIN_REQUEST
             )
         );
     }

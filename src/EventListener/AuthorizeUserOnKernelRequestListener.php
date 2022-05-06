@@ -31,7 +31,7 @@ final class AuthorizeUserOnKernelRequestListener implements EventSubscriberInter
 
         $request = $event->getRequest();
 
-        if (!str_starts_with($request->attributes->get('_route'), 'symfonycasts.messenger_monitor.')) {
+        if (!str_starts_with($request->attributes->get('_route', ''), 'symfonycasts.messenger_monitor.')) {
             return;
         }
 
