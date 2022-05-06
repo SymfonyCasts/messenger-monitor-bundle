@@ -15,6 +15,12 @@ final class MetricsPerMessageTypeTest extends TestCase
         $this->assertSame('Message', $metrics->getClass());
     }
 
+    public function testGetShortClassName(): void
+    {
+        $metrics = new MetricsPerMessageType(new \DateTimeImmutable(), new \DateTimeImmutable(), self::class, 0, 0, 0);
+        $this->assertSame('MetricsPerMessageTypeTest', $metrics->getShortClassName());
+    }
+
     public function testMessagesCount(): void
     {
         $metrics = new MetricsPerMessageType(new \DateTimeImmutable(), new \DateTimeImmutable(), 'Message', 10, 0, 0);
