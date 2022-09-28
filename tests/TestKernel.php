@@ -114,7 +114,7 @@ final class TestKernel extends Kernel
                 'dbal' => [
                     'connections' => [
                         'default' => [
-                            'url' => getenv('TEST_DATABASE_DSN'),
+                            'url' => '%env(resolve:TEST_DATABASE_DSN)%',
                             'logging' => false,
                         ],
                     ],

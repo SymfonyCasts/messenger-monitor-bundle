@@ -15,12 +15,14 @@ final class StoredMessageTest extends TestCase
 {
     public function testStoredMessage(): void
     {
+        $uuid = uuid_create(UUID_TYPE_RANDOM);
+
         $storedMessage = new StoredMessage(
-            'message_uid', TestableMessage::class, $dispatchedAt = new \DateTimeImmutable(), 1, $receivedAt = new \DateTimeImmutable(), $handledAt = new \DateTimeImmutable(), $failedAt = new \DateTimeImmutable(), $receiverName = 'receiver_name'
+            $uuid, TestableMessage::class, $dispatchedAt = new \DateTimeImmutable(), 1, $receivedAt = new \DateTimeImmutable(), $handledAt = new \DateTimeImmutable(), $failedAt = new \DateTimeImmutable(), $receiverName = 'receiver_name'
         );
 
         $this->assertSame(1, $storedMessage->getId());
-        $this->assertSame('message_uid', $storedMessage->getMessageUid());
+        $this->assertSame($uuid, $storedMessage->getMessageUid());
         $this->assertSame(TestableMessage::class, $storedMessage->getMessageClass());
         $this->assertSame($dispatchedAt, $storedMessage->getDispatchedAt());
         $this->assertSame($receivedAt, $storedMessage->getReceivedAt());

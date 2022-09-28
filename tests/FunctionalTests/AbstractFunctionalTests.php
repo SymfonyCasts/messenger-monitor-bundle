@@ -8,6 +8,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -48,8 +49,16 @@ abstract class AbstractFunctionalTests extends WebTestCase
 
         $connection->executeQuery('DROP TABLE IF EXISTS messenger_messages');
 
+        $databasePlatform = $connection->getDatabasePlatform()->getName();
+
+        $truncateTable = match ($databasePlatform) {
+            'mysql' => 'TRUNCATE TABLE messenger_monitor',
+            'postgresql' => 'TRUNCATE TABLE messenger_monitor RESTART IDENTITY',
+            default => throw new InvalidConfigurationException(sprintf('Doctrine platform "%s" is not supported', $databasePlatform))
+        };
+
         try {
-            $connection->executeQuery('TRUNCATE TABLE messenger_monitor');
+            $connection->executeQuery($truncateTable);
         } catch (\Throwable) {
             self::getContainer()->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection')->executeSchema(new Schema(), $connection);
         }
@@ -102,7 +111,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
         /** @var MonitorIdStamp $monitorIdStamp */
         $monitorIdStamp = $envelope->last(MonitorIdStamp::class);
         $this->assertNotFalse(
-            $connection->executeQuery('SELECT id FROM messenger_monitor WHERE id = :id', ['id' => $monitorIdStamp->getId()])
+            $connection->executeQuery('SELECT id FROM messenger_monitor WHERE message_uid = :id', ['id' => $monitorIdStamp->getId()])
         );
     }
 
