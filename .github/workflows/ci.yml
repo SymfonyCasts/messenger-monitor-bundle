@@ -1,9 +1,10 @@
 name: MessengerMonitorBundle CI
+
 on:
   pull_request: ~
   push:
     branches:
-      - master
+      - "master"
 
 jobs:
   coding-standards:
@@ -35,18 +36,18 @@ jobs:
   build:
     name: "Unit Tests"
 
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
 
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - php: '8.0'
-          - php: '8.1'
-          - php: '8.0'
-            mode: low-deps
-          - php: '8.1'
-            mode: low-deps
+        php:
+          - "8.0"
+          - "8.1"
+        dependencies:
+          - "lowest"
+          - "highest"
+
     services:
       mariadb:
         image: mariadb:latest
@@ -60,15 +61,16 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2.0.0
+      - name: "Checkout"
+        uses: actions/checkout@v3
 
-      - name: Setup PHP with PECL extension
+      - name: "Set up PHP"
         uses: shivammathur/setup-php@v2
         with:
+          coverage: none
           php-version: ${{ matrix.php }}
 
-      - name: Verify MariaDB connection
+      - name: "Verify MariaDB connection"
         env:
           PORT: ${{ job.services.mariadb.ports[3306] }}
         run: |
@@ -76,18 +78,15 @@ jobs:
             sleep 1
           done
 
-      - name: Install dependencies
-        run: |
-          if [[ "${{ matrix.mode }}" = low-deps ]]; then
-              COMPOSER_OPTION="--prefer-lowest"
-          fi
+      - name: "Install dependencies with composer"
+        uses: ramsey/composer-install@v2
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
 
-          composer update --prefer-dist --no-progress ${COMPOSER_OPTION:=""}
-
-      - name: Psalm Static Analysis
+      - name: "Psalm Static Analysis"
         run: vendor/bin/psalm -c psalm.xml
 
-      - name: Unit Tests
+      - name: "Unit Tests"
         run: vendor/bin/simple-phpunit
         if: always()
         env:
