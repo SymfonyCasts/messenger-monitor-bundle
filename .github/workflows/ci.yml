@@ -4,9 +4,37 @@ on:
   push:
     branches:
       - master
+
 jobs:
+  coding-standards:
+    name: "Coding Standards"
+
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      matrix:
+        php:
+          - "8.0"
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Set up PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          php-version: ${{ matrix.php }}
+
+      - name: "Install dependencies with composer"
+        uses: ramsey/composer-install@v2
+
+      - name: "Run friendsofphp/php-cs-fixer"
+        run: vendor/bin/php-cs-fixer fix --ansi --config=.php-cs-fixer.dist.php --diff --dry-run --verbose
+
   build:
-    name: MessengerMonitor
+    name: "Unit Tests"
+
     runs-on: ubuntu-latest
 
     strategy:
@@ -30,6 +58,7 @@ jobs:
           MYSQL_DATABASE: messenger_monitor_bundle_test
           MYSQL_ROOT_PASSWORD: password
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2.0.0
@@ -38,7 +67,6 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          tools: php-cs-fixer
 
       - name: Verify MariaDB connection
         env:
@@ -56,12 +84,8 @@ jobs:
 
           composer update --prefer-dist --no-progress ${COMPOSER_OPTION:=""}
 
-      - name: Check src with php-cs-Fixer
-        run: php-cs-fixer fix --diff --dry-run
-
       - name: Psalm Static Analysis
         run: vendor/bin/psalm -c psalm.xml
-        if: always()
 
       - name: Unit Tests
         run: vendor/bin/simple-phpunit
