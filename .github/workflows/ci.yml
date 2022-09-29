@@ -96,14 +96,6 @@ jobs:
           coverage: none
           php-version: ${{ matrix.php }}
 
-      - name: "Verify MariaDB connection"
-        env:
-          PORT: ${{ job.services.mariadb.ports[3306] }}
-        run: |
-          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
-            sleep 1
-          done
-
       - name: "Install dependencies with composer"
         uses: ramsey/composer-install@v2
         with:
