@@ -33,8 +33,34 @@ jobs:
       - name: "Run friendsofphp/php-cs-fixer"
         run: vendor/bin/php-cs-fixer fix --ansi --config=.php-cs-fixer.dist.php --diff --dry-run --verbose
 
-  build:
-    name: "Unit Tests"
+  static-code-analysis:
+    name: "Static Code Analysis"
+
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      matrix:
+        php:
+          - "8.0"
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Set up PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          php-version: ${{ matrix.php }}
+
+      - name: "Install dependencies with composer"
+        uses: ramsey/composer-install@v2
+
+      - name: "Run vimeo/psalm"
+        run: vendor/bin/psalm --diff --show-info=false --stats --threads=4
+
+  tests:
+    name: "Tests"
 
     runs-on: "ubuntu-latest"
 
@@ -83,11 +109,7 @@ jobs:
         with:
           dependency-versions: ${{ matrix.dependencies }}
 
-      - name: "Psalm Static Analysis"
-        run: vendor/bin/psalm -c psalm.xml
-
       - name: "Unit Tests"
         run: vendor/bin/simple-phpunit
-        if: always()
         env:
           TEST_DATABASE_DSN: mysql://root:password@127.0.0.1:${{ job.services.mariadb.ports[3306] }}/messenger_monitor_bundle_test
