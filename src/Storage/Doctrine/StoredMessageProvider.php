@@ -10,6 +10,7 @@ use SymfonyCasts\MessengerMonitorBundle\Stamp\MonitorIdStamp;
 
 /**
  * @internal
+ *
  * @final
  */
 class StoredMessageProvider
