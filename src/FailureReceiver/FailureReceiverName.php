@@ -6,6 +6,7 @@ namespace SymfonyCasts\MessengerMonitorBundle\FailureReceiver;
 
 /**
  * @internal
+ *
  * @psalm-immutable
  */
 final class FailureReceiverName

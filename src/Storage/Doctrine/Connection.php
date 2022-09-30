@@ -15,6 +15,7 @@ use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Driver\SQLDriverInterfa
 
 /**
  * @internal
+ *
  * @final
  */
 class Connection
