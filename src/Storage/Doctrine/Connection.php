@@ -176,10 +176,10 @@ class Connection
         $table->addColumn('id', Types::INTEGER)->setNotnull(true)->setAutoincrement(true);
         $table->addColumn('message_uid', Types::GUID)->setNotnull(true);
         $table->addColumn('class', Types::STRING)->setLength(255)->setNotnull(true);
-        $table->addColumn('dispatched_at', Types::FLOAT)->setNotnull(true);
-        $table->addColumn('waiting_time', Types::FLOAT)->setNotnull(false);
-        $table->addColumn('handling_time', Types::FLOAT)->setNotnull(false);
-        $table->addColumn('failing_time', Types::FLOAT)->setNotnull(false);
+        $table->addColumn('dispatched_at', Types::DECIMAL, ['precision' => 16, 'scale' => 6])->setNotnull(true);
+        $table->addColumn('waiting_time', Types::DECIMAL, ['precision' => 16, 'scale' => 6])->setNotnull(false);
+        $table->addColumn('handling_time', Types::DECIMAL, ['precision' => 16, 'scale' => 6])->setNotnull(false);
+        $table->addColumn('failing_time', Types::DECIMAL, ['precision' => 16, 'scale' => 6])->setNotnull(false);
         $table->addColumn('receiver_name', Types::STRING)->setLength(255)->setNotnull(false);
         $table->addIndex(['dispatched_at']);
         $table->addIndex(['class']);
