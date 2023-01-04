@@ -189,6 +189,7 @@ class Connection
         $table->addColumn('receiver_name', Types::STRING)->setLength(255)->setNotnull(false);
         $table->addIndex(['dispatched_at']);
         $table->addIndex(['class']);
+        $table->addIndex(['message_uid']);
         $table->setPrimaryKey(['id']);
     }
 }
