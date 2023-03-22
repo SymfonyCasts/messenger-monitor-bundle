@@ -1,64 +1,13 @@
-name: MessengerMonitorBundle CI
+name: CI
 
 on:
   pull_request: ~
   push:
-    branches:
-      - "master"
+    branches: ['master']
+  schedule:
+    - cron: '0 */12 * * *'
 
 jobs:
-  coding-standards:
-    name: "Coding Standards"
-
-    runs-on: "ubuntu-latest"
-
-    strategy:
-      matrix:
-        php:
-          - "8.0"
-
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@v3
-
-      - name: "Set up PHP"
-        uses: shivammathur/setup-php@v2
-        with:
-          coverage: none
-          php-version: ${{ matrix.php }}
-
-      - name: "Install dependencies with composer"
-        uses: ramsey/composer-install@v2
-
-      - name: "Run friendsofphp/php-cs-fixer"
-        run: vendor/bin/php-cs-fixer fix --ansi --config=.php-cs-fixer.dist.php --diff --dry-run --verbose
-
-  static-code-analysis:
-    name: "Static Code Analysis"
-
-    runs-on: "ubuntu-latest"
-
-    strategy:
-      matrix:
-        php:
-          - "8.0"
-
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@v3
-
-      - name: "Set up PHP"
-        uses: shivammathur/setup-php@v2
-        with:
-          coverage: none
-          php-version: ${{ matrix.php }}
-
-      - name: "Install dependencies with composer"
-        uses: ramsey/composer-install@v2
-
-      - name: "Run vimeo/psalm"
-        run: vendor/bin/psalm --diff --show-info=false --stats --threads=4
-
   tests-mariadb:
     name: "Tests with MariaDB"
 
@@ -148,3 +97,12 @@ jobs:
         run: vendor/bin/simple-phpunit
         env:
           TEST_DATABASE_DSN: postgres://user:password@127.0.0.1:${{ job.services.postgres.ports[5432] }}/messenger_monitor_bundle_test
+
+  composer-validate:
+    uses: SymfonyCasts/.github/.github/workflows/composer-validate.yaml@main
+
+  cs:
+    uses: SymfonyCasts/.github/.github/workflows/php-cs-fixer.yaml@main
+
+  sca:
+    uses: SymfonyCasts/.github/.github/workflows/psalm.yaml@main
