@@ -16,6 +16,10 @@ use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use SymfonyCasts\MessengerMonitorBundle\SymfonyCastsMessengerMonitorBundle;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\FailureMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\RetryableMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\TestableMessage;
+use SymfonyCasts\MessengerMonitorBundle\Tests\Fixtures\TestableMessageHandler;
 
 final class TestKernel extends Kernel
 {
@@ -98,10 +102,16 @@ final class TestKernel extends Kernel
                             'dsn' => 'doctrine://default?queue_name=queue',
                             'retry_strategy' => ['max_retries' => 0],
                         ],
+                        'queue_with_retry' => [
+                            'dsn' => 'doctrine://default?queue_name=queue_with_retry',
+                            'retry_strategy' => ['max_retries' => 1, 'delay' => 0, 'multiplier' => 1],
+                        ],
                         'failed' => 'doctrine://default?queue_name=failed',
                     ],
                     'routing' => [
                         TestableMessage::class => 'queue',
+                        FailureMessage::class => 'queue',
+                        RetryableMessage::class => 'queue_with_retry',
                     ],
                 ],
                 'test' => true,

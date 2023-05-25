@@ -11,7 +11,6 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 use SymfonyCasts\MessengerMonitorBundle\Statistics\MetricsPerMessageType;
 use SymfonyCasts\MessengerMonitorBundle\Statistics\Statistics;
-use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Driver\SQLDriverInterface;
 
 /**
  * @internal
@@ -20,7 +19,7 @@ use SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Driver\SQLDriverInterfa
  */
 class Connection
 {
-    public function __construct(private DBALConnection $driverConnection, private SQLDriverInterface $SQLDriver, private string $tableName)
+    public function __construct(private DBALConnection $driverConnection, private string $tableName)
     {
     }
 
@@ -40,10 +39,7 @@ class Connection
             [
                 'message_uid' => $storedMessage->getMessageUid(),
                 'class' => $storedMessage->getMessageClass(),
-                'dispatched_at' => $storedMessage->getDispatchedAt(),
-            ],
-            [
-                'dispatched_at' => Types::DATETIME_IMMUTABLE,
+                'dispatched_at' => (float) $storedMessage->getDispatchedAt()->format('U.u'),
             ]
         );
 
@@ -55,23 +51,18 @@ class Connection
         $this->executeQuery(
             $this->driverConnection->createQueryBuilder()
                 ->update($this->tableName)
-                ->set('received_at', ':received_at')
+                ->set('waiting_time', ':waiting_time')
                 ->set('receiver_name', ':receiver_name')
-                ->set('handled_at', ':handled_at')
-                ->set('failed_at', ':failed_at')
+                ->set('handling_time', ':handling_time')
+                ->set('failing_time', ':failing_time')
                 ->where('id = :id')
                 ->getSQL(),
             [
-                'received_at' => $storedMessage->getReceivedAt(),
-                'handled_at' => $storedMessage->getHandledAt(),
-                'failed_at' => $storedMessage->getFailedAt(),
+                'waiting_time' => $storedMessage->getWaitingTime(),
                 'receiver_name' => $storedMessage->getReceiverName(),
+                'handling_time' => $storedMessage->getHandlingTime(),
+                'failing_time' => $storedMessage->getFailingTime(),
                 'id' => $storedMessage->getId(),
-            ],
-            [
-                'received_at' => Types::DATETIME_IMMUTABLE,
-                'handled_at' => Types::DATETIME_IMMUTABLE,
-                'failed_at' => Types::DATETIME_IMMUTABLE,
             ]
         );
     }
@@ -93,15 +84,16 @@ class Connection
             return null;
         }
 
+        /** @psalm-suppress PossiblyFalseArgument */
         return new StoredMessage(
             $row['message_uid'],
             $row['class'],
-            new \DateTimeImmutable($row['dispatched_at']),
+            \DateTimeImmutable::createFromFormat('U.u', sprintf('%.6f', $row['dispatched_at'])),
             (int) $row['id'],
-            null !== $row['received_at'] ? new \DateTimeImmutable($row['received_at']) : null,
-            null !== $row['handled_at'] ? new \DateTimeImmutable($row['handled_at']) : null,
-            null !== $row['failed_at'] ? new \DateTimeImmutable($row['failed_at']) : null,
-            $row['receiver_name'] ?? null
+            null !== $row['waiting_time'] ? (float) $row['waiting_time'] : null,
+            $row['receiver_name'] ?? null,
+            null !== $row['handling_time'] ? (float) $row['handling_time'] : null,
+            null !== $row['failing_time'] ? (float) $row['failing_time'] : null
         );
     }
 
@@ -110,15 +102,17 @@ class Connection
         $statement = $this->executeQuery(
             $this->driverConnection->createQueryBuilder()
                 ->select('count(id) as count_messages_on_period, class')
-                ->addSelect(sprintf('AVG(%s) AS average_waiting_time', $this->SQLDriver->getDateDiffInSecondsExpression('received_at', 'dispatched_at')))
-                ->addSelect(sprintf('AVG(%s) AS average_handling_time', $this->SQLDriver->getDateDiffInSecondsExpression('handled_at', 'received_at')))
+                ->addSelect('AVG(waiting_time) AS average_waiting_time')
+                ->addSelect('AVG(handling_time) AS average_handling_time')
                 ->from($this->tableName)
-                ->where('handled_at >= :from_date')
-                ->andWhere('handled_at <= :to_date')
+                ->where('dispatched_at >= :from_date')
+                ->andWhere('dispatched_at <= :to_date')
                 ->groupBy('class')
                 ->getSQL(),
-            ['from_date' => $fromDate, 'to_date' => $toDate],
-            ['from_date' => Types::DATETIME_IMMUTABLE, 'to_date' => Types::DATETIME_IMMUTABLE]
+            [
+                'from_date' => (float) $fromDate->format('U'),
+                'to_date' => (float) $toDate->format('U'),
+            ]
         );
 
         $statistics = new Statistics($fromDate, $toDate);
@@ -129,8 +123,8 @@ class Connection
                     $toDate,
                     $row['class'],
                     (int) $row['count_messages_on_period'],
-                    (float) $row['average_waiting_time'],
-                    (float) $row['average_handling_time']
+                    $row['average_waiting_time'] ? (float) $row['average_waiting_time'] : null,
+                    $row['average_handling_time'] ? (float) $row['average_handling_time'] : null
                 )
             );
         }
@@ -182,10 +176,10 @@ class Connection
         $table->addColumn('id', Types::INTEGER)->setNotnull(true)->setAutoincrement(true);
         $table->addColumn('message_uid', Types::GUID)->setNotnull(true);
         $table->addColumn('class', Types::STRING)->setLength(255)->setNotnull(true);
-        $table->addColumn('dispatched_at', Types::DATETIME_IMMUTABLE)->setNotnull(true);
-        $table->addColumn('received_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
-        $table->addColumn('handled_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
-        $table->addColumn('failed_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
+        $table->addColumn('dispatched_at', Types::DECIMAL, ['precision' => 16, 'scale' => 6])->setNotnull(true);
+        $table->addColumn('waiting_time', Types::DECIMAL, ['precision' => 16, 'scale' => 6])->setNotnull(false);
+        $table->addColumn('handling_time', Types::DECIMAL, ['precision' => 16, 'scale' => 6])->setNotnull(false);
+        $table->addColumn('failing_time', Types::DECIMAL, ['precision' => 16, 'scale' => 6])->setNotnull(false);
         $table->addColumn('receiver_name', Types::STRING)->setLength(255)->setNotnull(false);
         $table->addIndex(['dispatched_at']);
         $table->addIndex(['class']);
