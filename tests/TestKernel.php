@@ -51,17 +51,11 @@ final class TestKernel extends Kernel
         return $this->getProjectDir().'/cache/'.md5(json_encode($this->bundleOptions));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureRoutes(RoutingConfigurator $routes)
     {
         $routes->import(__DIR__.'/../src/Resources/config/routing.xml');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureContainer(ContainerBuilder $container)
     {
         $container->setAlias(

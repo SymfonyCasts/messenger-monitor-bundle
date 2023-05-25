@@ -34,6 +34,6 @@ final class SaveStoredMessageOnMessageSentListenerTest extends TestCase
                 )
             );
 
-        $listener->onMessageSent(new SendMessageToTransportsEvent($envelope));
+        $listener->onMessageSent(new SendMessageToTransportsEvent($envelope, []));
     }
 }

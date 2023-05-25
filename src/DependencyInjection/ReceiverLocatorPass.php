@@ -12,9 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 final class ReceiverLocatorPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         if ($container->hasDefinition('symfonycasts.messenger_monitor.receiver_locator')

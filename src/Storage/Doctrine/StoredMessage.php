@@ -17,7 +17,7 @@ final class StoredMessage
     private ?\DateTimeImmutable $handledAt = null;
     private ?\DateTimeImmutable $failedAt = null;
 
-    public function __construct(private string $messageUid, private string $messageClass, private \DateTimeImmutable $dispatchedAt, private ?int $id = null, ?\DateTimeImmutable $receivedAt = null, ?\DateTimeImmutable $handledAt = null, ?\DateTimeImmutable $failedAt = null, private ?string $receiverName = null)
+    public function __construct(private string $messageUid, private string $messageClass, private \DateTimeImmutable $dispatchedAt, private ?int $id = null, \DateTimeImmutable $receivedAt = null, \DateTimeImmutable $handledAt = null, \DateTimeImmutable $failedAt = null, private ?string $receiverName = null)
     {
         if (null !== $receivedAt) {
             $this->receivedAt = $receivedAt;

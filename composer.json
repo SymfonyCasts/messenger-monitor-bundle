@@ -3,7 +3,7 @@
     "description": "Symfony bundle for information about your Messenger queues and transports",
     "type": "symfony-bundle",
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "ext-json": "*",
         "symfony/config": "^5.4|^6.0",
         "symfony/dependency-injection": "^5.4|^6.0",
@@ -21,7 +21,7 @@
         "doctrine/dbal": "^2.13.3",
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/orm": "^2.10",
-        "friendsofphp/php-cs-fixer": "^3.11",
+        "php-cs-fixer/shim": "^3.17",
         "symfony/browser-kit": "^5.4|^6.0",
         "symfony/css-selector": "^5.4|^6.0",
         "symfony/doctrine-messenger": "^6.0",

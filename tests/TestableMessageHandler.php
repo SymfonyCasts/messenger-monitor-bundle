@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace SymfonyCasts\MessengerMonitorBundle\Tests;
 
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-final class TestableMessageHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+final class TestableMessageHandler
 {
     public function __invoke(TestableMessage $message)
     {
