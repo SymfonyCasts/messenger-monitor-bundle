@@ -3,7 +3,7 @@
     "description": "Symfony bundle for information about your Messenger queues and transports",
     "type": "symfony-bundle",
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "ext-json": "*",
         "symfony/config": "^5.4|^6.0",
         "symfony/dependency-injection": "^5.4|^6.0",
