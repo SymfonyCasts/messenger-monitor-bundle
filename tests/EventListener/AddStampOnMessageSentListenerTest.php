@@ -16,7 +16,7 @@ final class AddStampOnMessageSentListenerTest extends TestCase
     public function testAddStampOnMessageSent(): void
     {
         $listener = new AddStampOnMessageSentListener();
-        $listener->onMessageSent($event = new SendMessageToTransportsEvent(new Envelope(new TestableMessage())));
+        $listener->onMessageSent($event = new SendMessageToTransportsEvent(new Envelope(new TestableMessage()), []));
 
         $this->assertNotNull($event->getEnvelope()->last(MonitorIdStamp::class));
     }
