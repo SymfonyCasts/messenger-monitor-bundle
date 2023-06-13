@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by bendavies at 2023-06-10T11:40:39Z
+
+not sure what's going on with maria db but using `mariadb:latest` failed to start. so did 11, 10.11. all failing.
+
+eventually changed to match doctrine/dbal: 10.11 and altered the healthcheck [doctrine/dbal](https://github.com/doctrine/dbal/blob/3.6.x/.github/workflows/continuous-integration.yml#L331)
+
+it starts sucessfully now.
