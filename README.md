@@ -1,6 +1,8 @@
 Messenger Monitor
 ---
 
+**THIS BUNDLE IS EXPERIMENTAL & UNSTABLE** and may not work and probably isn't ready for production.
+It's also super rough.
 
 A Symfony Bundle to show you information about your Messenger queues/transports
 
