@@ -19,103 +19,103 @@ jobs:
       - name: Composer Validate
         run: composer validate --strict
 
-#  tests-mariadb:
-#    name: "Tests with MariaDB"
-#
-#    runs-on: "ubuntu-latest"
-#
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        php:
-#          - "8.1"
-#          - "8.2"
-#        dependencies:
-#          - "lowest"
-#          - "highest"
-#
-#    services:
-#      mariadb:
-#        image: mariadb:10.11
-#        ports:
-#          - 3306
-#        env:
-#          MYSQL_USER: user
-#          MYSQL_PASSWORD: password
-#          MYSQL_DATABASE: messenger_monitor_bundle_test
-#          MYSQL_ROOT_PASSWORD: password
-#        options: --health-cmd "mysqladmin ping --silent"
-#    steps:
-#      - name: "Checkout"
-#        uses: actions/checkout@v3
-#
-#      - name: "Set up PHP"
-#        uses: shivammathur/setup-php@v2
-#        with:
-#          coverage: none
-#          php-version: ${{ matrix.php }}
-#
-#      - name: "Install dependencies with composer"
-#        uses: ramsey/composer-install@v2
-#        with:
-#          dependency-versions: ${{ matrix.dependencies }}
-#
-#      - name: "Unit Tests"
-#        run: vendor/bin/simple-phpunit
-#        env:
-#          TEST_DATABASE_DSN: mysql://root:password@127.0.0.1:${{ job.services.mariadb.ports[3306] }}/messenger_monitor_bundle_test
-#
-#  tests-postgres:
-#    name: "Tests with PostgreSQL"
-#
-#    runs-on: "ubuntu-latest"
-#
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        php:
-#          - "8.1"
-#          - "8.2"
-#        postgres-version:
-#          - "14"
-#
-#    services:
-#      postgres:
-#        image: "postgres:${{ matrix.postgres-version }}"
-#        ports:
-#          - "5432:5432"
-#        env:
-#          POSTGRES_DB: messenger_monitor_bundle_test
-#          POSTGRES_USER: user
-#          POSTGRES_PASSWORD: password
-#        options: --health-cmd "pg_isready -U user" --health-interval 1s --health-timeout 5s --health-retries 5
-#
-#    steps:
-#      - name: "Checkout"
-#        uses: actions/checkout@v3
-#
-#      - name: "Set up PHP"
-#        uses: shivammathur/setup-php@v2
-#        with:
-#          coverage: none
-#          php-version: ${{ matrix.php }}
-#
-#      - name: "Install dependencies with composer"
-#        uses: ramsey/composer-install@v2
-#
-#      - name: "Unit Tests"
-#        run: vendor/bin/simple-phpunit
-#        env:
-#          TEST_DATABASE_DSN: postgres://user:password@127.0.0.1:${{ job.services.postgres.ports[5432] }}/messenger_monitor_bundle_test
+  tests-mariadb:
+    name: "Tests with MariaDB"
+
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php:
+          - "8.1"
+          - "8.2"
+        dependencies:
+          - "lowest"
+          - "highest"
+
+    services:
+      mariadb:
+        image: mariadb:10.11
+        ports:
+          - 3306
+        env:
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+          MYSQL_DATABASE: messenger_monitor_bundle_test
+          MYSQL_ROOT_PASSWORD: password
+        options: --health-cmd "mysqladmin ping --silent"
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Set up PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          php-version: ${{ matrix.php }}
+
+      - name: "Install dependencies with composer"
+        uses: ramsey/composer-install@v2
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
+
+      - name: "Unit Tests"
+        run: vendor/bin/simple-phpunit
+        env:
+          TEST_DATABASE_DSN: mysql://root:password@127.0.0.1:${{ job.services.mariadb.ports[3306] }}/messenger_monitor_bundle_test
+
+  tests-postgres:
+    name: "Tests with PostgreSQL"
+
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php:
+          - "8.1"
+          - "8.2"
+        postgres-version:
+          - "14"
+
+    services:
+      postgres:
+        image: "postgres:${{ matrix.postgres-version }}"
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_DB: messenger_monitor_bundle_test
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+        options: --health-cmd "pg_isready -U user" --health-interval 1s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Set up PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          php-version: ${{ matrix.php }}
+
+      - name: "Install dependencies with composer"
+        uses: ramsey/composer-install@v2
+
+      - name: "Unit Tests"
+        run: vendor/bin/simple-phpunit
+        env:
+          TEST_DATABASE_DSN: postgres://user:password@127.0.0.1:${{ job.services.postgres.ports[5432] }}/messenger_monitor_bundle_test
 #
   composer-validate:
     uses: SymfonyCasts/.github/.github/workflows/composer-validate.yaml@main
-#
-#  cs:
-#    uses: SymfonyCasts/.github/.github/workflows/php-cs-fixer.yaml@main
-#
-#  sca:
-#    uses: SymfonyCasts/.github/.github/workflows/phpstan.yaml@main
-#    with:
-#      php: 8.1
-#      install-phpunit-bridge: true
+
+  cs:
+    uses: SymfonyCasts/.github/.github/workflows/php-cs-fixer.yaml@main
+
+  sca:
+    uses: SymfonyCasts/.github/.github/workflows/phpstan.yaml@main
+    with:
+      php: 8.1
+      install-phpunit-bridge: true
