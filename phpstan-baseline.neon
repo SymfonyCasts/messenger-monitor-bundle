@@ -1,0 +1,26 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method SymfonyCasts\\\\MessengerMonitorBundle\\\\Exception\\\\ReceiverDoesNotExistException\\:\\:__construct\\(\\) has parameter \\$availableReceivers with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Exception/ReceiverDoesNotExistException.php
+
+		-
+			message: "#^Method SymfonyCasts\\\\MessengerMonitorBundle\\\\Locator\\\\ReceiverLocator\\:\\:__construct\\(\\) has parameter \\$receiverLocator with generic interface Symfony\\\\Contracts\\\\Service\\\\ServiceProviderInterface but does not specify its types\\: T$#"
+			count: 1
+			path: src/Locator/ReceiverLocator.php
+
+		-
+			message: "#^Method SymfonyCasts\\\\MessengerMonitorBundle\\\\Locator\\\\ReceiverLocator\\:\\:__construct\\(\\) has parameter \\$receiverNames with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Locator/ReceiverLocator.php
+
+		-
+			message: "#^Method SymfonyCasts\\\\MessengerMonitorBundle\\\\Storage\\\\Doctrine\\\\Connection\\:\\:executeQuery\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Storage/Doctrine/Connection.php
+
+		-
+			message: "#^Method SymfonyCasts\\\\MessengerMonitorBundle\\\\Storage\\\\Doctrine\\\\Connection\\:\\:executeQuery\\(\\) has parameter \\$types with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Storage/Doctrine/Connection.php
