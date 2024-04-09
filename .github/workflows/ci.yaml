@@ -108,8 +108,8 @@ jobs:
 #        env:
 #          TEST_DATABASE_DSN: postgres://user:password@127.0.0.1:${{ job.services.postgres.ports[5432] }}/messenger_monitor_bundle_test
 #
-#  composer-validate:
-#    uses: SymfonyCasts/.github/.github/workflows/composer-validate.yaml@main
+  composer-validate:
+    uses: SymfonyCasts/.github/.github/workflows/composer-validate.yaml@main
 #
 #  cs:
 #    uses: SymfonyCasts/.github/.github/workflows/php-cs-fixer.yaml@main
