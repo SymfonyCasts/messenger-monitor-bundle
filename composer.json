@@ -22,12 +22,12 @@
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/orm": "^2.10",
         "php-cs-fixer/shim": "^3.17",
+        "phpstan/phpstan": "^1.11.x-dev",
         "symfony/browser-kit": "^5.4|^6.0",
         "symfony/css-selector": "^5.4|^6.0",
         "symfony/doctrine-messenger": "^6.0",
         "symfony/phpunit-bridge": "^5.4|^6.0",
-        "symfony/security-bundle": "^5.4|^6.0",
-        "vimeo/psalm": "^4.0"
+        "symfony/security-bundle": "^5.4|^6.0"
     },
     "conflict": {
         "symfony/doctrine-bridge": "<5.4"
