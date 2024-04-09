@@ -8,17 +8,6 @@ on:
     - cron: '0 */12 * * *'
 
 jobs:
-  wtf:
-    name: Something is broken
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Composer Validate
-        run: composer validate --strict
-
   tests-mariadb:
     name: "Tests with MariaDB"
 
@@ -107,7 +96,7 @@ jobs:
         run: vendor/bin/simple-phpunit
         env:
           TEST_DATABASE_DSN: postgres://user:password@127.0.0.1:${{ job.services.postgres.ports[5432] }}/messenger_monitor_bundle_test
-#
+
   composer-validate:
     uses: SymfonyCasts/.github/.github/workflows/composer-validate.yaml@main
 
