@@ -116,28 +116,32 @@ final class TestKernel extends Kernel
             ]
         );
 
-        $container->loadFromExtension(
-            'security',
-            [
-                'enable_authenticator_manager' => true,
-                'providers' => [
-                    'in_memory' => [
-                        'memory' => [
-                            'users' => [
-                                'admin' => ['password' => 'password', 'roles' => ['ROLE_MESSENGER_ADMIN']],
-                                'user' => ['password' => 'password', 'roles' => ['ROLE_USER']],
-                            ],
+        $securityConfig = [
+            'providers' => [
+                'in_memory' => [
+                    'memory' => [
+                        'users' => [
+                            'admin' => ['password' => 'password', 'roles' => ['ROLE_MESSENGER_ADMIN']],
+                            'user' => ['password' => 'password', 'roles' => ['ROLE_USER']],
                         ],
                     ],
                 ],
-                'password_hashers' => [InMemoryUser::class => 'plaintext'],
-                'firewalls' => [
-                    'main' => [
-                        'provider' => 'in_memory',
-                        'http_basic' => true,
-                    ],
+            ],
+            'password_hashers' => [InMemoryUser::class => 'plaintext'],
+            'firewalls' => [
+                'main' => [
+                    'provider' => 'in_memory',
+                    'http_basic' => true,
                 ],
-            ]
+            ],
+        ];
+        // Legacy, since 6.0 enable_authenticator_manager is true by default
+        if (Kernel::VERSION_ID < 60000) {
+            $securityConfig['enable_authenticator_manager'] = true;
+        }
+        $container->loadFromExtension(
+            'security',
+            $securityConfig,
         );
 
         $container->loadFromExtension('symfonycasts_messenger_monitor', $this->bundleOptions);

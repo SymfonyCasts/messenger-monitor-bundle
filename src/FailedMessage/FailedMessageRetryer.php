@@ -38,7 +38,7 @@ final class FailedMessageRetryer
 
         $envelope = $failureReceiver->find($id);
         if (null === $envelope) {
-            throw new \RuntimeException(sprintf('The message "%s" was not found.', $id));
+            throw new \RuntimeException(\sprintf('The message "%s" was not found.', $id));
         }
 
         /** @var MonitorIdStamp|null $monitorIdStamp */
