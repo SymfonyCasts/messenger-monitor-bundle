@@ -21,21 +21,21 @@ final class TimeDisplayExtension extends AbstractExtension
         if ($seconds < 10) {
             $seconds = round($seconds, 2);
 
-            return sprintf('%s %s', $seconds, $this->pluralize('second', $seconds));
+            return \sprintf('%s %s', $seconds, $this->pluralize('second', $seconds));
         }
 
         if ($seconds < 60) {
-            return sprintf('%d seconds', round($seconds));
+            return \sprintf('%d seconds', round($seconds));
         }
 
         $minutes = (int) floor($seconds / 60);
         $intSeconds = (int) $seconds % 60;
 
         if (0 === $intSeconds) {
-            return sprintf('%d %s', $minutes, $this->pluralize('minute', $minutes));
+            return \sprintf('%d %s', $minutes, $this->pluralize('minute', $minutes));
         }
 
-        return sprintf('%d %s %d %s', $minutes, $this->pluralize('minute', $minutes), $intSeconds, $this->pluralize('second', $intSeconds));
+        return \sprintf('%d %s %d %s', $minutes, $this->pluralize('minute', $minutes), $intSeconds, $this->pluralize('second', $intSeconds));
     }
 
     private function pluralize(string $word, float $number): string

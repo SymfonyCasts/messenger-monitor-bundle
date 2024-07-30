@@ -33,7 +33,7 @@ class StoredMessageProvider
         $storedMessage = $this->doctrineConnection->findMessage($monitorIdStamp->getId());
 
         if (null === $storedMessage) {
-            $this->logError(sprintf('Message with id "%s" not found', $monitorIdStamp->getId()));
+            $this->logError(\sprintf('Message with id "%s" not found', $monitorIdStamp->getId()));
 
             return null;
         }
