@@ -119,7 +119,6 @@ final class TestKernel extends Kernel
         $container->loadFromExtension(
             'security',
             [
-                'enable_authenticator_manager' => true,
                 'providers' => [
                     'in_memory' => [
                         'memory' => [
