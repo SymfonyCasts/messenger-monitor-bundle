@@ -18,8 +18,7 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('symfonycasts_messenger_monitor');
         $rootNode = $treeBuilder->getRootNode();
 
-        /** @psalm-suppress PossiblyUndefinedMethod */
-        $rootNode
+        $rootNode /** @phpstan-ignore-line method.notFound (The last end() call) */
             ->children()
                 ->enumNode('driver')
                     ->defaultValue('doctrine')

@@ -33,7 +33,7 @@ abstract class AbstractDoctrineIntegrationTests extends KernelTestCase
         try {
             $connection->connect();
         } catch (\Exception $exception) {
-            $this->markTestSkipped(sprintf('Can\'t connect to connection: %s', $exception->getMessage()));
+            $this->markTestSkipped(\sprintf('Can\'t connect to connection: %s', $exception->getMessage()));
         }
 
         $this->doctrineConnection = self::getContainer()->get('test.symfonycasts.messenger_monitor.storage.doctrine_connection');
@@ -43,7 +43,7 @@ abstract class AbstractDoctrineIntegrationTests extends KernelTestCase
         $truncateTable = match ($databasePlatform) {
             'mysql' => 'TRUNCATE TABLE messenger_monitor',
             'postgresql' => 'TRUNCATE TABLE messenger_monitor RESTART IDENTITY',
-            default => throw new InvalidConfigurationException(sprintf('Doctrine platform "%s" is not supported', $databasePlatform))
+            default => throw new InvalidConfigurationException(\sprintf('Doctrine platform "%s" is not supported', $databasePlatform))
         };
 
         try {

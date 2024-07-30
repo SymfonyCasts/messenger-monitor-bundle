@@ -110,8 +110,8 @@ class Connection
         $statement = $this->executeQuery(
             $this->driverConnection->createQueryBuilder()
                 ->select('count(id) as count_messages_on_period, class')
-                ->addSelect(sprintf('AVG(%s) AS average_waiting_time', $this->SQLDriver->getDateDiffInSecondsExpression('received_at', 'dispatched_at')))
-                ->addSelect(sprintf('AVG(%s) AS average_handling_time', $this->SQLDriver->getDateDiffInSecondsExpression('handled_at', 'received_at')))
+                ->addSelect(\sprintf('AVG(%s) AS average_waiting_time', $this->SQLDriver->getDateDiffInSecondsExpression('received_at', 'dispatched_at')))
+                ->addSelect(\sprintf('AVG(%s) AS average_handling_time', $this->SQLDriver->getDateDiffInSecondsExpression('handled_at', 'received_at')))
                 ->from($this->tableName)
                 ->where('handled_at >= :from_date')
                 ->andWhere('handled_at <= :to_date')

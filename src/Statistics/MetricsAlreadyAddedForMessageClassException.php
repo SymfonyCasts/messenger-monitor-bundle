@@ -8,6 +8,6 @@ final class MetricsAlreadyAddedForMessageClassException extends \RuntimeExceptio
 {
     public function __construct(string $messageClass)
     {
-        parent::__construct(sprintf('Metrics already added for message class "%s"', $messageClass));
+        parent::__construct(\sprintf('Metrics already added for message class "%s"', $messageClass));
     }
 }

@@ -29,9 +29,9 @@ final class RetryFailedMessageController
 
         try {
             $this->failedMessageRetryer->retryFailedMessage($id);
-            $sessionBag->add('messenger_monitor.success', sprintf('Message with id "%s" correctly retried.', $id));
+            $sessionBag->add('messenger_monitor.success', \sprintf('Message with id "%s" correctly retried.', $id));
         } catch (\Exception $exception) {
-            $sessionBag->add('messenger_monitor.error', sprintf('Error while retrying message with id "%s": %s', $id, $exception->getMessage()));
+            $sessionBag->add('messenger_monitor.error', \sprintf('Error while retrying message with id "%s": %s', $id, $exception->getMessage()));
         }
 
         return new RedirectResponse($this->urlGenerator->generate('symfonycasts.messenger_monitor.dashboard'));

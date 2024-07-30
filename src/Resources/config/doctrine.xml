@@ -43,7 +43,7 @@
             <argument type="service_locator">
                 <argument key="SymfonyCasts\MessengerMonitorBundle\Storage\Doctrine\Connection" type="service" id="symfonycasts.messenger_monitor.storage.doctrine_connection"/>
             </argument>
-            <tag name="doctrine.event_subscriber"/>
+            <tag name="doctrine.event_listener" event="postGenerateSchema"/>
         </service>
 
         <!-- Statistics -->
