@@ -11,6 +11,6 @@ final class MySQLDriver implements SQLDriverInterface
 {
     public function getDateDiffInSecondsExpression(string $fieldFrom, string $fieldTo): string
     {
-        return sprintf('TIME_TO_SEC(TIMEDIFF(%s, %s))', $fieldFrom, $fieldTo);
+        return \sprintf('TIME_TO_SEC(TIMEDIFF(%s, %s))', $fieldFrom, $fieldTo);
     }
 }

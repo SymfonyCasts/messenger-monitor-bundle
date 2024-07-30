@@ -22,7 +22,7 @@ final class FailedMessageRejecter
         $envelope = $failureReceiver->find($id);
 
         if (null === $envelope) {
-            throw new \RuntimeException(sprintf('The message with id "%s" was not found.', $id));
+            throw new \RuntimeException(\sprintf('The message with id "%s" was not found.', $id));
         }
 
         $failureReceiver->reject($envelope);

@@ -38,7 +38,7 @@ final class StoredMessageProviderTest extends TestCase
         $envelope = new Envelope(new TestableMessage(), [$stamp = new MonitorIdStamp()]);
 
         $doctrineConnection->expects($this->once())->method('findMessage')->with($stamp->getId())->willReturn(null);
-        $logger->expects($this->once())->method('error')->with(sprintf('Message with id "%s" not found', $stamp->getId()));
+        $logger->expects($this->once())->method('error')->with(\sprintf('Message with id "%s" not found', $stamp->getId()));
 
         $this->assertNull($storedMessageProvider->getStoredMessage($envelope));
     }
