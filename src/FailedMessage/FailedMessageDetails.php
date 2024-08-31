@@ -13,7 +13,7 @@ final class FailedMessageDetails
         private mixed $id,
         private string $class,
         private string $failedAt,
-        private ?string $error
+        private ?string $error,
     ) {
     }
 

@@ -24,7 +24,7 @@ final class SendEventOnRetriedMessageListener implements EventSubscriberInterfac
     public function __construct(
         private SendFailedMessageForRetryListener $decorated,
         private EventDispatcherInterface $eventDispatcher,
-        private ?LoggerInterface $logger = null
+        private ?LoggerInterface $logger = null,
     ) {
     }
 
