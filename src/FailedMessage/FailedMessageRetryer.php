@@ -26,7 +26,7 @@ final class FailedMessageRetryer
         private FailureReceiverName $failureReceiverName,
         private MessageBusInterface $messageBus,
         private EventDispatcherInterface $eventDispatcher,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
     ) {
     }
 

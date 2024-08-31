@@ -25,7 +25,7 @@ final class DashboardController
         private Environment $twig,
         private ReceiverLocator $receiverLocator,
         private FailedMessageRepository $failedMessageRepository,
-        private StatisticsProcessorInterface $statisticsProcessor
+        private StatisticsProcessorInterface $statisticsProcessor,
     ) {
     }
 

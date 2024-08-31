@@ -15,7 +15,7 @@ final class MetricsPerMessageType
         private string $class,
         private int $messagesCountOnPeriod,
         private float $averageWaitingTime,
-        private float $averageHandlingTime
+        private float $averageHandlingTime,
     ) {
     }
 

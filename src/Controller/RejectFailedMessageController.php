@@ -18,7 +18,7 @@ final class RejectFailedMessageController
     public function __construct(
         private FailedMessageRejecter $failedMessageRejecter,
         private RequestStack $requestStack,
-        private UrlGeneratorInterface $urlGenerator
+        private UrlGeneratorInterface $urlGenerator,
     ) {
     }
 

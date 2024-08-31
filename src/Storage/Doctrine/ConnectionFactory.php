@@ -29,7 +29,7 @@ final class ConnectionFactory
             $driver = match ($databasePlatform) {
                 'mysql' => new MySQLDriver(),
                 'postgresql' => new PostgreSQLDriver(),
-                default => throw new InvalidConfigurationException(\sprintf('Doctrine platform "%s" is not supported', $databasePlatform))
+                default => throw new InvalidConfigurationException(\sprintf('Doctrine platform "%s" is not supported', $databasePlatform)),
             };
 
             return new Connection($driverConnection, $driver, $this->tableName);

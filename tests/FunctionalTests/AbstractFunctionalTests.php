@@ -54,7 +54,7 @@ abstract class AbstractFunctionalTests extends WebTestCase
         $truncateTable = match ($databasePlatform) {
             'mysql' => 'TRUNCATE TABLE messenger_monitor',
             'postgresql' => 'TRUNCATE TABLE messenger_monitor RESTART IDENTITY',
-            default => throw new InvalidConfigurationException(\sprintf('Doctrine platform "%s" is not supported', $databasePlatform))
+            default => throw new InvalidConfigurationException(\sprintf('Doctrine platform "%s" is not supported', $databasePlatform)),
         };
 
         try {
