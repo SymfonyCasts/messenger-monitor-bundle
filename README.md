@@ -76,4 +76,4 @@ Check `bin/console help messenger:monitor` for more information.
 
 ## Security Policy
 
-If you discover a security vulnerability, please do not open a public issue or pull request. Instead, please review this repository's <a href="https://github.com/SymfonyCasts/messenger-monitor-bundle/security">Security Policy</a> for instructions on how to report it responsibly.
+If you discover a security vulnerability, please do not open a public issue or pull request. Instead, please review this repository's [Security Policy](https://github.com/SymfonyCasts/messenger-monitor-bundle/security) for instructions on how to report it responsibly.
