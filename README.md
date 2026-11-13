@@ -3,9 +3,9 @@ Messenger Monitor
 
 [![CI](https://github.com/SymfonyCasts/messenger-monitor-bundle/actions/workflows/ci.yaml/badge.svg)](https://github.com/SymfonyCasts/messenger-monitor-bundle/actions/workflows/ci.yaml)
 
-> **Note**
-> **THIS BUNDLE IS EXPERIMENTAL & UNSTABLE** and may not work and probably isn't ready for production.
-> It's also super rough and currently is in a development phase.
+> [!WARNING]
+> This package is abandoned. Please use
+> [`zenstruck/messenger-monitor-bundle`](https://github.com/zenstruck/messenger-monitor-bundle) instead.
 
 A Symfony Bundle to show you information about your Messenger queues/transports.
 
